@@ -6,8 +6,13 @@ export default defineConfig({
     plugins: [
         vue(),
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: ['resources/css/app.css', 'resources/js/app.ts'],
             refresh: true,
         }),
     ],
+    server: {
+        fs: {
+            cachedChecks: false,
+        }
+    }
 });

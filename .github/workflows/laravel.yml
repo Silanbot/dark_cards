@@ -50,6 +50,9 @@ jobs:
     - name: Directory Permissions
       run: chmod -R 777 storage bootstrap/cache
 
+    - name: Compile VueJS
+      run: npm install && npm run build
+
     - name: Execute tests via Pest
       env:
         DB_CONNECTION: sqlite
