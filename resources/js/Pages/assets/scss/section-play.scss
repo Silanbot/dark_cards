@@ -1,0 +1,310 @@
+body {
+  @media (max-width: 100px) {
+    display: none;
+    // 380 320
+  }
+}
+
+body {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.section-play {
+  width: 100%;
+  .play__title {
+    @media (min-height: 626px) {
+      margin-top: 15dvh;
+    }
+    margin-top: 11.5dvh;
+    font-family: "SF Pro Display";
+    font-weight: 600;
+    font-size: 22px;
+    text-align: center;
+    color: #fff;
+  }
+  .play__block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 98%;
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.35);
+    justify-content: center;
+    align-items: center;
+    margin: 3dvh auto 0 auto;
+    padding: 10px;
+    box-sizing: border-box;
+    // @media(max-width: 350px) {
+    //   transform: scale(0.7);
+    //   width: 100%;
+    //   max-width: inherit;
+    // }
+
+    .play__block__title {
+      font-family: "SF Pro Display";
+      font-weight: 600;
+      font-size: 18px;
+      color: #fff;
+      align-self: start;
+      margin-left: 10px;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      #arr {
+        width: 20px;
+        height: 20px;
+        margin-right: 20px;
+      }
+    }
+
+    .plash {
+      height: 100%;
+      background: rgba(56, 21, 21, 0.5);
+      display: flex;
+      align-items: center;
+      border-radius: 8px;
+      padding: 0 10px;
+      gap: 5px;
+      @media (max-width: 350px) {
+        padding: 0 7px;
+      }
+      img {
+        width: 15px;
+        height: 15px;
+        @media (max-width: 350px) {
+          width: 10px;
+          height: 10px;
+        }
+      }
+      div {
+        font-family: "SF Pro Display";
+        font-weight: 400;
+        font-size: 12px;
+        text-align: center;
+        color: #834444;
+        @media (max-width: 350px) {
+          font-size: 9px;
+        }
+      }
+    }
+
+    .play__block__row {
+      display: flex;
+      gap: 15px;
+
+      .play__block__row__item {
+        &:not(:last-child) {
+          position: relative;
+          &::after {
+            content: "";
+            position: absolute;
+            right: -10px;
+            top: 0;
+            width: 1px;
+            height: 100%;
+            background: #441b1b;
+          }
+        }
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .play__block__row__item_img {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 5px;
+        .fullimg {
+          width: 30px;
+          height: 60px;
+          @media (max-width: 350px) {
+            width: 27px;
+            height: 57px;
+          }
+        }
+        .polimg {
+          height: 23px;
+          width: 33px;
+
+          @media (max-width: 350px) {
+            height: 19px;
+            width: 28px;
+          }
+        }
+        .defimg {
+          height: 22px;
+          width: 22px;
+          @media (max-width: 350px) {
+            width: 17px;
+            height: 17px;
+          }
+        }
+      }
+    }
+  }
+
+  .play__down {
+    max-width: 50%;
+    position: relative;
+    top: -10px;
+    margin: 0 auto;
+    .play__down__text {
+      font-family: "SF Pro Display";
+      font-weight: 600;
+      margin-top: 3px;
+      font-size: 6px;
+      text-align: center;
+      color: #834444;
+    }
+    .play__down__block {
+      background: #230707;
+      border-radius: 10px;
+      padding-top: 5px;
+      height: 45px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid #441b1b;
+      img {
+        width: 20px;
+        height: 20px;
+      }
+      span {
+        font-size: 20px;
+        font-weight: 600;
+        color: #fff;
+        font-family: "SF Pro Display";
+      }
+    }
+  }
+
+  .play__buttons {
+    position: relative;
+    z-index: 1;
+    background: #230707;
+    display: flex;
+    max-width: 95%;
+    margin: 1dvh auto 0 auto;
+    @media (min-height: 626px) {
+      margin: 3dvh auto 0 auto;
+    }
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    box-sizing: border-box;
+    border: 1px solid #441b1b;
+    padding: 7px;
+    border-radius: 15px;
+    .play__button__item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 10px;
+      padding: 10px 0;
+      &.active {
+        background: #441b1b;
+        box-sizing: border-box;
+        border-radius: 12px;
+      }
+      img {
+        width: 20px;
+        height: 20px;
+      }
+      span {
+        font-weight: 600;
+        font-size: 15px;
+        color: #fff;
+        font-family: "SF Pro Display";
+      }
+    }
+  }
+
+  .play__two {
+    max-width: 95%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 0 auto;
+    gap: 30px;
+    @media (min-height: 626px) {
+      margin: 3dvh auto 0 auto;
+    }
+    .play__two__item {
+      display: flex;
+      flex-direction: column-reverse;
+      background: #381515;
+      box-sizing: border-box;
+      padding: 10px;
+      border: 1px solid #643434;
+      border-radius: 15px;
+      gap: 15px;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      &.active {
+        background: rgba(194, 27, 27, 0.18);
+        border-color: #c21b1b;
+        position: relative;
+        img,
+        svg {
+          box-shadow: 10px 10px 145px 40px rgba(158, 35, 35, 1);
+          border-radius: 100%;
+        }
+      }
+      img,
+      svg {
+        width: 40px;
+        height: 40px;
+      }
+      div,
+      span {
+        font-family: "SF Pro Display";
+        font-weight: 600;
+        font-size: 12px;
+        text-align: center;
+        color: #fff;
+      }
+    }
+  }
+
+  .play__last {
+    display: flex;
+    justify-content: space-between;
+    max-width: 95%;
+    margin: 2dvh auto 0 auto;
+    padding: 10px 0;
+    box-sizing: border-box;
+    padding-right: 12px;
+    padding-left: 12px;
+    border: 1px solid #643434;
+    background: #381515;
+    align-items: center;
+    border-radius: 20px;
+    #zam {
+      width: 30px;
+      height: 30px;
+    }
+    #arrow3 {
+      width: 25px;
+      height: 25px;
+    }
+    .play__last__left {
+      align-items: center;
+      display: flex;
+      gap: 12px;
+
+      span,
+      div {
+        font-family: "SF Pro Display";
+        font-weight: 600;
+        font-size: 12px;
+        color: #fff;
+      }
+    }
+  }
+}

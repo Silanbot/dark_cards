@@ -1,0 +1,615 @@
+@import url("https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Onest:wght@100..900&family=Oswald:wght@200..700&family=Play:wght@400;700&display=swap");
+@import "./fonts/stylesheet.css";
+@import "./scss/section-vert.scss";
+@import "./scss/section-play.scss";
+@import "./scss/section-filter.scss";
+@import "./scss/section-dev.scss";
+
+a {
+  text-decoration: inherit;
+  color: inherit;
+}
+
+.load.section.section-load {
+  position: relative;
+  z-index: 1;
+  width: 100dvw;
+  height: 100dvh;
+  background: url("/sources/bg1.svg");
+  background-size: cover;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15%;
+
+  .load__logotype {
+    margin-top: 10%;
+    width: 67%;
+    img {
+      width: 100%;
+    }
+  }
+
+  .load__progress {
+    width: 80%;
+    height: 33px;
+    background: #170a0a;
+    position: relative;
+    #progress {
+      background: #4f1112;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      /* Inner Shadow */
+      box-shadow: 0px 0px 25px rgba(119, 19, 20, 0.94);
+    }
+  }
+}
+
+body {
+  background: rgba(23, 10, 10, 1);
+  // overflow-x: hidden;
+}
+
+section.hidden {
+  transform: translateX(500vw);
+  overflow: hidden;
+}
+
+section {
+  transition: all 1s;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.inter.section.section-inter {
+  width: 100dvw;
+  height: 100dvh;
+  min-height: 605px;
+  background: url("/sources/back2.svg");
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+
+  overflow-y: hidden;
+  @media (max-height: 680px) {
+    overflow-y: auto;
+  }
+
+  .inter__inner {
+    &.el-2 {
+      background: none;
+    }
+    position: relative;
+    background: linear-gradient(16deg, rgba(22, 6, 6, 0.7) 11.25%, rgba(17, 7, 7, 0.7) 92.97%);
+    flex-grow: 1;
+    margin-top: -20%;
+  }
+
+  .inter__profile {
+    align-items: center;
+    width: 39%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3%;
+    position: relative;
+    top: -7px;
+    z-index: 2;
+    padding: 5px;
+    background: transparent;
+    &::after {
+      // content: url('/sources/shadow.svg');
+      // top: 0;
+      // left: 0;
+      // position: absolute;
+    }
+    .intro__profile__inner {
+      max-width: 99.5%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 5.5px solid #acacac;
+      border-radius: 100%;
+      #profile {
+        width: 100%;
+        border-radius: 100%;
+      }
+    }
+  }
+
+  .inter__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    font-size: 53px;
+    // padding-top: 7.5%;
+    padding: 7.5% 5% 0 5%;
+  }
+
+  .inter__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    align-items: center;
+    margin-top: 24%;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    .inter__buttons__item {
+      color: #fff;
+      font-family: "SF Pro Display";
+      font-size: 4vw;
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
+      display: flex;
+      align-items: center;
+      gap: 8%;
+      width: 100%;
+      border: 1px solid #714242;
+      background: rgba(37, 14, 14, 0.65);
+      padding: 3%;
+      box-sizing: border-box;
+      align-items: center;
+      position: relative;
+      max-height: 62px !important;
+      max-width: 450px !important;
+      border-radius: 13px;
+      @media (max-height: 521px) {
+        width: 80%;
+      }
+      .svg {
+        padding: 4.5%;
+        width: 8%;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        border-radius: 10px;
+        border: 1px solid #714242;
+        background: rgba(37, 14, 14, 0.65);
+        flex-shrink: 0;
+        height: 100%;
+        position: relative;
+        left: 0%;
+        img {
+          height: 100%;
+          width: 100%;
+        }
+      }
+      position: relative;
+      svg {
+        // align-self: flex-end;
+        position: absolute;
+        // top: 19%;
+        right: 15px;
+        // width: 10%;
+        width: 13px;
+      }
+    }
+  }
+
+  .inter__monet {
+    width: 29%;
+    border-radius: 16px;
+    border: 1px solid #4a1214;
+    background: rgba(0, 0, 0, 0.33);
+    -webkit-backdrop-filter: blur(9.1499996185px);
+    backdrop-filter: blur(9.1499996185px);
+    display: flex;
+    align-items: center;
+    gap: 8%;
+    justify-content: center;
+    font-family: "SF Pro Display";
+    color: #fff;
+    // font-family: "SF Pro Text";
+    font-size: 4.5vw;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    padding: 3.25% 2.5%;
+    img {
+      width: 20%;
+      aspect-ratio: 16/16;
+    }
+  }
+}
+
+.none {
+  display: none !important;
+}
+
+footer.footer {
+  // flex-grow: 1;
+  box-sizing: border-box;
+  width: 100%;
+  background: #401515;
+  align-items: center;
+  padding: 3% 0;
+  .footer__inner {
+    box-sizing: border-box;
+    padding: 0 10%;
+    display: flex;
+    justify-content: center;
+    gap: 93px;
+    &.footer__inner_play {
+      gap: 0 !important;
+      justify-content: space-between;
+      padding: 0 3%;
+    }
+  }
+  .footer__btns {
+    display: flex;
+    flex-direction: column;
+    .footer__btns__row {
+      display: flex;
+      justify-content: space-between;
+      &.footer__btns__row_second {
+        justify-content: center;
+        gap: 10px;
+        .footer__btns__row__el {
+          display: flex;
+          align-items: center;
+          font-weight: 600;
+          gap: 5px;
+          padding: 5px 9px;
+          border: 2px solid #4a1214;
+          border-radius: 7px;
+          background: #2b0e0e;
+          img {
+            height: 13px;
+          }
+          span {
+            font-family: "SF Pro Display";
+            color: white;
+            font-size: 9px;
+          }
+        }
+      }
+      .footer__btns__row__cart {
+        height: 35px;
+        width: 35px;
+        border-radius: 10px;
+        background: #331111;
+        display: flex;
+        justify-content: center;
+        border: 2px solid #4a1214;
+        align-items: center;
+        position: relative;
+        .footer__btns__row__cart__icon {
+          position: absolute;
+          background: #5b2628;
+          font-family: "SF Pro Display";
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 2px;
+          padding: 3px;
+          border-radius: 5px;
+          top: -7px;
+          span {
+            color: white;
+            font-size: 7px;
+          }
+          img {
+            width: 9px;
+            height: 9px;
+          }
+        }
+        svg {
+          height: 30px;
+          width: 20px;
+        }
+      }
+    }
+  }
+  .footer__person {
+    width: 50px;
+    flex-shrink: 0;
+    height: 56px;
+    overflow: hidden;
+    border-radius: 5px;
+    .footer__person__name {
+      background: #5b2628;
+      padding: 2px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "SF Pro Display";
+      font-size: 9px;
+      color: white;
+    }
+    .footer__person__img {
+      width: 100%;
+      height: 74%;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      display: flex;
+      .text {
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        bottom: 5px;
+        display: flex;
+        align-items: center;
+        img {
+          width: 15px;
+          height: 15px;
+        }
+      }
+      img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+  .footer__button {
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "SF Pro Display";
+    height: 56px;
+    width: 37%;
+    font-size: 20px;
+    color: #eb3d3d;
+    background: #eb3d3d35;
+    border: 1px solid #eb3d3d;
+    border-radius: 30px;
+    &.chat {
+      gap: 5px;
+      align-items: center;
+      svg {
+        width: 16px;
+      }
+      width: 30%;
+      height: 40px;
+      border-radius: 10px;
+    }
+  }
+  .footer__play {
+    align-items: center;
+    width: 70px;
+    height: 70px;
+    flex-shrink: 0;
+    position: relative;
+    /* top: -53px; */
+    background: #1d0808;
+    border-radius: 140%;
+    position: absolute;
+    bottom: 23px;
+    svg,
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .footer__item {
+    .svg {
+      width: 25px;
+      height: 25px;
+    }
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+    display: flex;
+    gap: 11%;
+    align-items: center;
+    color: #893f3f;
+    font-family: "SF Pro Display";
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    font-size: 4vw;
+  }
+}
+
+body {
+  touch-action: none !important;
+}
+
+.anim-none {
+  transition: none !important;
+  * {
+    transition: none !important;
+  }
+  & > * {
+    transition: none !important;
+  }
+  .vert__scroll {
+    transition: none !important;
+  }
+}
+
+body {
+  user-select: all;
+  touch-action: none !important;
+}
+
+.vert__scroll {
+  touch-action: cross-slide-y;
+  user-select: all;
+  justify-content: center;
+}
+
+.test {
+  display: flex;
+  flex-direction: column;
+  background-color: red;
+  height: 300px;
+  overflow: scroll;
+}
+
+body {
+  position: fixed;
+  overflow-y: scroll;
+}
+
+.section-game {
+  width: 100%;
+  margin-top: 18dvh;
+  .game__cart {
+    display: flex;
+    font-family: "SF Pro Display";
+    .game__cart__cold {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      .game__cart__cold__two {
+        position: absolute;
+        width: 15dvw;
+        display: flex;
+        flex-direction: column;
+        left: 23dvw;
+        transform: translateY(25px);
+        .game__cart__cold__two__second {
+          position: absolute;
+          top: 30px;
+        }
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .game__cart__cold__count {
+        font-size: 20px;
+        color: white;
+        margin-left: 10px;
+        position: relative;
+        top: 10px;
+      }
+      .game__cart__cold__carts {
+        .game__cart__cold__carts__side {
+          position: absolute;
+          width: 12dvw;
+          z-index: 1;
+        }
+        .game__cart__cold__carts__second {
+          width: 16dvw;
+          position: relative;
+        }
+      }
+    }
+  }
+  .game__players {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    .game__players__player {
+      display: flex;
+      flex-direction: column;
+      aspect-ratio: 1/6;
+      width: 30vw;
+      position: relative;
+      height: 15vh;
+      &.second {
+        .game__players__player__photo {
+          background: transparent;
+          border-color: #ffffff00;
+        }
+      }
+      .game__players__player__cart {
+        width: 100%;
+        height: 100%;
+        img {
+          width: 105%;
+          height: 114%;
+          object-fit: cover;
+          z-index: 1;
+          position: absolute;
+        }
+      }
+      .game__players__player__photo {
+        width: 60px;
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 0 3px;
+        z-index: 2;
+        margin: 0 auto;
+        border: 4px solid #eb3d3d;
+        background: #eb3d3d;
+
+        border-radius: 5px;
+
+        .game__players__player__photo__img {
+          width: 60px;
+          height: 50px;
+          object-fit: cover;
+          border-radius: 5px 5px 0 0;
+          margin: 0 auto;
+        }
+        .game__players__player__photo__name {
+          font-family: "SF Pro Display";
+          color: white;
+          width: 100%;
+          text-align: center;
+          font-size: 9px;
+          background: #3b1011;
+          padding: 4px 0;
+          border-radius: 0 0 3px 3px;
+        }
+        .game__players__player__photo__text {
+          position: absolute;
+          font-size: 10px;
+          display: flex;
+          align-items: center;
+          font-family: "SF Pro Display";
+          color: white;
+          border-radius: 20%;
+          bottom: 30px;
+          width: 15px;
+          height: 15px;
+          bottom: +35px;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+.vue-devtools__panel {
+  display: none !important;
+  opacity: 0;
+}
+
+.back-3 {
+  position: absolute;
+  z-index: 0;
+  width: 100%;
+  object-fit: contain;
+}
+
+.inter__inner.blured {
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.inter__header_play {
+  z-index: 2;
+}
+
+#mycards {
+  width: 100dvw;
+  position: relative;
+  z-index: 2;
+  bottom: -10dvh;
+  img {
+    width: 100%;
+  }
+}

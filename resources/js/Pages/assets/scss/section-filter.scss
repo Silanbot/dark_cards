@@ -1,0 +1,250 @@
+section.section-filter {
+  width: 100%;
+  margin-top: 11.5dvh;
+  
+  .filter__rows {
+    margin-top: 2dvh;
+    background: #1a0404;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #461717;
+    border-radius: 16px;
+    padding-bottom: 10px;
+    .filter__rows__title {
+      font-weight: 600;
+      font-size: 16px;
+      color: #fff;
+      font-family: 'SF Pro Display';
+      padding-bottom: 3dvh;
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+      padding-top: 10px;
+    }
+    .filter__rows__row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+      gap: 8px;
+      padding-bottom: 10px;
+      .filter__rows__item {
+        
+        // aspect-ratio: 0.125 / 0.125;
+        max-height: 70px;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        justify-content: space-around;
+        background: #290d0d;
+
+        border-radius: 7px;
+        background: rgba(56, 21, 21, 0.5);
+        border: 1px solid rgba(235, 61, 61, 0.38);
+        &.active {
+          background: rgba(235, 61, 61, 0.14);;
+          position: relative;
+          svg {
+              
+            path.gofill {
+              fill: #eb3d3d;
+            }
+            path.gostroke {
+              stroke: #eb3d3d;
+            }
+          }
+          span {
+            color: #eb3d3d;
+            
+          }
+          &::before {
+            content: '';
+            position: absolute;
+            box-sizing: border-box;
+            background: url('/sources/act.svg');
+            background-size: cover;
+            width: 11px;
+            aspect-ratio: 1/1;
+            top: 2px;
+            right: 2px;
+            z-index: 5;
+          }
+        }
+        svg {
+          max-height: 40%;
+          max-width: 60%;
+          position: relative;
+          top: 5px;
+        }
+        span {
+        font-family: 'SF Pro Display';
+        font-weight: 400;
+        font-size: 9px;
+        text-align: center;
+        color: #7a3c3c;
+        }
+      }
+    }
+  }
+  .filter__inner {
+    padding-bottom: 10px;
+    background: #230707;
+    margin-top: 3.7dvh;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: 1px solid #5d1313;
+  }
+  .filter__block {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px 20px;
+    position: relative;
+    max-width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+    &.border-bottom {
+      border-bottom: 1px solid #522;
+      padding-bottom: 3dvh;
+      margin: auto;
+    }
+  }
+  .filter__title {
+    font-family: 'SF Pro Display';
+    font-weight: 400;
+    font-size: 14px;
+    text-align: center;
+    color: #7a3c3c;
+  }
+  .filter__buttons {
+    display: flex;
+    align-items: self-end;
+    gap: 2dvw;
+    justify-content: center;
+    .filter__buttons__item {
+      .filter__buttons__item__inner.active {
+        .cont {
+          background: #eb3d3d !important;
+          box-shadow: 4px 10px 85px 10px rgba(158,35,35,1) !important;
+          // -webkit-box-shadow: 0px 2px 8px 9px rgba(235, 61, 61, 0.2);
+          // -moz-box-shadow: 0px 2px 8px 9px rgba(235, 61, 61, 0.2);
+          svg {
+            path {
+              fill: #230707 !important;
+            }
+            
+          }
+          
+        }
+      }
+      &.active:not(.filter__buttons__item__double) {
+        .cont {
+            background: #eb3d3d;
+            color: #230707 !important;
+            position: relative;
+            &::before {
+              content: '';
+              position: absolute;
+              box-sizing: border-box;
+              background: url('/sources/act.svg');
+              background-size: cover;
+              width: 15px;
+              aspect-ratio: 1/1;
+              bottom: -27%;
+              z-index: 5;
+          }
+        }
+      }
+      
+      
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+
+      &.filter__buttons__item__double {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        .filter__buttons__item__title {
+        }
+
+        .filter__buttons__item__content {
+          border-radius: 7px;
+          display: flex;
+          border: 1px solid #eb3d3d;
+          // overflow: hidden;
+          position: relative;
+          justify-content: center;
+          align-items: center;
+          .filter__buttons__item__inner {
+            background: none;
+            
+            .cont {
+              
+              margin: auto;
+              border: none;
+              border-radius: 5px;
+              background: none;
+              
+              svg {
+                max-height: 15px;
+              }
+            }
+            
+          }
+        }
+      }
+
+      .filter__buttons__item__inner {
+        transition: all 0.5s;
+        .cont {
+          transition: all 0.5s;
+        }
+        &.double {
+          box-sizing: border-box;
+          padding: 3.5px;
+        }
+        &:not(.double) {
+          .cont {
+            padding: 3.5px;
+          }
+        }
+        
+        
+        
+        background: rgba(56, 21, 21, 0.5);
+        .cont {
+          width: 11dvw;
+          aspect-ratio: 3 / 2.1 ;
+          display: flex;
+          justify-content: center;
+          text-align: center;
+          align-items: center;
+          font-weight: 600;
+          font-size: 17px;
+          text-align: center;
+          font-family: 'SF Pro Display';
+          color: #eb3d3d;
+          
+          border-radius: 5px;
+          
+          border: 1px solid #eb3d3d;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        
+      }
+    }
+  }
+}

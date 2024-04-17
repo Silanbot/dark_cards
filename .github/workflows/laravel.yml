@@ -53,6 +53,9 @@ jobs:
     - name: Compile VueJS
       run: npm install && npm run build
 
+    - name: Change session driver to file
+      run: echo "SESSION_DRIVER=file" >> .env
+
     - name: Execute tests via Pest
       env:
         DB_CONNECTION: sqlite
