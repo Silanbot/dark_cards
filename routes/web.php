@@ -1,11 +1,10 @@
 <?php
 
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PlayController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return inertia('HomeView');
-});
-
-Route::get('/profile', function () {
-    return inertia('ProfileView');
-});
+Route::get('/', ProfileController::class)->name('profile');
+Route::get('/home', HomeController::class)->name('home');
+Route::get('/play', PlayController::class)->name('play');
