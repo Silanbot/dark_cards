@@ -56,6 +56,9 @@ jobs:
     - name: Change session driver to file
       run: echo "SESSION_DRIVER=file" >> .env
 
+    - name: Analyzing code project via Laravel Pint
+      run: ./vendor/bin/pint --test
+
     - name: Execute tests via Pest
       env:
         DB_CONNECTION: sqlite
