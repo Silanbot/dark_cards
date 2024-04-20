@@ -17,7 +17,6 @@
         "@inertiajs/vue3": "^1.0.15",
         "@vitejs/plugin-vue": "^5.0.4",
         "pinia": "^2.1.7",
-        "socket.io-client": "^4.7.5",
         "vue": "^3.4.22",
         "vuex": "^4.1.0"
     }
