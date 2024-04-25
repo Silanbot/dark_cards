@@ -13,6 +13,7 @@ class Room extends Model
     protected $fillable = [
         'user_id',
         'bank',
+        'game_type',
         'max_gamers',
     ];
 

@@ -4,12 +4,12 @@
     <section class="inter section section-inter">
         <div class="inter__header">
             <div class="inter__monet">
-                <img src="././sources/coin1.svg" alt=""/>
+                <img src="./sources/coin1.svg" alt=""/>
                 <span>44 719</span>
             </div>
             <div class="inter__monet">
                 <span>153 028</span>
-                <img src="././sources/coin2.svg" alt=""/>
+                <img src="./sources/coin2.svg" alt=""/>
             </div>
         </div>
         <div class="inter__inner el-2">
@@ -91,7 +91,7 @@
                         <div>Присоединиться к столу</div>
                         <img src="./sources/2/play.svg" alt=""/>
                     </div>
-                    <div class="play__two__item">
+                    <div class="play__two__item" @click="createGame">
                         <div>Создать игру</div>
                         <img src="./sources/2/two.svg" alt=""/>
                     </div>
@@ -186,7 +186,7 @@
                     </div>
                     <span>Профиль</span>
                 </a>
-                <a class="footer__play" @click="$router.push('/play')">
+                <a class="footer__play" @click="createGame">
                     <img src="./sources/play.png" alt=""/>
                 </a>
 
@@ -213,6 +213,7 @@
     </section>
 </template>
 <script>
+import axios from "axios";
 document.addEventListener(
     'touchmove',
     function (event) {
@@ -230,7 +231,16 @@ export default {
             telegram: window.Telegram.WebApp
         }
     },
-    methods() {
+    methods: {
+        createGame() {
+            axios.post('/api/create-game', {
+                bank: 100,
+                game_type: this.selectMode,
+                user_id: 2222,
+            }).then(response => {
+                location.replace('/play/' + response.data.room_id)
+            })
+        }
     }
 }
 </script>

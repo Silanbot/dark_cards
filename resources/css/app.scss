@@ -15,7 +15,7 @@ a {
     z-index: 1;
     width: 100dvw;
     height: 100dvh;
-    background: url("/sources/bg1.svg");
+    background: url("../js/Pages/sources/bg1.svg");
     background-size: cover;
 
     display: flex;
@@ -72,7 +72,7 @@ section {
     width: 100dvw;
     height: 100dvh;
     min-height: 605px;
-    background: url("/sources/back2.svg");
+    background: url("../js/Pages/sources/back2.svg");
     background-size: cover;
     display: flex;
     flex-direction: column;
