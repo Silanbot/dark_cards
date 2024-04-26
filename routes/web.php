@@ -8,3 +8,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', ProfileController::class)->name('profile');
 Route::get('/home', HomeController::class)->name('home');
 Route::get('/play/{room}', PlayController::class)->name('play');
+Route::get('filter1', function () {
+    return inertia('Filter1View');
+});
+Route::get('filter3', function () {
+    return inertia('Filter3View');
+});

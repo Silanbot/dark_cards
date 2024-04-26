@@ -15,7 +15,7 @@
         <div class="inter__inner el-2">
             <section class="section-play play">
                 <div class="play__title">Лобби</div>
-                <a @click="$router.push('/filter1')" class="play__block">
+                <a href="/filter1" class="play__block">
                     <div class="play__block__title">
                         <span>Фильтр</span>
                         <img id="arr" src="./sources/2/arr.svg" alt=""/>
@@ -73,7 +73,7 @@
                     </div>
                 </div>
                 <div class="play__down">
-                    <a @click="$router.push('/filter3')" class="play__down__block">
+                    <a href="/filter3" class="play__down__block">
                         <template v-if="selectMode == 1">
                             <img src="./sources/2/arrow.svg" alt=""/>
                             <span>$ 100 - 1К</span>
