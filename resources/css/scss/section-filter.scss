@@ -1,7 +1,7 @@
 section.section-filter {
   width: 100%;
   margin-top: 11.5dvh;
-  
+
   .filter__rows {
     margin-top: 2dvh;
     background: #1a0404;
@@ -31,7 +31,7 @@ section.section-filter {
       gap: 8px;
       padding-bottom: 10px;
       .filter__rows__item {
-        
+
         // aspect-ratio: 0.125 / 0.125;
         max-height: 70px;
         width: 100%;
@@ -50,7 +50,7 @@ section.section-filter {
           background: rgba(235, 61, 61, 0.14);;
           position: relative;
           svg {
-              
+
             path.gofill {
               fill: #eb3d3d;
             }
@@ -60,13 +60,13 @@ section.section-filter {
           }
           span {
             color: #eb3d3d;
-            
+
           }
           &::before {
             content: '';
             position: absolute;
             box-sizing: border-box;
-            background: url('/sources/act.svg');
+            background: url('../../../resources/js/Pages/sources/act.svg');
             background-size: cover;
             width: 11px;
             aspect-ratio: 1/1;
@@ -140,9 +140,9 @@ section.section-filter {
             path {
               fill: #230707 !important;
             }
-            
+
           }
-          
+
         }
       }
       &.active:not(.filter__buttons__item__double) {
@@ -154,7 +154,7 @@ section.section-filter {
               content: '';
               position: absolute;
               box-sizing: border-box;
-              background: url('/sources/act.svg');
+              background: url('../../../resources/js/Pages/sources/act.svg');
               background-size: cover;
               width: 15px;
               aspect-ratio: 1/1;
@@ -163,8 +163,8 @@ section.section-filter {
           }
         }
       }
-      
-      
+
+
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -188,19 +188,19 @@ section.section-filter {
           align-items: center;
           .filter__buttons__item__inner {
             background: none;
-            
+
             .cont {
-              
+
               margin: auto;
               border: none;
               border-radius: 5px;
               background: none;
-              
+
               svg {
                 max-height: 15px;
               }
             }
-            
+
           }
         }
       }
@@ -219,9 +219,9 @@ section.section-filter {
             padding: 3.5px;
           }
         }
-        
-        
-        
+
+
+
         background: rgba(56, 21, 21, 0.5);
         .cont {
           width: 11dvw;
@@ -235,15 +235,15 @@ section.section-filter {
           text-align: center;
           font-family: 'SF Pro Display';
           color: #eb3d3d;
-          
+
           border-radius: 5px;
-          
+
           border: 1px solid #eb3d3d;
           display: flex;
           justify-content: center;
           align-items: center;
         }
-        
+
       }
     }
   }

@@ -7,46 +7,72 @@
         </div>
       </div>
       <div class="modal__title">Чат игроков</div>
-      <div class="modal__dialog">
-        <div class="modal__dialog__item main">
+      <div class="modal__dialog" v-for="message of messages">
+        <div v-if="!message.from_me" class="modal__dialog__item main">
           <div class="modal__dialog__item__header">
-            <div class="modal__dialog__item__header__title">Константин</div>
+            <div class="modal__dialog__item__header__title">Игрок</div>
             <div class="modal__dialog__item__header__data">13:21</div>
           </div>
-          <div class="modal__dialog__item__text">Сделал верстку</div>
+          <div class="modal__dialog__item__text">{{ message.message }}</div>
         </div>
-        <div class="modal__dialog__item second">
+        <div v-else class="modal__dialog__item second">
           <div class="modal__dialog__item__header">
             <div class="modal__dialog__item__header__title">Константин</div>
             <div class="modal__dialog__item__header__data">13:21</div>
           </div>
-          <div class="modal__dialog__item__text">Сделал верстку</div>
-        </div>
-        <div class="modal__dialog__item second">
-          <div class="modal__dialog__item__header">
-            <div class="modal__dialog__item__header__title">Константин</div>
-            <div class="modal__dialog__item__header__data">13:21</div>
-          </div>
-          <div class="modal__dialog__item__text">Сделал верстку</div>
-        </div>
-        <div class="modal__dialog__item main">
-          <div class="modal__dialog__item__header">
-            <div class="modal__dialog__item__header__title">Константин</div>
-            <div class="modal__dialog__item__header__data">13:21</div>
-          </div>
-          <div class="modal__dialog__item__text">Сделал верстку</div>
+          <div class="modal__dialog__item__text">{{ message.message }}</div>
         </div>
         <div class="modal__dialog__sticker">
           <img src="../sources/sticker.png" alt="" />
         </div>
       </div>
       <div class="modal__input">
-        <input type="text" placeholder="Сообщение" />
-        <img src="../sources/msg.png" alt="" />
+        <input v-model="text" type="text" placeholder="Сообщение" />
+        <img @click="sendMessage" src="../sources/msg.png" alt="" />
       </div>
     </div>
   </div>
 </template>
+<script>
+import {Centrifuge} from "centrifuge";
+
+export default {
+    data() {
+        return {
+            messages: [],
+            centrifugo: null,
+            text: '',
+            user: null,
+        }
+    },
+    methods: {
+        sendMessage() {
+            this.centrifugo.publish('news', {
+                message: this.text,
+            })
+            this.text = ''
+        }
+    },
+    async created() {
+        this.user = 1
+
+        let token = ''
+        const response = await (await fetch(`/api/auth/token?id=${this.user}`)).json()
+        token = response.token
+        this.centrifugo = new Centrifuge('ws://127.0.0.1:3000/connection/websocket', {
+            token: token
+        })
+
+        const subscription = this.centrifugo.newSubscription('news')
+
+        subscription.on('publication', context => {
+            this.messages.push({ message: context.data.message, from_me: context.info.user === this.user })
+        }).subscribe()
+
+        this.centrifugo.connect()
+    }
+}
+</script>
 <style lang="scss" scoped>
 .background-modal {
   position: fixed;

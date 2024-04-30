@@ -15,7 +15,7 @@ a {
   z-index: 1;
   width: 100dvw;
   height: 100dvh;
-  background: url("/sources/bg1.svg");
+  background: url("../sources/bg1.svg");
   background-size: cover;
 
   display: flex;
@@ -70,7 +70,7 @@ section {
   width: 100dvw;
   height: 100dvh;
   min-height: 605px;
-  background: url("/sources/back2.svg");
+  background: url("../sources/back2.svg");
   background-size: cover;
   display: flex;
   flex-direction: column;
@@ -103,7 +103,7 @@ section {
     padding: 5px;
     background: transparent;
     &::after {
-      // content: url('/sources/shadow.svg');
+      // content: url('../sources/shadow.svg');
       // top: 0;
       // left: 0;
       // position: absolute;

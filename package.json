@@ -16,6 +16,7 @@
         "@inertiajs/inertia": "^0.11.1",
         "@inertiajs/vue3": "^1.0.15",
         "@vitejs/plugin-vue": "^5.0.4",
+        "centrifuge": "^5.1.1",
         "pinia": "^2.1.7",
         "vue": "^3.4.22",
         "vuex": "^4.1.0"

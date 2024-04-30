@@ -190,14 +190,11 @@ export default {
         }
     },
     created() {
-        if (window.Telegram.WebApp.length !== undefined) {
-            window.Telegram.WebApp.expand()
-            fetch(`/api/profile?id=${window.Telegram.WebApp.initDataUnsafe.user.id}&username=${window.Telegram.WebApp.initDataUnsafe.user.username}`)
-                .then(response => response.json())
-                .then(data => {
-                    this.dc_coins = data.balance
-                })
-        }
+        fetch(`/api/profile?id=${window.Telegram.WebApp.initDataUnsafe.user.id}&username=${window.Telegram.WebApp.initDataUnsafe.user.username}`)
+            .then(response => response.json())
+            .then(data => {
+                this.dc_coins = data.balance
+            })
     }
 }
 </script>

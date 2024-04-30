@@ -5,10 +5,10 @@
         <div class="inter__header">
             <div class="inter__monet">
                 <img src="./sources/coin1.svg" alt=""/>
-                <span>44 719</span>
+                <span>{{ dc_coins }}</span>
             </div>
             <div class="inter__monet">
-                <span>153 028</span>
+                <span>{{ dollars }}</span>
                 <img src="./sources/coin2.svg" alt=""/>
             </div>
         </div>
@@ -214,6 +214,7 @@
 </template>
 <script>
 import axios from "axios";
+import {Centrifuge} from "centrifuge";
 document.addEventListener(
     'touchmove',
     function (event) {
@@ -228,7 +229,9 @@ export default {
     data() {
         return {
             selectMode: 1,
-            telegram: window.Telegram.WebApp
+            dc_coins: 0,
+            dollars: 0,
+            token: '',
         }
     },
     methods: {
@@ -236,11 +239,18 @@ export default {
             axios.post('/api/create-game', {
                 bank: 100,
                 game_type: this.selectMode,
-                user_id: 2222,
+                user_id: window.Telegram.WebApp.initDataUnsafe.user.id,
             }).then(response => {
                 location.replace('/play/' + response.data.room_id)
             })
         }
-    }
+    },
+    created() {
+        fetch(`/api/profile?id=${window.Telegram.WebApp.initDataUnsafe.user.id}&username=${window.Telegram.WebApp.initDataUnsafe.user.username}`)
+            .then(response => response.json())
+            .then(data => {
+                this.dc_coins = data.balance
+            })
+    },
 }
 </script>
