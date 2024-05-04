@@ -19,7 +19,7 @@ test('play screen returns successfully', function () {
         'user_id' => 1,
         'bank' => 100,
         'game_type' => 1,
-        'max_gamers' => 2
+        'max_gamers' => 2,
     ]);
     $response = $this->get(route('play', ['room' => $room->id]));
 
