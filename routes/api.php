@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DeckController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\TokenController;
 use App\Http\Controllers\UserController;
@@ -10,3 +11,4 @@ Route::post('create-game', [GameController::class, 'createGame'])->name('create-
 Route::prefix('/auth/')->group(function () {
     Route::get('token', TokenController::class)->name('auth.token');
 });
+Route::get('/deck', DeckController::class)->name('deck');

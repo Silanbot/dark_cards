@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Room;
+
 test('home screen returns successfully response', function () {
     $response = $this->get(route('home'));
 
@@ -13,7 +15,13 @@ test('profile screen returns successfully', function () {
 });
 
 test('play screen returns successfully', function () {
-    $response = $this->get(route('play'));
+    $room = Room::query()->create([
+        'user_id' => 1,
+        'bank' => 100,
+        'game_type' => 1,
+        'max_gamers' => 2
+    ]);
+    $response = $this->get(route('play', ['room' => $room->id]));
 
     $response->assertStatus(200);
 });

@@ -1,11 +1,10 @@
 {
-    "token_hmac_secret_key": "d9ebe540-8fcc-4dd5-b126-1f4ca507db48",
-    "admin_password": "f4d2d209-f45c-4c4d-8b2e-ef53c552f8ed",
-    "admin_secret": "1cd6eefb-da1a-49a5-92dd-8b8ddd3f2eb1",
-    "api_key": "76030b41-5666-47e0-9938-14566288b558",
-    "allowed_origins": [
-        "*"
-    ],
+    "token_hmac_secret_key": "8d84fffd-2197-4ab8-91be-5a0f424f7339",
+    "admin_password": "b6a0a830-bc99-45bb-932b-236be387be12",
+    "admin_secret": "3ec43fcd-8be0-4932-9b9d-77298e3daa75",
+    "api_key": "8eec90ea-9e1e-4b21-b6b3-ab6fc2ee9fa0",
+    "allowed_origins": ["*"],
     "allow_subscribe_for_client": true,
-    "allow_publish_for_client": true
+    "allow_publish_for_client": true,
+    "admin_insecure": false
 }
