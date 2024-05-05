@@ -155,7 +155,7 @@ export default {
         setTimeout(() => {
             touchstart(document.querySelector('.vert__scroll:first-child'))
             touchstart(document.querySelector('.vert__scroll:last-child'))
-        }, 250)
+        }, 500)
     },
     created() {
         fetch(`/api/profile?id=${telegram.initDataUnsafe.user.id}&username=${telegram.initDataUnsafe.user.username}`)
@@ -321,7 +321,7 @@ function touchstart(element) {
             }
             setTimeout(() => {
                 document.body.classList.remove('anim-none')
-            }, 100)
+            }, 1)
         }, 350)
     }
 }
