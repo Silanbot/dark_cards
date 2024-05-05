@@ -202,7 +202,7 @@ function touchstart(element) {
         console.log(staticOffsetY)
         console.log(nanoOffset)
         if (staticOffsetY > 70000) {
-            move(true, 3)
+            move(true, 9)
         }
             // else if (staticOffsetY > 30) {
             //   countOffset = 4;
@@ -322,7 +322,7 @@ function touchstart(element) {
             setTimeout(() => {
                 document.body.classList.remove('anim-none')
             }, 1)
-        }, 50)
+        }, 1)
     }
 }
 </script>
