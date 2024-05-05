@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 function touchstart(element) {
-    const cursor = {x: 0, y: 0}
+    const cursor = { x: 0, y: 0 }
     let drag = false
 
     element.addEventListener('touchstart', (event) => {
@@ -204,23 +204,23 @@ function touchstart(element) {
         if (staticOffsetY > 70000) {
             move(true, 3)
         }
-    //     else if (staticOffsetY > 30) {
-    //       countOffset = 4;
-    //       move(true, 2);
-    //     }
-    //     else if (staticOffsetY > 10) {
-    //       countOffset = 3;
-    //       move(true);
-    //
-    //     }
-    //     else if (staticOffsetY < -30) {
-    //       countOffset = 2;
-    //       move(false, 2);
-    // }
-    //     else if (staticOffsetY < -10) {
-    //         countOffset = 1
-    //         move(false)
-    //     }
+            // else if (staticOffsetY > 30) {
+            //   countOffset = 4;
+            //   move(true, 2);
+            // }
+            // else if (staticOffsetY > 10) {
+            //   countOffset = 3;
+            //   move(true);
+
+            // }
+            // else if (staticOffsetY < -30) {
+            //   countOffset = 2;
+            //   move(false, 2);
+        // }
+        else if (staticOffsetY < -10) {
+            countOffset = 1
+            move(false)
+        }
 
         element.querySelectorAll('span').forEach((span) => {
             span.style.fontSize = 'inherit'
@@ -250,7 +250,6 @@ function touchstart(element) {
     })
 
     let moveTimer = null
-
     function move(up = false, count = 1) {
         clearTimeout(moveTimer)
         moveTimer = setTimeout(() => {
