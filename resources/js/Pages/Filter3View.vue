@@ -155,7 +155,7 @@ export default {
         setTimeout(() => {
             touchstart(document.querySelector('.vert__scroll:first-child'))
             touchstart(document.querySelector('.vert__scroll:last-child'))
-        }, 1)
+        }, 250)
     },
     created() {
         fetch(`/api/profile?id=${telegram.initDataUnsafe.user.id}&username=${telegram.initDataUnsafe.user.username}`)
@@ -202,25 +202,25 @@ function touchstart(element) {
         console.log(staticOffsetY)
         console.log(nanoOffset)
         if (staticOffsetY > 70000) {
-            move(true, 3)
+            move(true, 4)
         }
-        else if (staticOffsetY > 30) {
-          countOffset = 4;
-          move(true, 2);
-        }
-        else if (staticOffsetY > 10) {
-          countOffset = 3;
-          move(true);
-
-        }
-        else if (staticOffsetY < -30) {
-          countOffset = 2;
-          move(false, 2);
-    }
-        else if (staticOffsetY < -10) {
-            countOffset = 1
-            move(false)
-        }
+    //     else if (staticOffsetY > 30) {
+    //       countOffset = 4;
+    //       move(true, 2);
+    //     }
+    //     else if (staticOffsetY > 10) {
+    //       countOffset = 3;
+    //       move(true);
+    //
+    //     }
+    //     else if (staticOffsetY < -30) {
+    //       countOffset = 2;
+    //       move(false, 2);
+    // }
+    //     else if (staticOffsetY < -10) {
+    //         countOffset = 1
+    //         move(false)
+    //     }
 
         element.querySelectorAll('span').forEach((span) => {
             span.style.fontSize = 'inherit'
@@ -321,8 +321,8 @@ function touchstart(element) {
             }
             setTimeout(() => {
                 document.body.classList.remove('anim-none')
-            }, 1)
-        }, 1)
+            }, 100)
+        }, 350)
     }
 }
 </script>
