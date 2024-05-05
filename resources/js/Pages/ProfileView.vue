@@ -181,6 +181,7 @@
     </section>
 </template>
 <script>
+window.Telegram.WebApp.BackButton.hide()
 export default {
     data() {
         return {

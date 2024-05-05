@@ -282,6 +282,8 @@ document.addEventListener(
     }
 )
 
+window.Telegram.WebApp.BackButton.hide()
+
 export default {
     data() {
         return {
