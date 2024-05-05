@@ -163,6 +163,12 @@ export default {
             .then(data => {
                 this.dc_coins = data.balance
             })
+        let back = window.Telegram.WebApp.BackButton
+        back.show()
+        back.onClick(() => {
+            location.replace('/home')
+        })
+
     }
 }
 document.addEventListener('DOMContentLoaded', () => {

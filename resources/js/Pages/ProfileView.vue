@@ -181,7 +181,6 @@
     </section>
 </template>
 <script>
-window.Telegram.WebApp.BackButton.hide()
 export default {
     data() {
         return {
@@ -196,6 +195,7 @@ export default {
             .then(data => {
                 this.dc_coins = data.balance
             })
+        window.Telegram.WebApp.BackButton.hide()
     }
 }
 </script>

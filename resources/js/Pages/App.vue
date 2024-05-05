@@ -25,6 +25,9 @@ export default {
         }
 
         location.replace('/profile')
+    },
+    created() {
+        window.Telegram.WebApp.BackButton.hide()
     }
 }
 

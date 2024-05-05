@@ -281,9 +281,6 @@ document.addEventListener(
         passive: false
     }
 )
-
-window.Telegram.WebApp.BackButton.hide()
-
 export default {
     data() {
         return {
@@ -313,6 +310,9 @@ export default {
         }).subscribe()
 
         this.centrifugo.connect()
+    },
+    created() {
+        window.Telegram.WebApp.BackButton.hide()
     }
 }
 </script>
