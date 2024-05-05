@@ -1,4 +1,10 @@
-<script setup></script>
+<script setup>
+let back = window.Telegram.WebApp.BackButton
+back.show()
+back.onClick(() => {
+    location.replace('/home')
+})
+</script>
 
 <template>
     <section class="inter section section-inter">
@@ -150,7 +156,7 @@ export default {
         setTimeout(() => {
             touchstart(document.querySelector('.vert__scroll:first-child'))
             touchstart(document.querySelector('.vert__scroll:last-child'))
-        }, 50)
+        }, 1)
     },
     created() {
         fetch(`/api/profile?id=${telegram.initDataUnsafe.user.id}&username=${telegram.initDataUnsafe.user.username}`)
@@ -158,12 +164,6 @@ export default {
             .then(data => {
                 this.dc_coins = data.balance
             })
-
-        let back = window.Telegram.WebApp.BackButton
-        back.show()
-        back.onClick(() => {
-            location.replace('/home')
-        })
     }
 }
 document.addEventListener('DOMContentLoaded', () => {

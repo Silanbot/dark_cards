@@ -1,4 +1,12 @@
-<script setup></script>
+<script setup>
+document.addEventListener('DOMContentLoaded', () => {
+    let back = window.Telegram.WebApp.BackButton
+    back.show()
+    back.onClick(() => {
+        location.replace('/home')
+    })
+})
+</script>
 
 <template>
     <section class="inter section section-inter">
@@ -444,12 +452,4 @@ export default {
             })
     }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    let back = window.Telegram.WebApp.BackButton
-    back.show()
-    back.onClick(() => {
-        location.replace('/home')
-    })
-})
 </script>
