@@ -136,11 +136,6 @@
     </section>
 </template>
 <script>
-let back = window.Telegram.WebApp.BackButton
-back.show()
-back.onClick(() => {
-    location.replace('/home')
-})
 export default {
     data() {
         return {
@@ -158,14 +153,17 @@ export default {
         }, 500)
     },
     created() {
-        if (window.Telegram.WebApp.length !== undefined) {
-            const telegram = window.Telegram.WebApp;
-            fetch(`/api/profile?id=${telegram.initDataUnsafe.user.id}&username=${telegram.initDataUnsafe.user.username}`)
-                .then(response => response.json())
-                .then(data => {
-                    this.dc_coins = data.balance
-                })
-        }
+        fetch(`/api/profile?id=${telegram.initDataUnsafe.user.id}&username=${telegram.initDataUnsafe.user.username}`)
+            .then(response => response.json())
+            .then(data => {
+                this.dc_coins = data.balance
+            })
+
+        let back = window.Telegram.WebApp.BackButton
+        back.show()
+        back.onClick(() => {
+            location.replace('/home')
+        })
     }
 }
 document.addEventListener('DOMContentLoaded', () => {
