@@ -202,7 +202,7 @@ function touchstart(element) {
         console.log(staticOffsetY)
         console.log(nanoOffset)
         if (staticOffsetY > 70000) {
-            move(true, 4)
+            move(true, 3)
         }
     //     else if (staticOffsetY > 30) {
     //       countOffset = 4;
