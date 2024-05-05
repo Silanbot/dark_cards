@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class StatisticController extends Controller
 {
-    public function __invokable(Request $request): JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
         return response()->json(ActivityLog::query()->where('user_id', $request->id)->get());
     }
