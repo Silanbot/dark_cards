@@ -165,7 +165,7 @@
         </div>
         <footer class="footer">
             <div class="footer__inner">
-                <a @click="$router.push('/')" class="footer__item">
+                <a href="/profile" class="footer__item">
                     <div class="svg">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
