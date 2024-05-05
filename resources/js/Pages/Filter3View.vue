@@ -1,10 +1,4 @@
-<script setup>
-let back = window.Telegram.WebApp.BackButton
-back.show()
-back.onClick(() => {
-    location.replace('/home')
-})
-</script>
+<script setup></script>
 
 <template>
     <section class="inter section section-inter">
@@ -142,6 +136,11 @@ back.onClick(() => {
     </section>
 </template>
 <script>
+let back = window.Telegram.WebApp.BackButton
+back.show()
+back.onClick(() => {
+    location.replace('/home')
+})
 export default {
     data() {
         return {
