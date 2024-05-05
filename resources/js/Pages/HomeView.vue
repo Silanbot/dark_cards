@@ -213,8 +213,13 @@
     </section>
 </template>
 <script>
+let back = window.Telegram.WebApp.BackButton
+back.show()
+back.onClick(() => {
+    location.replace('/profile')
+})
+
 import axios from "axios";
-import {Centrifuge} from "centrifuge";
 document.addEventListener(
     'touchmove',
     function (event) {

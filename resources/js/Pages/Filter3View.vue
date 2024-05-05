@@ -136,6 +136,11 @@
     </section>
 </template>
 <script>
+let back = window.Telegram.WebApp.BackButton
+back.show()
+back.onClick(() => {
+    location.replace('/home')
+})
 export default {
     data() {
         return {

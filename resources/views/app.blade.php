@@ -15,6 +15,7 @@
     <script>
         const telegram = window.Telegram.WebApp
         telegram.expand()
+        telegram.enableClosingConfirmation()
     </script>
     @vite(['resources/js/app.js', 'resources/css/app.scss'])
     @inertiaHead
