@@ -150,11 +150,11 @@ export default {
         }, 500)
     },
     created() {
-        // fetch(`/api/profile?id=${telegram.initDataUnsafe.user.id}&username=${telegram.initDataUnsafe.user.username}`)
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         this.dc_coins = data.balance
-        //     })
+        fetch(`/api/profile?id=${telegram.initDataUnsafe.user.id}&username=${telegram.initDataUnsafe.user.username}`)
+            .then(response => response.json())
+            .then(data => {
+                this.dc_coins = data.balance
+            })
         let back = window.Telegram.WebApp.BackButton
         back.show()
         back.onClick(() => {
