@@ -231,7 +231,7 @@ export default {
             dc_coins: 0,
             dollars: 0,
             token: '',
-            range: '',
+            range: '1м - 1м',
         }
     },
     methods: {
