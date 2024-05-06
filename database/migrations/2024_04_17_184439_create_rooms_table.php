@@ -18,7 +18,7 @@ return new class extends Migration
             $table->float('bank');
             $table->tinyInteger('game_type');
             $table->unsignedTinyInteger('max_gamers')->default(2);
-            $table->jsonb('deck');
+            $table->jsonb('deck')->nullable();
             $table->timestamps();
         });
     }
