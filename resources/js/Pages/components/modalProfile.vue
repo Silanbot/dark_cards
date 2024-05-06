@@ -1,4 +1,9 @@
+<script setup>
+import modalChat from './modalChat.vue'
+</script>
+
 <template>
+    <modalChat @hide="modalChatShow = false" v-if="modalChatShow" />
     <div class="background-modal">
         <div class="modal">
             <div class="modal__inner">
@@ -35,7 +40,7 @@
                 </div>
             </div>
             <div class="modal__btns">
-                <div class="modal__btns__item">
+                <div class="modal__btns__item" @click="modalChatShow = true">
                     <span>Жалоба</span>
                 </div>
                 <div class="modal__btns__item second">
@@ -64,7 +69,8 @@ export default {
         return {
             total_wins: 0,
             total_coins: 0,
-            total_dollars: 0
+            total_dollars: 0,
+            modalChatShow: false,
         }
     }
 }
