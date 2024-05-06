@@ -16,7 +16,7 @@
         const telegram = window.Telegram.WebApp
         telegram.expand()
         telegram.enableClosingConfirmation()
-        telegram.headerColor = '#150808'
+        telegram.headerColor = '#3B0F0F'
     </script>
     @vite(['resources/js/app.js', 'resources/css/app.scss'])
     @inertiaHead
