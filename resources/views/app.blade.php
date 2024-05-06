@@ -9,13 +9,14 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
 
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0" />
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="/js/telegram-web-app.js"></script>
     <script src="https://unpkg.com/centrifuge@5.0.0/dist/centrifuge.js"></script>
-    <style rel="/css/base.css"></style>
+    <link rel="stylesheet" href="/css/base.css">
     <script>
         const telegram = window.Telegram.WebApp
         telegram.expand()
         telegram.enableClosingConfirmation()
+        telegram.headerColor = '#150808'
     </script>
     @vite(['resources/js/app.js', 'resources/css/app.scss'])
     @inertiaHead
