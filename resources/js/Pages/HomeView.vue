@@ -186,7 +186,7 @@
                     </div>
                     <span>Профиль</span>
                 </a>
-                <a class="footer__play" @click="createGame">
+                <a class="footer__play" href="#">
                     <img src="./sources/play.png" alt=""/>
                 </a>
 
