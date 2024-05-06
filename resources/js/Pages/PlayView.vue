@@ -296,7 +296,7 @@ export default {
     async mounted() {
         const response = await (await fetch(`/api/auth/token?id=1`)).json()
         this.token = response.token
-        this.centrifugo = new Centrifuge('ws://127.0.0.1:3000/connection/websocket', {
+        this.centrifugo = new Centrifuge('wss://darkcards.de:3000/connection/websocket', {
             token: this.token
         })
         this.centrifugo.on('connected', () => {

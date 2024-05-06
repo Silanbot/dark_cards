@@ -399,7 +399,7 @@
                     </div>
                     <span>Профиль</span>
                 </a>
-                <a href="/play/11" class="footer__play">
+                <a @click="createGame" class="footer__play">
                     <img src="./sources/play.png" alt=""/>
                 </a>
 
@@ -426,6 +426,8 @@
     </section>
 </template>
 <script>
+import axios from "axios";
+
 export default {
     data() {
         return {
@@ -435,6 +437,15 @@ export default {
         }
     },
     methods: {
+        createGame() {
+            axios.post('/api/create-game', {
+                bank: 100,
+                game_type: this.selectMode,
+                user_id: window.Telegram.WebApp.initDataUnsafe.user.id,
+            }).then(response => {
+                location.replace('/play/' + response.data.room_id)
+            })
+        }
     },
     created() {
         fetch(`/api/profile?id=${window.Telegram.WebApp.initDataUnsafe.user.id}&username=${window.Telegram.WebApp.initDataUnsafe.user.username}`)

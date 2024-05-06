@@ -5,10 +5,10 @@
         <div class="inter__header">
             <div class="inter__monet">
                 <img src="./sources/coin1.svg" alt=""/>
-                <span>44 719</span>
+                <span>{{ dc_coins}}</span>
             </div>
             <div class="inter__monet">
-                <span>153 028</span>
+                <span>0</span>
                 <img src="./sources/coin2.svg" alt=""/>
             </div>
         </div>
@@ -109,7 +109,7 @@
                     </div>
                     <span>Профиль</span>
                 </a>
-                <a href="/play/1" class="footer__play">
+                <a @click="createGame" class="footer__play">
                     <img src="./sources/play.png" alt=""/>
                 </a>
 
@@ -136,6 +136,8 @@
     </section>
 </template>
 <script>
+import axios from "axios";
+
 let back = window.Telegram.WebApp.BackButton
 back.show()
 back.onClick(() => {
@@ -149,7 +151,16 @@ export default {
             dollars: 0,
         }
     },
-    methods() {
+    methods: {
+        createGame() {
+            axios.post('/api/create-game', {
+                bank: 100,
+                game_type: this.selectMode,
+                user_id: window.Telegram.WebApp.initDataUnsafe.user.id,
+            }).then(response => {
+                location.replace('/play/' + response.data.room_id)
+            })
+        }
     },
     mounted() {
         setTimeout(() => {
