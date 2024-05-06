@@ -53,21 +53,6 @@
                                 <span func="minus" fz="18">1м</span>
                                 <span func="minus" fz="16">10м</span>
                                 <span func="minus" fz="14">100м</span>
-                                <span func="plus" fz="10">100</span>
-                                <span func="plus" fz="12">1к</span>
-                                <span func="plus" fz="14">10к</span>
-                                <span func="plus" fz="16">100к</span>
-                                <span func="minus" fz="18">1м</span>
-                                <span func="minus" fz="16">10м</span>
-                                <span func="minus" fz="14">100м</span>
-                                <span func="plus" fz="10">100</span>
-                                <span func="plus" fz="12">1к</span>
-                                <span func="plus" fz="14">10к</span>
-                                <span func="plus" fz="16">100к</span>
-                                <span func="minus" fz="18">1м</span>
-                                <span func="minus" fz="16">10м</span>
-                                <span func="minus" fz="14">100м</span>
-                                <!-- <span func="minus" fz="10">1</span> -->
                             </div>
                             <div class="vert__scroll">
                                 <span func="plus" fz="10">100</span>
@@ -81,7 +66,7 @@
                                 <!-- <span func="minus" fz="10">1</span> -->
                             </div>
                         </div>
-                        <div class="vert__button">Применить</div>
+                        <div class="vert__button" @click="submitFilters">Применить</div>
                     </div>
                 </div>
             </section>
@@ -109,7 +94,7 @@
                     </div>
                     <span>Профиль</span>
                 </a>
-                <a @click="createGame" class="footer__play">
+                <a href="/home" class="footer__play">
                     <img src="./sources/play.png" alt=""/>
                 </a>
 
@@ -136,8 +121,6 @@
     </section>
 </template>
 <script>
-import axios from "axios";
-
 let back = window.Telegram.WebApp.BackButton
 back.show()
 back.onClick(() => {
@@ -149,17 +132,15 @@ export default {
             selectMode: 1,
             dc_coins: 0,
             dollars: 0,
+            range: []
         }
     },
     methods: {
-        createGame() {
-            axios.post('/api/create-game', {
-                bank: 100,
-                game_type: this.selectMode,
-                user_id: window.Telegram.WebApp.initDataUnsafe.user.id,
-            }).then(response => {
-                location.replace('/play/' + response.data.room_id)
-            })
+        submitFilters() {
+            const elems = document.querySelectorAll('span[fz="18"]')
+            elems.forEach(i => this.range.push(i.textContent))
+
+            location.replace('/home?range=' + this.range.join('-'))
         }
     },
     mounted() {
@@ -169,11 +150,11 @@ export default {
         }, 500)
     },
     created() {
-        fetch(`/api/profile?id=${telegram.initDataUnsafe.user.id}&username=${telegram.initDataUnsafe.user.username}`)
-            .then(response => response.json())
-            .then(data => {
-                this.dc_coins = data.balance
-            })
+        // fetch(`/api/profile?id=${telegram.initDataUnsafe.user.id}&username=${telegram.initDataUnsafe.user.username}`)
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         this.dc_coins = data.balance
+        //     })
         let back = window.Telegram.WebApp.BackButton
         back.show()
         back.onClick(() => {
@@ -210,8 +191,6 @@ function touchstart(element) {
         cursor.y = event.changedTouches[0].clientY * -1
         const nanoOffset = offsetY / 5
         staticOffsetY += nanoOffset
-        console.log(staticOffsetY)
-        console.log(nanoOffset)
         if (staticOffsetY > 70000) {
             move(true, 3)
         }
@@ -327,7 +306,6 @@ function touchstart(element) {
                 if (num > 7) {
                     num = 1
                 }
-                console.log(span.style.fontSize)
             }
             setTimeout(() => {
                 document.body.classList.remove('anim-none')

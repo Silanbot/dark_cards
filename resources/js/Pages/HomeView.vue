@@ -76,12 +76,12 @@
                     <a href="/filter3" class="play__down__block">
                         <template v-if="selectMode == 1">
                             <img src="./sources/2/arrow.svg" alt=""/>
-                            <span>$ 100 - 1К</span>
+                            <span>$ {{ range }}</span>
                         </template>
                         <template v-if="selectMode == 2">
                             <img src="./sources/2/arrow.svg" alt=""/>
                             <img src="./sources/2/dc2.svg" alt=""/>
-                            <span>100 - 1К</span>
+                            <span>{{ range }}</span>
                         </template>
                     </a>
                     <div class="play__down__text">УКАЖИТЕ НЕОБХОДИМЫЙ ДИАПАЗОН</div>
@@ -231,6 +231,7 @@ export default {
             dc_coins: 0,
             dollars: 0,
             token: '',
+            range: '',
         }
     },
     methods: {
@@ -245,16 +246,20 @@ export default {
         }
     },
     created() {
-        fetch(`/api/profile?id=${window.Telegram.WebApp.initDataUnsafe.user.id}&username=${window.Telegram.WebApp.initDataUnsafe.user.username}`)
-            .then(response => response.json())
-            .then(data => {
-                this.dc_coins = data.balance
-            })
+        // fetch(`/api/profile?id=${window.Telegram.WebApp.initDataUnsafe.user.id}&username=${window.Telegram.WebApp.initDataUnsafe.user.username}`)
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         this.dc_coins = data.balance
+        //     })
         let back = window.Telegram.WebApp.BackButton
         back.show()
         back.onClick(() => {
             location.replace('/profile')
         })
     },
+    mounted() {
+        const params = new URLSearchParams(window.location.search)
+        this.range = params.get('range').split('-').join(' - ')
+    }
 }
 </script>
