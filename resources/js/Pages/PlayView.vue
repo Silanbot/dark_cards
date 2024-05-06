@@ -75,7 +75,7 @@ import modalDialog from './components/modalDialog.vue'
             <img src="./sources/back-3.png" class="back-3" alt="" />
             <section class="section-game game">
                 <div class="game__players">
-                    <div class="game__players__player">
+                    <div class="game__players__player" @click="modalProfileShow = true">
                         <div class="game__players__player__cart">
                             <img src="./sources/cartes.svg" alt="" />
                         </div>
@@ -294,9 +294,11 @@ export default {
         }
     },
     async mounted() {
-        const response = await (await fetch(`/api/auth/token?id=1`)).json()
+        window.Telegram.WebApp.BackButton.hide()
+
+        const response = await (await fetch(`/api/auth/token?id=${window.Telegram.WebApp.initDataUnsafe.user.id}`)).json()
         this.token = response.token
-        this.centrifugo = new Centrifuge('wss://darkcards.de:3000/connection/websocket', {
+        this.centrifugo = new Centrifuge('ws://darkcards.de:3000/connection/websocket', {
             token: this.token
         })
         this.centrifugo.on('connected', () => {
@@ -311,9 +313,6 @@ export default {
 
         this.centrifugo.connect()
     },
-    created() {
-        window.Telegram.WebApp.BackButton.hide()
-    }
 }
 </script>
 <style lang="scss" scoped>
