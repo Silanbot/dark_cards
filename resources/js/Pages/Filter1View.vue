@@ -399,7 +399,7 @@
                     </div>
                     <span>Профиль</span>
                 </a>
-                <a @click="createGame" class="footer__play">
+                <a href="/home" class="footer__play">
                     <img src="./sources/play.png" alt=""/>
                 </a>
 
