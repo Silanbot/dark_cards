@@ -4,7 +4,7 @@ import modalChat from './modalChat.vue'
 
 <template>
     <modalChat @hide="modalChatShow = false" v-if="modalChatShow" />
-    <div class="background-modal">
+    <div class="background-modal" v-if="!modalChatShow">
         <div class="modal">
             <div class="modal__inner">
                 <div class="modal__photo">
