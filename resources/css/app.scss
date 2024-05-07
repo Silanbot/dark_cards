@@ -531,11 +531,11 @@ body {
             }
 
             .game__cart__cold__count {
-                font-size: 20px;
+                font-size: 6vw;
                 color: white;
-                margin-left: 10px;
+                margin-left: 2vw;
                 position: relative;
-                top: 10px;
+                top: 1vw;
             }
 
             .game__cart__cold__carts {
@@ -671,6 +671,27 @@ body {
     bottom: -10dvh;
 
     img {
-        width: 100%;
+        position: absolute;
+        top: -160px;
+        left: -13%;
+        width: 30%;
+    }
+}
+
+#cards {
+    margin-top: -8px;
+    margin-left: -8px;
+    img {
+        position: absolute;
+        width: 13vw;
+        top: -25vh;
+        left: -5vw;
+        transform: translate(0, 46vh);
+    }
+    img:not([data-player=me]) {
+        transition: transform 0.3s, width 0.3s, left 0.3s, top 0.3s;
+    }
+    img[data-player=me] {
+        transition: width 0.3s, left 0.3s, top 0.3s;
     }
 }
