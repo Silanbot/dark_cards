@@ -146,6 +146,8 @@ export default {
             } else {
                 localStorage.setItem('cash', this.range.join(' - '))
             }
+
+            location.replace('/home')
         }
     },
     mounted() {
