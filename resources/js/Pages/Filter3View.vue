@@ -139,8 +139,13 @@ export default {
         submitFilters() {
             const elems = document.querySelectorAll('span[fz="18"]')
             elems.forEach(i => this.range.push(i.textContent))
+            const url = new URL(document.location).searchParams
 
-            location.replace('/home?range=' + this.range.join('-'))
+            if (url.has('coins')) {
+                localStorage.setItem('coins', this.range.join(' - '))
+            } else {
+                localStorage.setItem('cash', this.range.join(' - '))
+            }
         }
     },
     mounted() {

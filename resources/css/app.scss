@@ -681,6 +681,7 @@ body {
 #cards {
     margin-top: -8px;
     margin-left: -8px;
+
     img {
         position: absolute;
         width: 13vw;
@@ -688,10 +689,22 @@ body {
         left: -5vw;
         transform: translate(0, 46vh);
     }
+
     img:not([data-player=me]) {
         transition: transform 0.3s, width 0.3s, left 0.3s, top 0.3s;
     }
+
     img[data-player=me] {
         transition: width 0.3s, left 0.3s, top 0.3s;
+    }
+}
+
+svg.active {
+    path.gofill {
+        fill: #eb3d3d;
+    }
+
+    path.gostroke {
+        stroke: #eb3d3d;
     }
 }
