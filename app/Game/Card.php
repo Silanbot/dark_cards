@@ -4,46 +4,51 @@ declare(strict_types=1);
 
 namespace App\Game;
 
-use App\Contracts\CardContract;
-
-final readonly class Card implements CardContract
+final class Card extends BasicEnum
 {
     public function __construct(
-        public string $suit,
-        public string $rank,
-        public bool $defeated
+        private Suit $suit,
+        private Rank $rank
     ) {
     }
 
-    public function isHigherThan(CardContract $card, string $trumpSuit): bool
+    public function getCardRating(): int
     {
-        if ($this->suit === $trumpSuit && $card->suit !== $trumpSuit) {
-            return true;
-        }
-        if ($this->suit !== $trumpSuit && $card->suit === $trumpSuit) {
-            return false;
-        }
-        if ($this->suit === $card->suit) {
-            $ranks = ['6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-
-            return array_search($this->rank, $ranks) > array_search($card->rank, $ranks);
-        }
-
-        return false;
+        return $this->getRank()->getRankRating($this->getSuit()->isTrump());
     }
 
-    public function isDefeated(): bool
+    public function setAsTrump(): void
     {
-        return $this->defeated;
+        $this->getSuit()->setIsTrump(true);
     }
 
-    public function getSuit(): string
+    public function getSuitName(): string
     {
-        return $this->suit;
+        return $this->getSuit()->getName();
     }
 
-    public function getRank(): string
+    public function isTrump(): bool
+    {
+        return $this->getSuit()->isTrump();
+    }
+
+    public function setRank(Rank $rank): void
+    {
+        $this->rank = $rank;
+    }
+
+    public function setSuit(Suit $suit): void
+    {
+        $this->suit = $suit;
+    }
+
+    public function getRank(): Rank
     {
         return $this->rank;
+    }
+
+    public function getSuit(): Suit
+    {
+        return $this->suit;
     }
 }

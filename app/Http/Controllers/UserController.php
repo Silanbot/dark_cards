@@ -30,6 +30,7 @@ class UserController extends Controller
         $user = User::query()->where('id', $request->id)->first();
 
         $user->update(['balance' => $request->balance]);
+
         return response()->json([
             'balance' => $user->balance,
         ]);

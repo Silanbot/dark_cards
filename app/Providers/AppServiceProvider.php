@@ -31,6 +31,6 @@ class AppServiceProvider extends ServiceProvider
             return $client;
         });
 
-        $this->app->bind(DeckContract::class, fn (Application $application) => new Deck());
+//        $this->app->bind(DeckContract::class, fn (Application $application) => new Deck());
     }
 }

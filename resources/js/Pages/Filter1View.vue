@@ -18,27 +18,27 @@
                     <div class="filter__block border-bottom">
                         <div class="filter__title">Кол-во игроков</div>
                         <div class="filter__buttons">
-                            <div class="filter__buttons__item active" name="max_gamers_2" onclick="this.classList.toggle('active')">
+                            <div class="filter__buttons__item active" :class="{active: paramExists('max_gamers_2')}" name="max_gamers_2" onclick="this.classList.toggle('active')">
                                 <div class="filter__buttons__item__inner">
                                     <div class="cont">2</div>
                                 </div>
                             </div>
-                            <div class="filter__buttons__item" name="max_gamers_3" onclick="this.classList.toggle('active')">
+                            <div class="filter__buttons__item" :class="{active: paramExists('max_gamers_3')}" name="max_gamers_3" onclick="this.classList.toggle('active')">
                                 <div class="filter__buttons__item__inner">
                                     <div class="cont">3</div>
                                 </div>
                             </div>
-                            <div class="filter__buttons__item" name="max_gamers_4" onclick="this.classList.toggle('active')">
+                            <div class="filter__buttons__item" :class="{active: paramExists('max_gamers_4')}" name="max_gamers_4" onclick="this.classList.toggle('active')">
                                 <div class="filter__buttons__item__inner">
                                     <div class="cont">4</div>
                                 </div>
                             </div>
-                            <div class="filter__buttons__item" name="max_gamers_5" onclick="this.classList.toggle('active')">
+                            <div class="filter__buttons__item" :class="{active: paramExists('max_gamers_5')}" name="max_gamers_5" onclick="this.classList.toggle('active')">
                                 <div class="filter__buttons__item__inner">
                                     <div class="cont">5</div>
                                 </div>
                             </div>
-                            <div class="filter__buttons__item" name="max_gamers_6" onclick="this.classList.toggle('active')">
+                            <div class="filter__buttons__item" :class="{active: paramExists('max_gamers_6')}" name="max_gamers_6" onclick="this.classList.toggle('active')">
                                 <div class="filter__buttons__item__inner">
                                     <div class="cont">6</div>
                                 </div>
@@ -95,18 +95,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="filter__buttons__item" name="cards_24" onclick="this.classList.toggle('active')">
+                            <div class="filter__buttons__item" :class="{active: paramExists('cards_24')}" name="cards_24" onclick="this.classList.toggle('active')">
                                 <div class="filter__buttons__item__inner">
                                     <div class="cont">24</div>
                                 </div>
                             </div>
-                            <div class="filter__buttons__item" name="cards_36" onclick="this.classList.toggle('active')">
+                            <div class="filter__buttons__item" :class="{active: paramExists('cards_36')}" name="cards_36" onclick="this.classList.toggle('active')">
                                 <div class="filter__buttons__item__title filter__title">Колода</div>
                                 <div class="filter__buttons__item__inner">
                                     <div class="cont">36</div>
                                 </div>
                             </div>
-                            <div class="filter__buttons__item" name="cards_52" onclick="this.classList.toggle('active')">
+                            <div class="filter__buttons__item" :class="{active: paramExists('cards_52')}" name="cards_52" onclick="this.classList.toggle('active')">
                                 <div class="filter__buttons__item__inner">
                                     <div class="cont">52</div>
                                 </div>
@@ -116,7 +116,7 @@
                     <div class="filter__rows">
                         <div class="filter__rows__title">Режимы игры</div>
                         <div class="filter__rows__row">
-                            <div class="filter__rows__item" name="thrown" onclick="this.classList.toggle('active')">
+                            <div class="filter__rows__item" :class="{active: paramExists('thrown')}" name="thrown" onclick="this.classList.toggle('active')">
                                 <svg
                                     width="75"
                                     height="102"
@@ -144,7 +144,7 @@
                                 </svg>
                                 <span>Подкидной</span>
                             </div>
-                            <div class="filter__rows__item" name="neighbors" onclick="this.classList.toggle('active')">
+                            <div class="filter__rows__item" :class="{active: paramExists('neighbors')}" name="neighbors" onclick="this.classList.toggle('active')">
                                 <svg
                                     width="119"
                                     height="68"
@@ -182,7 +182,7 @@
                                 </svg>
                                 <span>Соседи</span>
                             </div>
-                            <div class="filter__rows__item" name="cheaters" onclick="this.classList.toggle('active')">
+                            <div class="filter__rows__item" :class="{active: paramExists('cheaters')}" name="cheaters" onclick="this.classList.toggle('active')">
                                 <svg
                                     width="72"
                                     height="71"
@@ -203,7 +203,7 @@
                                 </svg>
                                 <span>С шулерами</span>
                             </div>
-                            <div class="filter__rows__item" name="classic" onclick="this.classList.toggle('active')">
+                            <div class="filter__rows__item" :class="{active: paramExists('classic')}" name="classic" onclick="this.classList.toggle('active')">
                                 <svg
                                     width="74"
                                     height="66"
@@ -251,7 +251,7 @@
                             </div>
                         </div>
                         <div class="filter__rows__row">
-                            <div class="filter__rows__item" name="transferable" onclick="this.classList.toggle('active')">
+                            <div class="filter__rows__item" :class="{active: paramExists('transferable')}" name="transferable" onclick="this.classList.toggle('active')">
                                 <svg
                                     width="69"
                                     height="102"
@@ -275,7 +275,7 @@
                                 </svg>
                                 <span>Переводной</span>
                             </div>
-                            <div class="filter__rows__item" name="all" onclick="this.classList.toggle('active')">
+                            <div class="filter__rows__item" :class="{active: paramExists('all')}" name="all" onclick="this.classList.toggle('active')">
                                 <svg
                                     width="119"
                                     height="74"
@@ -326,7 +326,7 @@
                                 </svg>
                                 <span>Все</span>
                             </div>
-                            <div class="filter__rows__item" name="honest" onclick="this.classList.toggle('active')">
+                            <div class="filter__rows__item" :class="{active: paramExists('honest')}" name="honest" onclick="this.classList.toggle('active')">
                                 <svg
                                     width="96"
                                     height="50"
@@ -357,7 +357,7 @@
                                 </svg>
                                 <span>Честная игра</span>
                             </div>
-                            <div class="filter__rows__item" name="draw" onclick="this.classList.toggle('active')">
+                            <div class="filter__rows__item" :class="{active: paramExists('draw')}" name="draw" onclick="this.classList.toggle('active')">
                                 <svg
                                     width="105"
                                     height="51"
@@ -443,14 +443,17 @@ export default {
             filters.push(`select_mode_${this.selectMode}`)
             localStorage.setItem('params', filters.join(','))
             location.replace('/home?')
+        },
+        paramExists(name) {
+            return localStorage.getItem('params') !== null ? localStorage.getItem('params').split(',').includes(name) : false
         }
     },
     created() {
-        // fetch(`/api/profile?id=${window.Telegram.WebApp.initDataUnsafe.user.id}&username=${window.Telegram.WebApp.initDataUnsafe.user.username}`)
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         this.dc_coins = data.balance
-        //     })
+        fetch(`/api/profile?id=${window.Telegram.WebApp.initDataUnsafe.user.id}&username=${window.Telegram.WebApp.initDataUnsafe.user.username}`)
+            .then(response => response.json())
+            .then(data => {
+                this.dc_coins = data.balance
+            })
         let back = window.Telegram.WebApp.BackButton
         back.show()
         back.onClick(() => {
