@@ -161,6 +161,7 @@ export default {
             const elems = document.querySelectorAll('span[fz="18"]')
             if (parseFloat(elems[0].dataset.sum) > parseFloat(elems[1].dataset.sum)) {
                 window.Telegram.WebApp.showAlert('Начальная ставка не должна превышать конечную')
+                return
             }
             elems.forEach(i => this.range.push(i.textContent))
             const url = new URL(document.location).searchParams
