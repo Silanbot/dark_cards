@@ -14,56 +14,77 @@
         </div>
         <div class="inter__inner el-2" style="margin-top: 0">
             <section class="section-vert vert section">
-                <!-- <div class="test" style="">
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-                  <div>12332131</div>
-
-                </div> -->
                 <div class="vert__inner">
                     <div class="vert__title">Диапазон ставки</div>
                     <div class="vert__block">
-                        <div class="vert__scrollblock">
+                        <div class="vert__scrollblock" v-if="searchParamHas('cash')">
                             <div class="vert__scroll">
-                                <span func="plus" fz="10">100</span>
-                                <span func="plus" fz="12">1к</span>
-                                <span func="plus" fz="14">10к</span>
-                                <span func="plus" fz="16">100к</span>
-                                <span func="minus" fz="18">1м</span>
-                                <span func="minus" fz="16">10м</span>
-                                <span func="minus" fz="14">100м</span>
+                                <span func="plus" data-sum="0.5" fz="10">0,5</span>
+                                <span func="plus" data-sum="1" fz="12">1</span>
+                                <span func="plus" data-sum="3" fz="14">3</span>
+                                <span func="plus" data-sum="5" fz="16">5</span>
+                                <span func="minus" data-sum="10" fz="18">10</span>
+                                <span func="minus" data-sum="25" fz="16">25</span>
+                                <span func="minus" data-sum="50" fz="14">50</span>
+                                <span func="minus" data-sum="100" fz="14">100</span>
+                                <span func="minus" data-sum="250" fz="14">250</span>
+                                <span func="minus" data-sum="500" fz="14">500</span>
+                                <span func="minus" data-sum="1000" fz="14">1к</span>
                             </div>
                             <div class="vert__scroll">
-                                <span func="plus" fz="10">100</span>
-                                <span func="plus" fz="12">1к</span>
-                                <span func="plus" fz="14">10к</span>
-                                <span func="plus" fz="16">100к</span>
-                                <span func="minus" fz="18">1м</span>
-                                <span func="minus" fz="16">10м</span>
-                                <span func="minus" fz="14">100м</span>
-
-                                <!-- <span func="minus" fz="10">1</span> -->
+                                <span func="plus" data-sum="0.5" fz="10">0,5</span>
+                                <span func="plus" data-sum="1" fz="12">1</span>
+                                <span func="plus" data-sum="3" fz="14">3</span>
+                                <span func="plus" data-sum="5" fz="16">5</span>
+                                <span func="minus" data-sum="10" fz="18">10</span>
+                                <span func="minus" data-sum="25" fz="16">25</span>
+                                <span func="minus" data-sum="50" fz="14">50</span>
+                                <span func="minus" data-sum="100" fz="14">100</span>
+                                <span func="minus" data-sum="250" fz="14">250</span>
+                                <span func="minus" data-sum="500" fz="14">500</span>
+                                <span func="minus" data-sum="1000" fz="14">1к</span>
+                            </div>
+                        </div>
+                        <div class="vert__scrollblock" v-else>
+                            <div class="vert__scroll">
+                                <span func="plus" data-sum="100" fz="10">100</span>
+                                <span func="plus" data-sum="250" fz="12">250</span>
+                                <span func="plus" data-sum="500" fz="14">500</span>
+                                <span func="plus" data-sum="1000" fz="16">1к</span>
+                                <span func="minus" data-sum="2500" fz="18">2.5к</span>
+                                <span func="minus" data-sum="5000" fz="16">5к</span>
+                                <span func="minus" data-sum="10000" fz="14">10к</span>
+                                <span func="plus" data-sum="25000" fz="14">25к</span>
+                                <span func="plus" data-sum="50000" fz="14">50к</span>
+                                <span func="plus" data-sum="100000" fz="14">100к</span>
+                                <span func="plus" data-sum="250000" fz="14">250к</span>
+                                <span func="minus" data-sum="500000" fz="14">500к</span>
+                                <span func="minus" data-sum="1000000" fz="14">1м</span>
+                                <span func="minus" data-sum="2500000" fz="14">2.5м</span>
+                                <span func="minus" data-sum="10000000" fz="14">10м</span>
+                                <span func="minus" data-sum="25000000" fz="14">25м</span>
+                                <span func="plus" data-sum="50000000" fz="14">50м</span>
+                                <span func="plus" data-sum="100000000" fz="14">100м</span>
+                            </div>
+                            <div class="vert__scroll">
+                                <span func="plus" data-sum="100" fz="10">100</span>
+                                <span func="plus" data-sum="250" fz="12">250</span>
+                                <span func="plus" data-sum="500" fz="14">500</span>
+                                <span func="plus" data-sum="1000" fz="16">1к</span>
+                                <span func="minus" data-sum="2500" fz="18">2.5к</span>
+                                <span func="minus" data-sum="5000" fz="10">5к</span>
+                                <span func="minus" data-sum="10000" fz="12">10к</span>
+                                <span func="plus" data-sum="25000" fz="14">25к</span>
+                                <span func="plus" data-sum="50000" fz="16">50к</span>
+                                <span func="plus" data-sum="100000" fz="10">100к</span>
+                                <span func="plus" data-sum="250000" fz="12">250к</span>
+                                <span func="minus" data-sum="500000" fz="14">500к</span>
+                                <span func="minus" data-sum="1000000" fz="16">1м</span>
+                                <span func="minus" data-sum="2500000" fz="10">2.5м</span>
+                                <span func="minus" data-sum="10000000" fz="12">10м</span>
+                                <span func="minus" data-sum="25000000" fz="14">25м</span>
+                                <span func="plus" data-sum="50000000" fz="16">50м</span>
+                                <span func="plus" data-sum="100000000" fz="10">100м</span>
                             </div>
                         </div>
                         <div class="vert__button" @click="submitFilters">Применить</div>
@@ -138,16 +159,24 @@ export default {
     methods: {
         submitFilters() {
             const elems = document.querySelectorAll('span[fz="18"]')
+            if (parseFloat(elems[0].dataset.sum) > parseFloat(elems[1].dataset.sum)) {
+                window.Telegram.WebApp.showAlert('Начальная ставка не должна превышать конечную')
+            }
             elems.forEach(i => this.range.push(i.textContent))
             const url = new URL(document.location).searchParams
 
             if (url.has('coins')) {
                 localStorage.setItem('coins', this.range.join(' - '))
+                localStorage.setItem('selectMode', '2')
             } else {
                 localStorage.setItem('cash', this.range.join(' - '))
+                localStorage.setItem('selectMode', '1')
             }
 
             location.replace('/home')
+        },
+        searchParamHas(name) {
+            return new URL(document.location).searchParams.has(name)
         }
     },
     mounted() {
@@ -157,11 +186,11 @@ export default {
         }, 500)
     },
     created() {
-        fetch(`/api/profile?id=${telegram.initDataUnsafe.user.id}&username=${telegram.initDataUnsafe.user.username}`)
-            .then(response => response.json())
-            .then(data => {
-                this.dc_coins = data.balance
-            })
+        // fetch(`/api/profile?id=${telegram.initDataUnsafe.user.id}&username=${telegram.initDataUnsafe.user.username}`)
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         this.dc_coins = data.balance
+        //     })
         let back = window.Telegram.WebApp.BackButton
         back.show()
         back.onClick(() => {
