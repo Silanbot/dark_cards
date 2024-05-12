@@ -369,8 +369,18 @@ export default {
 //
         //this.centrifugo.connect()
 
-        let gameCell = 0
-        let myCell = 0
+        let gameCells = []
+
+        function addGameCard(card) {
+            for (let i=0; i<gameCells.length; i++)
+                if (gameCells[i].length < 2) {
+                    gameCells[i].push(card)
+                    return {gameCell: i, top: gameCells[i].length==2}
+                }
+            let newGameCell = [card]
+            gameCells.push(newGameCell)
+            return {gameCell: gameCells.length-1, top: false}
+        }
 
         function getGamePos(cell) {
             cell = cell % 5
@@ -381,6 +391,11 @@ export default {
             if (cell==2) return [x*1.4, y*0.9]
             if (cell==3) return [x*0.8, y*1.3]
             if (cell==4) return [x*1.2, y*1.3]
+        }
+
+        function getTransform(r) {
+            let gamePos = getGamePos(r.gameCell)
+            return `translate(${gamePos[0] + (r.top?25:0)}px, ${gamePos[1] + (r.top?10:0)}px)` + (r.top?` rotate(10deg)`:'')
         }
 
         let gameCards = []
@@ -405,11 +420,11 @@ export default {
             if (state==1)
                 giveCards()
             if (state==2)
-                playerStep()
+                playerStep(Math.floor(Math.random()*2), codes[Math.floor(Math.random()*codes.length)])
             if (state==3)
                 endCards()
-            if (state==2 && gameCell < 5) return
             state++
+            if (state==4) state=2
         })
         document.addEventListener('touchmove', e=>{
             e.preventDefault()
@@ -426,14 +441,14 @@ export default {
                 if (ty < window.innerHeight*0.75) {
                     activeCard.dataset.player = ''
                     
-                    let gamePos = getGamePos(myCell++)
+                    let r = addGameCard(activeCard)
                     
-                    activeCard.style.transform = `translate(${gamePos[0]+25}px, ${gamePos[1]+10}px) rotate(10deg)`
+                    activeCard.style.transform = getTransform(r)
                     activeCard.style.width = '13vw'
                     activeCard.style.removeProperty('left')
                     activeCard.style.removeProperty('top')
 
-                    activeCard.style.zIndex = 5
+                    activeCard.style.zIndex = r.top?5:3
 
                     gameCards.push(activeCard)
 
@@ -579,19 +594,28 @@ export default {
         let cardBack = document.querySelector('#card-back')
         let cardStep = document.querySelector('#card-step')
 
-        function playerStep() {
-            let playerRect = players[1].getBoundingClientRect()
+        function playerStep(player, code) {
+            let playerRect = players[player].getBoundingClientRect()
             let playerX = playerRect.x + playerRect.width/2
             let playerY = playerRect.y + playerRect.height/2
-            let card = Array.from(document.querySelectorAll('[data-player="1"]')).filter(c=>!gameCards.includes(c))[0]
-            gameCards.push(card)
-            card.src = document.querySelector(`img[data-cardimg="${codes[Math.floor(Math.random()*codes.length)]}"]`).src
-            let gamePos = getGamePos(gameCell++)
-            card.style.transform = `translate(${gamePos[0]}px, ${gamePos[1]}px)`
+            let card = document.createElement('img')
+            card.dataset.card = code
+            card.dataset.player = player
             card.style.width = '13vw'
+            card.src = document.querySelector(`img[data-cardimg="${code}"]`).src
+            let r = addGameCard(card)
+            gameCards.push(card)
+            card.style.transform = `translate(${playerX}px, ${playerY}px)`
+            card.style.zIndex = r.top?5:3
+            cardCnt.appendChild(card)
+            card.offsetWidth
+            requestAnimationFrame(()=>{card.style.transform = getTransform(r)})
         }
 
+        window.playerStep = playerStep
+
         function endCards() {
+            gameCells = []
             for (let card of gameCards) {
                 card.style.transform = `translate(${window.innerWidth}px, ${window.innerHeight/2}px) rotate(${Math.random()*360}deg)`
                 setTimeout(()=>{card.src=cardBack.src}, 200)
