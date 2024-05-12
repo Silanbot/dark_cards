@@ -7,9 +7,7 @@ namespace App\Game;
 final class CardSorter
 {
     /**
-     * @param string $trumpSuitName
-     * @param Card[] $cards
-     * @return array
+     * @param  Card[]  $cards
      */
     public static function sort(string $trumpSuitName, array $cards): array
     {
@@ -29,8 +27,9 @@ final class CardSorter
         }
 
         foreach ($cardsSplitBySuitSortedBySuitName as $suitName => $cardsBySuit) {
-            if (!is_array($cardsBySuit)) {
+            if (! is_array($cardsBySuit)) {
                 unset($cardsSplitBySuitSortedBySuitName[$suitName]);
+
                 continue;
             }
 
@@ -41,6 +40,7 @@ final class CardSorter
         foreach ($cardsSplitBySuitSortedBySuitName as $suitName => $suitCards) {
             if ($trumpSuitName === $suitName) {
                 $trumpCards = $suitCards;
+
                 continue;
             }
 

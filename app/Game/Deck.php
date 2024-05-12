@@ -35,7 +35,7 @@ final class Deck
             new Suit(Suit::SPADE),
             new Suit(Suit::HEART),
             new Suit(Suit::CLUB),
-            new Suit(Suit::DIAMOND)
+            new Suit(Suit::DIAMOND),
         ];
     }
 
@@ -61,7 +61,7 @@ final class Deck
 
     public function isNotEmpty(): bool
     {
-        return !empty($this->suits);
+        return ! empty($this->suits);
     }
 
     public function getDeckCount(): int

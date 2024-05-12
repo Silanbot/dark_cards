@@ -16,7 +16,7 @@ abstract class BasicEnum
 
         $called = get_called_class();
 
-        if (!array_key_exists($called, $this->constCacheArray)) {
+        if (! array_key_exists($called, $this->constCacheArray)) {
             $reflection = new ReflectionClass($called);
             $this->constCacheArray[$called] = $reflection->getConstants();
         }
@@ -33,12 +33,14 @@ abstract class BasicEnum
         }
 
         $keys = array_map('strtolower', array_keys($constants));
+
         return in_array(strtolower($name), $keys);
     }
 
     protected function isValidValue(string $value, bool $strict = false): bool
     {
         $values = array_values($this->getConstants());
+
         return in_array($value, $values, $strict);
     }
 }

@@ -7,13 +7,21 @@ namespace App\Game;
 final class Rank extends BasicEnum
 {
     const ACE = 'Т';
+
     const KING = 'К';
+
     const QUEEN = 'Д';
+
     const JACK = 'В';
+
     const CARD10 = '10';
+
     const CARD9 = '9';
+
     const CARD8 = '8';
+
     const CARD7 = '7';
+
     const CARD6 = '6';
 
     const RANKS_RATING = [
@@ -25,10 +33,11 @@ final class Rank extends BasicEnum
         self::JACK => 6,
         self::QUEEN => 7,
         self::KING => 8,
-        self::ACE => 9
+        self::ACE => 9,
     ];
 
     private string $value;
+
     private int $rating;
 
     public function __construct(string $value)
@@ -60,8 +69,8 @@ final class Rank extends BasicEnum
 
     public function isExists(string $value): bool
     {
-        if (!array_key_exists($value, self::RANKS_RATING)) {
-            throw new RankException("rating for this card rank does not exist.");
+        if (! array_key_exists($value, self::RANKS_RATING)) {
+            throw new RankException('rating for this card rank does not exist.');
         }
 
         return true;

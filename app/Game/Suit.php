@@ -9,8 +9,11 @@ use App\Exceptions\RankException;
 final class Suit extends BasicEnum
 {
     const SPADE = '♠';
+
     const HEART = '♥';
+
     const CLUB = '♣';
+
     const DIAMOND = '♦';
 
     private bool $isTrump = false;
@@ -28,7 +31,7 @@ final class Suit extends BasicEnum
 
     private function isExists(string $name): bool
     {
-        if (!array_key_exists($name, $this->suits())) {
+        if (! array_key_exists($name, $this->suits())) {
             throw new RankException("{$name} suit not exists");
         }
 

@@ -31,7 +31,7 @@ final class Player
 
     public function getSimpleCardIndexes(): array
     {
-        return array_filter($this->cards, fn (Card $card) => !$card->isTrump());
+        return array_filter($this->cards, fn (Card $card) => ! $card->isTrump());
     }
 
     public function isOutOfTheGame(): bool

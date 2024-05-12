@@ -15,6 +15,7 @@ class Room extends Model
         'bank',
         'game_type',
         'max_gamers',
+        'deck',
     ];
 
     public function user(): BelongsTo

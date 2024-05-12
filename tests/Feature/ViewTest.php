@@ -20,6 +20,7 @@ test('play screen returns successfully', function () {
         'bank' => 100,
         'game_type' => 1,
         'max_gamers' => 2,
+        'deck' => json_encode([]),
     ]);
     $response = $this->get(route('play', ['room' => $room->id]));
 

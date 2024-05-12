@@ -6,5 +6,4 @@ namespace App\Exceptions;
 
 class RankException extends \Exception
 {
-
 }

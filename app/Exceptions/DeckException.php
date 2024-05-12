@@ -6,5 +6,4 @@ namespace App\Exceptions;
 
 class DeckException extends \Exception
 {
-
 }
