@@ -31,4 +31,8 @@ return [
         ],
     ],
 
+    'bot' => [
+        'api_key' => env('API_BOT_TOKEN'),
+    ]
+
 ];
