@@ -181,10 +181,87 @@ export default {
         }
     },
     mounted() {
-        setTimeout(() => {
-            touchstart(document.querySelector('.vert__scroll:first-child'))
-            touchstart(document.querySelector('.vert__scroll:last-child'))
-        }, 500)
+        
+        let scrollRect = document.querySelector('.vert__scrollblock').getBoundingClientRect()
+        let scrollMidY = (scrollRect.top+scrollRect.bottom)/2 + 20
+        let scrollH = scrollRect.bottom-scrollRect.top
+        let scrollE = document.querySelectorAll('.vert__scroll')
+        let scrollC = [document.querySelectorAll('.vert__scroll:first-child > span'), document.querySelectorAll('.vert__scroll:last-child > span')]
+        let scrollY = [0, 0]
+        let scrollSY = [0, 0]
+        
+        let scrollTop = [0, 1].map(i=>scrollC[i][0].getBoundingClientRect().top)
+        let scrollBottom = [0, 1].map(i=>scrollC[i][scrollC[i].length-1].getBoundingClientRect().bottom)
+
+        let lt = null
+
+        function update(t) {
+            
+            if (lt===null) lt=t
+            let dt = t-lt
+            lt = t
+
+            if (scroll) {
+                
+                scrollY[scrollIndex] = scrollSY[scrollIndex] + ty-tsy
+
+                for (let span of scrollC[scrollIndex]) {
+                    let spanRect = span.getBoundingClientRect()
+                    let spanMidY = (spanRect.top+spanRect.bottom)/2
+                    span.style.fontSize = 15 + Math.cos((spanMidY-scrollMidY)/scrollH*4)*5 + 'px'
+                }
+
+                for (let i=0; i<2; i++) {
+                    let st = scrollTop[i] + scrollY[i]
+                    let sb = scrollBottom[i] + scrollY[i]
+                    if (st > scrollMidY) scrollY[i] -= st - scrollMidY
+                    if (sb < scrollMidY) scrollY[i] -= sb - scrollMidY
+                    scrollE[i].style.transform = `translateY(${scrollY[i]}px)`
+                }
+
+            }
+
+            requestAnimationFrame(update)
+
+        }
+
+        requestAnimationFrame(update)
+
+        let scroll = false
+        let scrollIndex = 0
+        let tsy = 0
+        let tx = 0
+        let ty = 0
+
+        document.addEventListener('touchstart', e=>{
+            
+            let t = e.touches[0]
+            
+            tsy = t.clientY
+
+            tx = t.clientX
+            ty = t.clientY
+            
+            if (tx >= scrollRect.left && tx <= scrollRect.right &&
+                ty >= scrollRect.top && ty <= scrollRect.bottom)
+            {
+                scroll = true
+                scrollIndex = tx>(scrollRect.left+scrollRect.right)/2 ? 1 : 0
+                scrollSY[scrollIndex] = scrollY[scrollIndex]
+            }
+
+        })
+
+        document.addEventListener('touchend', e=>{
+            scroll = false
+        })
+
+        document.addEventListener('touchmove', e=>{
+            let t = e.touches[0]
+            tx = t.clientX
+            ty = t.clientY
+        })
+        
     },
     created() {
         // fetch(`/api/profile?id=${telegram.initDataUnsafe.user.id}&username=${telegram.initDataUnsafe.user.username}`)
@@ -198,156 +275,6 @@ export default {
             location.replace('/home')
         })
 
-    }
-}
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('[fz]').forEach((e) => {
-        e.style.fontSize = `${parseInt(e.getAttribute('fz'))}px`
-    })
-})
-
-function touchstart(element) {
-    const cursor = { x: 0, y: 0 }
-    let drag = false
-
-    element.addEventListener('touchstart', (event) => {
-        cursor.y = event.changedTouches[0].clientY * -1
-        drag = true
-    })
-    element.addEventListener('touchend', () => {
-        staticOffsetY = 0
-        drag = false
-    })
-    let staticOffsetY = 0
-    let countOffset = 0
-    let arrayOffset = [0, -20, -50, 20, 43]
-    let fontPlus = [0, -2, -4, 2, 4]
-    element.addEventListener('touchmove', (event) => {
-        if (!drag) return
-        const offsetY = cursor.y - event.changedTouches[0].clientY * -1
-        cursor.y = event.changedTouches[0].clientY * -1
-        const nanoOffset = offsetY / 5
-        staticOffsetY += nanoOffset
-        if (staticOffsetY > 70000) {
-            move(true, 3)
-        }
-            // else if (staticOffsetY > 30) {
-            //   countOffset = 4;
-            //   move(true, 2);
-            // }
-            // else if (staticOffsetY > 10) {
-            //   countOffset = 3;
-            //   move(true);
-
-            // }
-            // else if (staticOffsetY < -30) {
-            //   countOffset = 2;
-            //   move(false, 2);
-        // }
-        else if (staticOffsetY < -10) {
-            countOffset = 1
-            move(false)
-        }
-
-        element.querySelectorAll('span').forEach((span) => {
-            span.style.fontSize = 'inherit'
-            setTimeout(() => {
-                let fontSize = parseInt(span.getAttribute('fz'))
-                if (span.getAttribute('func') == 'minus') {
-                    span.style.fontSize = `${parseInt(fontSize) - fontPlus[countOffset]}px`
-                } else if (span.getAttribute('func') == 'plus') {
-                    span.style.fontSize = `${parseInt(fontSize) + fontPlus[countOffset]}px`
-                } else if (span.getAttribute('func') == 'neut') {
-                    if (countOffset < 3) {
-                        fontPlus * -1
-                    }
-                    span.style.fontSize = `${parseInt(fontSize) + fontPlus[countOffset]}px`
-                }
-            }, 1)
-        })
-        element.querySelectorAll('span').forEach((span) => {
-            span.style.transform = `translateY(${arrayOffset[countOffset]}px)`
-        })
-        // if (offsetY/2 > 30) {
-        //   staticOffsetY = 50;
-        // }
-        // if (offsetY/2 > 50) {
-        //   staticOffsetY = 80;
-        // }
-    })
-
-    let moveTimer = null
-    function move(up = false, count = 1) {
-        clearTimeout(moveTimer)
-        moveTimer = setTimeout(() => {
-            for (let i = 0; i < count; i++) {
-                if (up) {
-                    let lastChild = element.lastElementChild
-                    element.removeChild(lastChild)
-                    element.insertBefore(lastChild, element.firstElementChild)
-                } else {
-                    let firstChild = element.firstElementChild
-                    element.removeChild(firstChild)
-                    element.appendChild(firstChild)
-                }
-            }
-
-            document.body.classList.add('anim-none')
-            const spans = [...element.querySelectorAll('span')]
-
-            let num = 1
-            for (let span of spans) {
-                span.style.transform = `translateY(0px)`
-                switch (num) {
-                    case 1: {
-                        span.setAttribute('fz', '10')
-                        span.setAttribute('func', 'plus')
-                        break
-                    }
-                    case 2: {
-                        span.setAttribute('fz', '12')
-                        span.setAttribute('func', 'plus')
-                        break
-                    }
-                    case 3: {
-                        span.setAttribute('fz', '14')
-                        span.setAttribute('func', 'plus')
-                        break
-                    }
-                    case 4: {
-                        span.setAttribute('fz', '16')
-                        span.setAttribute('func', 'plus')
-                        break
-                    }
-                    case 5: {
-                        span.setAttribute('fz', '18')
-                        span.setAttribute('func', 'neut')
-                        break
-                    }
-                    case 6: {
-                        span.setAttribute('fz', '16')
-                        span.setAttribute('func', 'minus')
-                        break
-                    }
-                    case 7: {
-                        span.setAttribute('fz', '14')
-                        span.setAttribute('func', 'minus')
-                        break
-                    }
-                }
-                setTimeout(() => {
-                    const fz = parseInt(span.getAttribute('fz'))
-                    span.style.fontSize = `${fz}px`
-                })
-                num++
-                if (num > 7) {
-                    num = 1
-                }
-            }
-            setTimeout(() => {
-                document.body.classList.remove('anim-none')
-            }, 1)
-        }, 350)
     }
 }
 </script>
