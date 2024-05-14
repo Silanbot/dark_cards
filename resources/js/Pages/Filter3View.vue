@@ -18,6 +18,7 @@
                     <div class="vert__title">Диапазон ставки</div>
                     <div class="vert__block">
                         <div class="vert__scrollblock" v-if="searchParamHas('cash')">
+                            <div class="vert__scrollblock-line"></div>
                             <div class="vert__scroll">
                                 <span func="plus" data-sum="0.5" fz="10">0,5</span>
                                 <span func="plus" data-sum="1" fz="12">1</span>
@@ -46,6 +47,7 @@
                             </div>
                         </div>
                         <div class="vert__scrollblock" v-else>
+                            <div class="vert__scrollblock-line"></div>
                             <div class="vert__scroll">
                                 <span func="plus" data-sum="100" fz="10">100</span>
                                 <span func="plus" data-sum="250" fz="12">250</span>
@@ -183,15 +185,29 @@ export default {
     mounted() {
         
         let scrollRect = document.querySelector('.vert__scrollblock').getBoundingClientRect()
-        let scrollMidY = (scrollRect.top+scrollRect.bottom)/2 + 20
+        let scrollLineRect = document.querySelector('.vert__scrollblock-line').getBoundingClientRect()
+        let scrollMidY = (scrollLineRect.top+scrollLineRect.bottom)/2
         let scrollH = scrollRect.bottom-scrollRect.top
         let scrollE = document.querySelectorAll('.vert__scroll')
-        let scrollC = [document.querySelectorAll('.vert__scroll:first-child > span'), document.querySelectorAll('.vert__scroll:last-child > span')]
+        let scrollC = [0, 1].map(i=>Array.from(scrollE[i].querySelectorAll('span')))
         let scrollY = [0, 0]
         let scrollSY = [0, 0]
         
         let scrollTop = [0, 1].map(i=>scrollC[i][0].getBoundingClientRect().top)
         let scrollBottom = [0, 1].map(i=>scrollC[i][scrollC[i].length-1].getBoundingClientRect().bottom)
+
+        function toMiddle(element) {
+            let rect = element.getBoundingClientRect()
+            return scrollMidY - (rect.top+rect.bottom)/2
+        }
+
+        function distanceToMiddle(element) {
+            return Math.abs(toMiddle(element))
+        }
+
+        function getClosestRow(i) {
+            return scrollC[i].reduce((a, b)=>distanceToMiddle(a)<distanceToMiddle(b) ? a : b)
+        }
 
         let lt = null
 
@@ -201,24 +217,26 @@ export default {
             let dt = t-lt
             lt = t
 
-            if (scroll) {
-                
-                scrollY[scrollIndex] = scrollSY[scrollIndex] + ty-tsy
+            if (scroll) scrollY[scrollIndex] = scrollSY[scrollIndex] + ty-tsy
 
-                for (let span of scrollC[scrollIndex]) {
-                    let spanRect = span.getBoundingClientRect()
-                    let spanMidY = (spanRect.top+spanRect.bottom)/2
-                    span.style.fontSize = 15 + Math.cos((spanMidY-scrollMidY)/scrollH*4)*5 + 'px'
+            for (let i=0; i<2; i++) {
+                if (!(scroll && scrollIndex===i)) {
+                    let closestRow = getClosestRow(i)
+                    let tm = toMiddle(closestRow)
+                    if (Math.abs(tm) > 2)
+                        scrollY[i] += tm * 0.01 * dt
                 }
+                let st = scrollTop[i] + scrollY[i]
+                let sb = scrollBottom[i] + scrollY[i]
+                if (st > scrollMidY) scrollY[i] -= st - scrollMidY
+                if (sb < scrollMidY) scrollY[i] -= sb - scrollMidY
+                scrollE[i].style.transform = `translateY(${scrollY[i]}px)`
+            }
 
-                for (let i=0; i<2; i++) {
-                    let st = scrollTop[i] + scrollY[i]
-                    let sb = scrollBottom[i] + scrollY[i]
-                    if (st > scrollMidY) scrollY[i] -= st - scrollMidY
-                    if (sb < scrollMidY) scrollY[i] -= sb - scrollMidY
-                    scrollE[i].style.transform = `translateY(${scrollY[i]}px)`
-                }
-
+            for (let span of scrollC[scrollIndex]) {
+                let spanRect = span.getBoundingClientRect()
+                let spanMidY = (spanRect.top+spanRect.bottom)/2
+                span.style.fontSize = 15 + Math.cos((spanMidY-scrollMidY)/scrollH*4)*5 + 'px'
             }
 
             requestAnimationFrame(update)
