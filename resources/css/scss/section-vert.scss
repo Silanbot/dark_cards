@@ -53,8 +53,7 @@
     overflow: hidden;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    &::before {
-      content: "";
+    .vert__scrollblock-line {
       height: 32px;
       width: 90%;
       background: #eb3d3d;
