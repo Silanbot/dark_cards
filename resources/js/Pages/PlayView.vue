@@ -375,7 +375,7 @@ export default {
             for (let i=0; i<gameCells.length; i++)
                 if (gameCells[i].length < 2) {
                     gameCells[i].push(card)
-                    return {gameCell: i, top: gameCells[i].length==2}
+                    return {gameCell: i, top: gameCells[i].length===2}
                 }
             let newGameCell = [card]
             gameCells.push(newGameCell)
@@ -386,11 +386,11 @@ export default {
             cell = cell % 5
             let x = window.innerWidth/2
             let y = window.innerHeight/2
-            if (cell==0) return [x*0.6, y*0.9]
-            if (cell==1) return [x, y*0.9]
-            if (cell==2) return [x*1.4, y*0.9]
-            if (cell==3) return [x*0.8, y*1.3]
-            if (cell==4) return [x*1.2, y*1.3]
+            if (cell===0) return [x*0.6, y*0.9]
+            if (cell===1) return [x, y*0.9]
+            if (cell===2) return [x*1.4, y*0.9]
+            if (cell===3) return [x*0.8, y*1.3]
+            if (cell===4) return [x*1.2, y*1.3]
         }
 
         function getTransform(r) {
@@ -410,28 +410,28 @@ export default {
 
         document.addEventListener('touchstart', e=>{
             e.preventDefault()
-            if (e.target.dataset.player=='me') {
+            if (e.target.dataset.player==='me') {
                 touch=true
                 tx=e.touches[0].clientX
                 ty=e.touches[0].clientY
                 activeCard=e.target
                 return
             }
-            if (state==1)
+            if (state===1)
                 giveCards()
-            if (state==2)
+            if (state===2)
                 playerStep(Math.floor(Math.random()*2), codes[Math.floor(Math.random()*codes.length)])
-            if (state==3)
+            if (state===3)
                 endCards()
             state++
-            if (state==4) state=2
+            if (state===4) state=2
         })
         document.addEventListener('touchmove', e=>{
             e.preventDefault()
             tx = e.touches[0].clientX
             ty = e.touches[0].clientY
             let elem = document.elementFromPoint(tx, ty)
-            if (!dragging && elem.dataset.player=='me') activeCard = elem
+            if (!dragging && elem.dataset.player==='me') activeCard = elem
         })
         document.addEventListener('touchend', e=>{
             e.preventDefault()
@@ -479,7 +479,7 @@ export default {
             return a != b && !lt(a, b)
         }
 
-        let codes = Array.from(document.querySelectorAll('img[data-cardimg]')).map(img=>img.dataset.cardimg).filter(c=>c.length==2)
+        let codes = Array.from(document.querySelectorAll('img[data-cardimg]')).map(img=>img.dataset.cardimg).filter(c=>c.length===2)
 
         let cardCnt = document.querySelector('#cards')
         let mycards = []
@@ -522,7 +522,7 @@ export default {
                     x: 0, y: window.innerHeight/2
                 }
                 card.data.tx = window.innerWidth/2 + window.innerWidth*0.1 + fromCenter*window.innerWidth*0.8/mycards.length
-                card.data.ty = window.innerHeight*0.75 - (touch?(card==activeCard?40:i&&mycards[i-1]==activeCard?10:0):0)
+                card.data.ty = window.innerHeight*0.75 - (touch?(card===activeCard?40:i&&mycards[i-1]===activeCard?10:0):0)
                 card.data.x += (card.data.tx - card.data.x) * 0.01 * dt
                 card.data.y += (card.data.ty - card.data.y) * 0.01 * dt
                 card.style.transform = `translate(${card.data.x}px, ${card.data.y}px) rotate(${fromCenter*2}deg)`
@@ -559,7 +559,7 @@ export default {
             card.dataset.card = code
             card.dataset.player = player
             card.src = document.querySelector(`img[data-cardimg="${code}"]`).src
-            if (player=='me') {
+            if (player==='me') {
                 card.style.width = '30vw'
                 card.style.left = '-15vw'
                 card.style.top = '-28vw'
@@ -576,16 +576,15 @@ export default {
         }
 
         function giveCards() {
-            let interval = null
             let i = 0
             let usedCodes = []
-            interval = setInterval(()=>{
+            let interval = setInterval(()=>{
                 let p = i%3
                 let newCodes = codes.filter(c=>!usedCodes.includes(c))
                 let newCode = newCodes[Math.floor(Math.random()*newCodes.length)]
                 usedCodes.push(newCode)
-                giveCard(p==2?'me':p, newCode)
-                if (++i==18) return clearInterval(interval)
+                giveCard(p===2?'me':p, newCode)
+                if (++i===18) return clearInterval(interval)
             }, 100)
         }
 
