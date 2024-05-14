@@ -209,6 +209,8 @@ export default {
             return scrollC[i].reduce((a, b)=>distanceToMiddle(a)<distanceToMiddle(b) ? a : b)
         }
 
+        window.getClosestRow = getClosestRow
+
         let lt = null
 
         function update(t) {
