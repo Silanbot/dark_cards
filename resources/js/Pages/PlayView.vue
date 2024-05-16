@@ -628,9 +628,9 @@ export default {
         }
 
         function endCards1() {
-            gameC = []
-            for (let cardCnt of gameCards) {
-                card.style.transform = `translate(${140}px, ${window.innerHeight}px)`
+            gameCells = []
+            for (let card of gameCards) {
+                card.style.transform = `translate(${-140}px, ${window.innerHeight/2}px) rotate(${Math.random()*360}deg)`
                 setTimeout(()=>{card.src=cardBack.src}, 200)
             }
         }
