@@ -266,6 +266,7 @@ export default {
             if (tx >= scrollRect.left && tx <= scrollRect.right &&
                 ty >= scrollRect.top && ty <= scrollRect.bottom)
             {
+                window.Telegram.WebApp.HapticFeedback.impactOccurred('soft')
                 scroll = true
                 scrollIndex = tx>(scrollRect.left+scrollRect.right)/2 ? 1 : 0
                 scrollSY[scrollIndex] = scrollY[scrollIndex]
@@ -275,13 +276,13 @@ export default {
 
         document.addEventListener('touchend', e=>{
             scroll = false
+            window.Telegram.WebApp.HapticFeedback.impactOccurred('soft')
         })
 
         document.addEventListener('touchmove', e=>{
             let t = e.touches[0]
             tx = t.clientX
             ty = t.clientY
-            window.Telegram.WebApp.HapticFeedback.impactOccurred('light')
         })
 
     },
