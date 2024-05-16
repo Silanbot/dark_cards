@@ -335,11 +335,11 @@
                     </div>
                 </a>
                 <div class="play__buttons">
-                    <div :class="['play__button__item', { active: selectMode == 2 }]" @click="selectMode = 2">
+                    <div :class="['play__button__item', { active: selectMode == 2 }]" @click="window.Telegram.WebApp.HapticFeedback.selectionChanged(); selectMode = 2">
                         <img src="./sources/2/dc.svg" alt=""/>
                         <span>Dark Coins</span>
                     </div>
-                    <div :class="['play__button__item', { active: selectMode == 1 }]" @click="selectMode = 1">
+                    <div :class="['play__button__item', { active: selectMode == 1 }]" @click="window.Telegram.WebApp.HapticFeedback.selectionChanged(); selectMode = 1">
                         <img src="./sources/2/cash.svg" alt=""/>
                         <span>Cash</span>
                     </div>
@@ -539,8 +539,8 @@ export default {
         })
     },
     mounted() {
-        this.coins = localStorage.getItem('coins') ?? '1м - 1м'
-        this.cash = localStorage.getItem('cash') ?? '1м - 1м'
+        this.coins = window.Telegram.WebApp.CloudStorage.getItem('coins') ?? '1м - 1м'
+        this.cash = window.Telegram.WebApp.CloudStorage.getItem('cash') ?? '1м - 1м'
     }
 }
 </script>

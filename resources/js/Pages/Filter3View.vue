@@ -160,20 +160,22 @@ export default {
     },
     methods: {
         submitFilters() {
-            const elems = document.querySelectorAll('span[fz="18"]')
-            if (parseFloat(elems[0].dataset.sum) > parseFloat(elems[1].dataset.sum)) {
+            const from = window.getClosestRow(0).dataset.sum
+            const to = window.getClosestRow(1).dataset.sum
+
+            if (parseFloat(from) > parseFloat(to)) {
                 window.Telegram.WebApp.showAlert('Начальная ставка не должна превышать конечную')
                 return
             }
-            elems.forEach(i => this.range.push(i.textContent))
+            this.range = `${from} - ${to}`
             const url = new URL(document.location).searchParams
 
             if (url.has('coins')) {
-                localStorage.setItem('coins', this.range.join(' - '))
-                localStorage.setItem('selectMode', '2')
+                window.Telegram.WebApp.CloudStorage.setItem('coins', this.range.join(' - '))
+                window.Telegram.WebApp.CloudStorage.setItem('selectMode', '2')
             } else {
-                localStorage.setItem('cash', this.range.join(' - '))
-                localStorage.setItem('selectMode', '1')
+                window.Telegram.WebApp.CloudStorage.setItem('cash', this.range.join(' - '))
+                window.Telegram.WebApp.CloudStorage.setItem('selectMode', '1')
             }
 
             location.replace('/home')
@@ -183,7 +185,7 @@ export default {
         }
     },
     mounted() {
-        
+
         let scrollRect = document.querySelector('.vert__scrollblock').getBoundingClientRect()
         let scrollLineRect = document.querySelector('.vert__scrollblock-line').getBoundingClientRect()
         let scrollMidY = (scrollLineRect.top+scrollLineRect.bottom)/2
@@ -192,7 +194,7 @@ export default {
         let scrollC = [0, 1].map(i=>Array.from(scrollE[i].querySelectorAll('span')))
         let scrollY = [0, 0]
         let scrollSY = [0, 0]
-        
+
         let scrollTop = [0, 1].map(i=>scrollC[i][0].getBoundingClientRect().top)
         let scrollBottom = [0, 1].map(i=>scrollC[i][scrollC[i].length-1].getBoundingClientRect().bottom)
 
@@ -214,7 +216,7 @@ export default {
         let lt = null
 
         function update(t) {
-            
+            window.Telegram.WebApp.HapticFeedback.impactOccurred('light')
             if (lt===null) lt=t
             let dt = t-lt
             lt = t
@@ -254,14 +256,14 @@ export default {
         let ty = 0
 
         document.addEventListener('touchstart', e=>{
-            
+
             let t = e.touches[0]
-            
+
             tsy = t.clientY
 
             tx = t.clientX
             ty = t.clientY
-            
+
             if (tx >= scrollRect.left && tx <= scrollRect.right &&
                 ty >= scrollRect.top && ty <= scrollRect.bottom)
             {
@@ -281,7 +283,7 @@ export default {
             tx = t.clientX
             ty = t.clientY
         })
-        
+
     },
     created() {
         // fetch(`/api/profile?id=${telegram.initDataUnsafe.user.id}&username=${telegram.initDataUnsafe.user.username}`)
