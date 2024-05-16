@@ -423,8 +423,10 @@ export default {
                 playerStep(Math.floor(Math.random()*2), codes[Math.floor(Math.random()*codes.length)])
             if (state===3)
                 endCards()
+            if (state===4)
+                endCards1()
             state++
-            if (state===4) state=2
+            if (state===5) state=2
         })
         document.addEventListener('touchmove', e=>{
             e.preventDefault()
@@ -485,6 +487,9 @@ export default {
         let mycards = []
 
         function addMyCard(element, addElement=true) {
+
+            if (mycards.includes(element)) return
+
             if (addElement) addMyCardElement(element)
 
             if (!mycards.length) return mycards.push(element)
@@ -494,6 +499,7 @@ export default {
                     return mycards.splice(i, 0, element)
 
             mycards.push(element)
+        
         }
 
         function addMyCardElement(element) {
@@ -617,6 +623,14 @@ export default {
             gameCells = []
             for (let card of gameCards) {
                 card.style.transform = `translate(${window.innerWidth}px, ${window.innerHeight/2}px) rotate(${Math.random()*360}deg)`
+                setTimeout(()=>{card.src=cardBack.src}, 200)
+            }
+        }
+
+        function endCards1() {
+            gameC = []
+            for (let cardCnt of gameCards) {
+                card.style.transform = `translate(${140}px, ${window.innerHeight}px)`
                 setTimeout(()=>{card.src=cardBack.src}, 200)
             }
         }
