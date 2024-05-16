@@ -335,11 +335,11 @@
                     </div>
                 </a>
                 <div class="play__buttons">
-                    <div :class="['play__button__item', { active: selectMode == 2 }]" @click="selectMode = 2">
+                    <div :class="['play__button__item', { active: selectMode == 2 }]" @click="changeCoins">
                         <img src="./sources/2/dc.svg" alt=""/>
                         <span>Dark Coins</span>
                     </div>
-                    <div :class="['play__button__item', { active: selectMode == 1 }]" @click="selectMode = 1">
+                    <div :class="['play__button__item', { active: selectMode == 1 }]" @click="changeCash">
                         <img src="./sources/2/cash.svg" alt=""/>
                         <span>Cash</span>
                     </div>
@@ -517,13 +517,13 @@ export default {
                 location.replace('/play/' + response.data.room_id)
             })
         },
-        isParamExists(name) {
-            let storage = localStorage.getItem('params')
-            if (storage === null) {
-                return false
-            }
-
-            return storage.split(',').includes(name)
+        changeCoins() {
+            window.Telegram.WebApp.HapticFeedback.selectionChanged();
+            this.selectMode = 2
+        },
+        changeCash() {
+            window.Telegram.WebApp.HapticFeedback.selectionChanged();
+            this.selectMode = 1
         }
     },
     created() {
@@ -539,8 +539,8 @@ export default {
         })
     },
     mounted() {
-        this.coins = window.Telegram.WebApp.CloudStorage.getItem('coins') ?? '1м - 1м'
-        this.cash = window.Telegram.WebApp.CloudStorage.getItem('cash') ?? '1м - 1м'
+        this.coins = localStorage.getItem('coins') ?? '1м - 1м'
+        this.cash = localStorage.getItem('cash') ?? '1м - 1м'
     }
 }
 </script>
