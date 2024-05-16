@@ -216,7 +216,6 @@ export default {
         let lt = null
 
         function update(t) {
-            window.Telegram.WebApp.HapticFeedback.impactOccurred('light')
             if (lt===null) lt=t
             let dt = t-lt
             lt = t
@@ -282,6 +281,7 @@ export default {
             let t = e.touches[0]
             tx = t.clientX
             ty = t.clientY
+            window.Telegram.WebApp.HapticFeedback.impactOccurred('light')
         })
 
     },
