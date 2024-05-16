@@ -4,51 +4,32 @@ declare(strict_types=1);
 
 namespace App\Game;
 
-final class Card extends BasicEnum
+final readonly class Card
 {
-    public function __construct(
-        private Suit $suit,
-        private Rank $rank
-    ) {
+    public function __construct(public string $suit, public string $rank)
+    {
     }
 
-    public function getCardRating(): int
+    public function isHigherThan(Card $card, string $trumpSuit, string $foolRank): bool
     {
-        return $this->getRank()->getRankRating($this->getSuit()->isTrump());
-    }
+        if ($this->suit === $trumpSuit && $card->suit !== $trumpSuit) {
+            return true;
+        }
+        if ($this->suit !== $trumpSuit && $card->suit === $trumpSuit) {
+            return false;
+        }
+        if ($this->rank === $foolRank && $card->rank !== $foolRank) {
+            return true;
+        }
+        if ($this->rank !== $foolRank && $card->rank === $foolRank) {
+            return false;
+        }
+        if ($this->suit === $card->suit) {
+            $ranks = ['6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
-    public function setAsTrump(): void
-    {
-        $this->getSuit()->setIsTrump(true);
-    }
+            return array_search($this->rank, $ranks) > array_search($card->rank, $ranks);
+        }
 
-    public function getSuitName(): string
-    {
-        return $this->getSuit()->getName();
-    }
-
-    public function isTrump(): bool
-    {
-        return $this->getSuit()->isTrump();
-    }
-
-    public function setRank(Rank $rank): void
-    {
-        $this->rank = $rank;
-    }
-
-    public function setSuit(Suit $suit): void
-    {
-        $this->suit = $suit;
-    }
-
-    public function getRank(): Rank
-    {
-        return $this->rank;
-    }
-
-    public function getSuit(): Suit
-    {
-        return $this->suit;
+        return false;
     }
 }

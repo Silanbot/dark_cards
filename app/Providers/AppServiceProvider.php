@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Contracts\DeckContract;
-use App\Game\Deck;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use phpcent\Client;
@@ -30,7 +28,5 @@ class AppServiceProvider extends ServiceProvider
 
             return $client;
         });
-
-        //        $this->app->bind(DeckContract::class, fn (Application $application) => new Deck());
     }
 }

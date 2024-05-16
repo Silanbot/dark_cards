@@ -229,7 +229,7 @@ import modalDialog from './components/modalDialog.vue'
               </div> -->
         </div>
         <div id="mycards">
-            
+
         </div>
         <footer class="footer" style="z-index: 2">
             <div class="footer__inner footer__inner_play">
@@ -442,9 +442,9 @@ export default {
             if (activeCard) {
                 if (ty < window.innerHeight*0.75) {
                     activeCard.dataset.player = ''
-                    
+
                     let r = addGameCard(activeCard)
-                    
+
                     activeCard.style.transform = getTransform(r)
                     activeCard.style.width = '13vw'
                     activeCard.style.removeProperty('left')
@@ -504,7 +504,7 @@ export default {
 
         function addMyCardElement(element) {
             let cards = document.querySelectorAll('img[data-player=me]')
-            
+
             if (!cards.length) return cardCnt.appendChild(element)
 
             for (let i=0; i<cards.length; i++)

@@ -4,104 +4,53 @@ declare(strict_types=1);
 
 namespace App\Game;
 
-use App\Exceptions\DeckException;
+use App\Contracts\DeckContract;
 
-final class Deck
+final class Deck implements DeckContract
 {
+    const MAX_CARDS = 6;
+
     /**
      * @var Card[]
      */
-    private array $cards;
-
-    private int $randNumber;
-
-    private Card $trumpCard;
+    private array $cards = [];
 
     /**
-     * @var Suit[]
+     * @var Player[]
      */
-    private array $suits;
+    private array $players = [];
 
-    public function __construct(int $randNumber)
+    public function __construct(int $players)
     {
-        $this->randNumber = $randNumber;
-        $this->createSuits();
-        $this->generateCards();
+        $suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
+        $ranks = ['6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+
+        foreach ($suits as $suit) {
+            foreach ($ranks as $rank) {
+                $this->cards[] = new Card($suit, $rank);
+            }
+
+            shuffle($this->cards);
+        }
+
+        $this->distribute($players);
     }
 
-    private function createSuits(): void
+    public function distribute(int $players): void
     {
-        $this->suits = [
-            new Suit(Suit::SPADE),
-            new Suit(Suit::HEART),
-            new Suit(Suit::CLUB),
-            new Suit(Suit::DIAMOND),
-        ];
-    }
-
-    private function generateCards(): void
-    {
-        foreach ($this->suits as $suit) {
-            $cardBySuit = $this->generateCardsBySuit($suit);
-            $this->cards[] = $cardBySuit;
+        for ($i = 0; $i < $players; $i++) {
+            $cards = array_splice($this->cards, offset: self::MAX_CARDS * $i, length: self::MAX_CARDS);
+            $this->players[] = (new Player(hand: $cards))->toArray();
         }
     }
 
-    private function generateCardsBySuit(Suit $suit): array
+    public function getPlayers(): array
     {
-        $result = [];
-        $ranks = Rank::getSortedRankNames();
-
-        foreach ($ranks as $rank) {
-            $result[] = new Card($suit, new Rank($rank));
-        }
-
-        return $result;
+        return $this->players;
     }
 
-    public function isNotEmpty(): bool
+    public function getCards(): array
     {
-        return ! empty($this->suits);
-    }
-
-    public function getDeckCount(): int
-    {
-        return count($this->cards);
-    }
-
-    public function sort(int $cardsCount = 36): void
-    {
-        for ($i = 0; $i < 1000; $i++) {
-            $n = ($this->randNumber + ($i * 2)) % $cardsCount;
-            $cardToStart = $this->cards[$n];
-            unset($this->cards[$n]);
-            $this->cards = array_merge([$cardToStart], $this->cards);
-        }
-    }
-
-    public function extractCard(): Card
-    {
-        if ($this->getDeckCount() === 0) {
-            throw new DeckException('No cards in deck left');
-        }
-
-        return array_shift($this->cards);
-    }
-
-    public function createTrump(): void
-    {
-        $this->trumpCard = array_shift($this->cards);
-        $this->trumpCard->setAsTrump();
-        $this->cards[] = $this->trumpCard;
-    }
-
-    public function getTrumpCard(): Card
-    {
-        return $this->trumpCard;
-    }
-
-    public function getTrumpSuitName(): string
-    {
-        return $this->trumpCard->getSuitName();
+        return $this->cards;
     }
 }
