@@ -517,6 +517,14 @@ export default {
                 location.replace('/play/' + response.data.room_id)
             })
         },
+        isParamExists(name) {
+            let storage = localStorage.getItem('params')
+            if (storage === null) {
+                return false
+            }
+
+            return storage.split(',').includes(name)
+        },
         changeCoins() {
             window.Telegram.WebApp.HapticFeedback.selectionChanged();
             this.selectMode = 2
