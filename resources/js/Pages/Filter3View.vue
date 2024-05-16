@@ -171,11 +171,11 @@ export default {
             const url = new URL(document.location).searchParams
 
             if (url.has('coins')) {
-                window.Telegram.WebApp.CloudStorage.setItem('coins', this.range.join(' - '))
-                window.Telegram.WebApp.CloudStorage.setItem('selectMode', '2')
+                localStorage.setItem('coins', this.range)
+                localStorage.setItem('selectMode', '2')
             } else {
-                window.Telegram.WebApp.CloudStorage.setItem('cash', this.range.join(' - '))
-                window.Telegram.WebApp.CloudStorage.setItem('selectMode', '1')
+                localStorage.setItem('cash', this.range)
+                localStorage.setItem('selectMode', '1')
             }
 
             location.replace('/home')
