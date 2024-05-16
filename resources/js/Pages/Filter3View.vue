@@ -160,14 +160,14 @@ export default {
     },
     methods: {
         submitFilters() {
-            const from = window.getClosestRow(0).dataset.sum
-            const to = window.getClosestRow(1).dataset.sum
+            const from = window.getClosestRow(0)
+            const to = window.getClosestRow(1)
 
-            if (parseFloat(from) > parseFloat(to)) {
+            if (parseFloat(from.dataset.sum) > parseFloat(to.dataset.sum)) {
                 window.Telegram.WebApp.showAlert('Начальная ставка не должна превышать конечную')
                 return
             }
-            this.range = `${from} - ${to}`
+            this.range = `${from.innerText} - ${to.innerText}`
             const url = new URL(document.location).searchParams
 
             if (url.has('coins')) {
