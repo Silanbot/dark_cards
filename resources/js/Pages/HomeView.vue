@@ -539,6 +539,7 @@ export default {
         })
     },
     mounted() {
+        console.log(window.Telegram.WebApp.CloudStorage)
         this.coins = window.Telegram.WebApp.CloudStorage.getItem('coins') ?? '1м - 1м'
         this.cash = window.Telegram.WebApp.CloudStorage.getItem('cash') ?? '1м - 1м'
     }
