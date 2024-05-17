@@ -68,7 +68,7 @@ jobs:
       run: vendor/bin/pest
 
   deploy:
-    runs_on: ubuntu-latest
+    runs-on: ubuntu-latest
     name: Deploy commit to production server
 
     steps:
