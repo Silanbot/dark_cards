@@ -68,8 +68,8 @@ jobs:
       run: vendor/bin/pest
 
   deploy:
+    runs_on: ubuntu-latest
     name: Deploy commit to production server
-    runs_on: ubuntu_latest
 
     steps:
       - name: Install SSH keys
