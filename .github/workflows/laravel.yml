@@ -35,11 +35,11 @@ jobs:
     - name: Install Dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
 
-    - name: Set up application for SQLite
-      run: |
-        touch database/database.sqlite
-        echo "DB_CONNECTION=sqlite" >> .env
-        echo "DB_DATABASE=${{ github.workspace }}/database/database.sqlite" >> .env
+#    - name: Set up application for SQLite
+#      run: |
+#        touch database/database.sqlite
+#        echo "DB_CONNECTION=sqlite" >> .env
+#        echo "DB_DATABASE=${{ github.workspace }}/database/database.sqlite" >> .env
     - name: Set up security system key
       run: echo "API_BOT_TOKEN=secret >> .env"
 
@@ -66,3 +66,18 @@ jobs:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
       run: vendor/bin/pest
+
+  deploy:
+    name: Deploy commit to production server
+    runs_on: ubuntu_latest
+
+    steps:
+      - name: Install SSH keys
+        run: |
+            install -m 600 -D /dev/null ~/.ssh/id_rsa
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+            ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+      - name: Connect and pull
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git pull origin main && composer install && php artisan migrate && php artisan optimize:clear && npm run build && exit"
+      - name: Cleanup
+        run: rm -rf ~/.ssh
