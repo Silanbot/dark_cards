@@ -1,4 +1,4 @@
-name: Deploy commit ${{ github.event.push.head.sha }} to production server
+name: Deploying on production
 on:
   workflow_run:
     workflows: [Testing laravel application]
@@ -17,6 +17,6 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
       - name: Connect and pull
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git pull origin main && composer install && php artisan migrate && php artisan optimize:clear && npm run build && exit"
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git pull origin main && composer install && php artisan migrate && php artisan optimize:clear && npm run build && php artisan test && exit"
       - name: Cleanup
         run: rm -rf ~/.ssh
