@@ -80,4 +80,4 @@ jobs:
         run: rm -rf ~/.ssh
       - name: Notify about deploy in telegram
         run: |
-          curl -X GET https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage?chat_id=${{ secrets.TELEGRAM_ADMIN_ID }}&text=🟢Деплой+завершен
+          curl -X GET "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage?chat_id=${{ secrets.TELEGRAM_ADMIN_ID }}&text=🟢Деплой+завершен"
