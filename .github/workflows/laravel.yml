@@ -63,3 +63,17 @@ jobs:
 
     - name: Execute tests via Pest
       run: vendor/bin/pest
+  deploy:
+    needs: laravel-tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install SSH keys
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+      - name: Connect and pull
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git pull origin main && composer install && php artisan migrate && php artisan optimize:clear && npm run build && php artisan test && exit"
+      - name: Cleanup
+        run: rm -rf ~/.ssh
