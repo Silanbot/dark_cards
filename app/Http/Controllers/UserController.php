@@ -2,37 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Repositories\Contracts\UserRepositoryContract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+final class UserController extends Controller
 {
-    public function profile(Request $request): Model|Builder
+    public function __construct(private readonly UserRepositoryContract $actor)
     {
-        return User::query()->firstOrCreate(['id' => $request->get('id')], [
-            'id' => $request->get('id'),
-            'username' => $request->get('username'),
-        ]);
     }
 
-    public function balance(Request $request): JsonResponse
+    public function profile(Request $request): Model|Builder
     {
-        return response()->json([
-            'balance' => User::query()->findOrFail($request->id)->balance,
-        ]);
+        return $this->actor->findOrCreateUser($request->id, $request->username);
     }
 
     public function updateBalance(Request $request): JsonResponse
     {
-        $user = User::query()->where('id', $request->id)->first();
+        $user = $this->actor->findByID($request->id);
 
         $user->update(['balance' => $request->balance]);
 
         return response()->json([
             'balance' => $user->balance,
-        ]);
+        ], 204);
     }
 }

@@ -15,7 +15,7 @@ class TelegramBotMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->header('X-Api-Auth-Bot') !== config('services.bot.api_key')) {
+        if ($request->header('x-api-auth-bot') !== config('services.bot.api_key')) {
             return response()->json([
                 'message' => 'Forbidden',
             ], 403);

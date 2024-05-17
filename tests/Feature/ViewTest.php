@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Room;
+use Illuminate\Support\Facades\Artisan;
 
 test('home screen returns successfully response', function () {
     $response = $this->get(route('home'));
@@ -15,6 +16,8 @@ test('profile screen returns successfully', function () {
 });
 
 test('play screen returns successfully', function () {
+    Artisan::call('migrate');
+
     $room = Room::query()->create([
         'user_id' => 1,
         'bank' => 100,

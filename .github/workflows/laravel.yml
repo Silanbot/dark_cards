@@ -40,6 +40,8 @@ jobs:
         touch database/database.sqlite
         echo "DB_CONNECTION=sqlite" >> .env
         echo "DB_DATABASE=${{ github.workspace }}/database/database.sqlite" >> .env
+    - name: Set up security system key
+      run: echo "API_BOT_TOKEN=secret >> .env"
 
     - name: Run migrations
       run: php artisan migrate
