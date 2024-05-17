@@ -1,4 +1,4 @@
-name: Deploy commit $GITHUB_SHA to production server
+name: Deploy commit ${{ github.event.push.head.sha }} to production server
 on:
   workflow_run:
     workflows: [Testing laravel application]
