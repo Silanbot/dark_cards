@@ -33,7 +33,7 @@ test('profile request to api returns user without saving in database', function 
 
     $this->assertDatabaseCount('users', 1);
     $response->assertStatus(200);
-    $response->assertJson(fn (AssertableJson $json) => $json->has('id')->has('username')->has('balance')->has('created_at')->has('updated_at')->has('remember_token'));
+    $response->assertJson(fn (AssertableJson $json) => $json->hasAll(['id', 'username', 'balance', 'remember_token', 'created_at', 'updated_at']));
 });
 
 test('impossible update user balance without system token', function () {

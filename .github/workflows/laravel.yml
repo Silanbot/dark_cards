@@ -8,7 +8,7 @@ on:
 
 jobs:
   laravel-tests:
-
+    name: Set up Laravel tests
     runs-on: ubuntu-latest
 
     services:
@@ -35,11 +35,11 @@ jobs:
     - name: Install Dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
 
-#    - name: Set up application for SQLite
-#      run: |
-#        touch database/database.sqlite
-#        echo "DB_CONNECTION=sqlite" >> .env
-#        echo "DB_DATABASE=${{ github.workspace }}/database/database.sqlite" >> .env
+    - name: Set up application for SQLite
+      run: |
+        touch database/database.sqlite
+        echo "DB_CONNECTION=sqlite" >> .env
+        echo "DB_DATABASE=${{ github.workspace }}/database/database.sqlite" >> .env
     - name: Set up security system key
       run: echo "API_BOT_TOKEN=secret >> .env"
 
@@ -62,9 +62,9 @@ jobs:
       run: ./vendor/bin/pint --test
 
     - name: Execute tests via Pest
-      env:
-        DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
+#      env:
+#        DB_CONNECTION: sqlite
+#        DB_DATABASE: database/database.sqlite
       run: vendor/bin/pest
 
   deploy:
