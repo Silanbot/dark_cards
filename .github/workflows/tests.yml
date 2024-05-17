@@ -62,22 +62,4 @@ jobs:
       run: ./vendor/bin/pint --test
 
     - name: Execute tests via Pest
-#      env:
-#        DB_CONNECTION: sqlite
-#        DB_DATABASE: database/database.sqlite
       run: vendor/bin/pest
-
-  deploy:
-    runs-on: ubuntu-latest
-    name: Deploy commit to production server
-
-    steps:
-      - name: Install SSH keys
-        run: |
-            install -m 600 -D /dev/null ~/.ssh/id_rsa
-            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-            ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
-      - name: Connect and pull
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git pull origin main && composer install && php artisan migrate && php artisan optimize:clear && npm run build && exit"
-      - name: Cleanup
-        run: rm -rf ~/.ssh
