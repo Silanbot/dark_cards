@@ -14,6 +14,13 @@ createInertiaApp({
             .use({
                 install(app, options) {
                     app.config.globalProperties.telegram = window.Telegram.WebApp
+                    axios.get('/api/profile', {
+                        params: {
+                            id: window.Telegram.WebApp.initDataUnsafe.user.id,
+                            username: window.Telegram.WebApp.initDataUnsafe.user.username
+                        }
+                    }).then(response => (app.config.globalProperties.user = response.data))
+
                     const authToken = axios.get('/api/auth/token', {
                         params: {
                             id: window.Telegram.WebApp.initDataUnsafe.user.id

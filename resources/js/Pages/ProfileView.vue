@@ -189,12 +189,11 @@ export default {
             dollars: 0,
         }
     },
+    mounted() {
+        console.log(this.user)
+        this.dc_coins = this.user.balance
+    },
     created() {
-        fetch(`/api/profile?id=${window.Telegram.WebApp.initDataUnsafe.user.id}&username=${window.Telegram.WebApp.initDataUnsafe.user.username}`)
-            .then(response => response.json())
-            .then(data => {
-                this.dc_coins = data.balance
-            })
         window.Telegram.WebApp.BackButton.hide()
     }
 }
