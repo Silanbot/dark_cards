@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DeckController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PlayController;
 use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\TokenController;
@@ -20,4 +21,9 @@ Route::get('/distribute', [PlayController::class, 'distribute']);
 Route::middleware(TelegramBotMiddleware::class)->group(function () {
     Route::put('/update-balance', [UserController::class, 'updateBalance'])->name('update-balance');
     Route::get('/stats', StatisticController::class)->name('statistic');
+});
+
+Route::prefix('/messages')->group(function() {
+    Route::get('/', [MessageController::class, 'index'])->name('messages');
+    Route::get('/send', [MessageController::class, 'send'])->name('messages.send');
 });

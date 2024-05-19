@@ -34,39 +34,43 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
 import {Centrifuge} from "centrifuge";
 
 export default {
     data() {
         return {
             messages: [],
-            centrifugo: null,
             text: '',
             user: null,
+            centrifuge: null
         }
     },
     methods: {
         sendMessage() {
-            this.centrifugo.publish('news', {
-                message: this.text,
-            })
+            fetch(`/api/messages/send?user_id=${this.user}&message=${this.text}&room_id=1&room_name=room`)
             this.text = ''
         }
     },
     async created() {
-        this.user = 1
+        this.user = window.Telegram.WebApp.initDataUnsafe.user.id
 
         let token = ''
         const response = await (await fetch(`/api/auth/token?id=${this.user}`)).json()
         token = response.token
-        this.centrifugo = new Centrifuge('ws://127.0.0.1:3000/connection/websocket', {
+        this.centrifugo = new Centrifuge('ws://127.0.0.1:8888/connection/websocket', {
             token: token
         })
+        fetch('/api/messages?room_id=1&room_name=room').then(response => response.json()).then(data => {
+            for (const message of data) {
+                this.messages.push({ message: message.message, from_me: message.user_id === this.user })
+            }
+        })
 
-        const subscription = this.centrifugo.newSubscription('news')
+        const subscription = this.centrifugo.newSubscription('room')
 
         subscription.on('publication', context => {
-            this.messages.push({ message: context.data.message, from_me: context.info.user === this.user })
+            this.messages.push({ message: context.data.message, from_me: context.data.user_id === this.user })
         }).subscribe()
 
         this.centrifugo.connect()

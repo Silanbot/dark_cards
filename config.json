@@ -11,5 +11,5 @@
     "allow_publish_for_subscriber": true,
     "admin": false,
     "log_level": "trace",
-    "port": 3300
+    "port": 8888
 }
