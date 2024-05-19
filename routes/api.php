@@ -23,7 +23,7 @@ Route::middleware(TelegramBotMiddleware::class)->group(function () {
     Route::get('/stats', StatisticController::class)->name('statistic');
 });
 
-Route::prefix('/messages')->group(function() {
+Route::prefix('/messages')->group(function () {
     Route::get('/', [MessageController::class, 'index'])->name('messages');
     Route::get('/send', [MessageController::class, 'send'])->name('messages.send');
 });
