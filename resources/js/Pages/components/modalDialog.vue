@@ -34,7 +34,6 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
 import {Centrifuge} from "centrifuge";
 
 export default {
@@ -67,7 +66,7 @@ export default {
             }
         })
 
-        const subscription = this.centrifugo.newSubscription('room')
+        const subscription = this.centrifugo.newSubscription(`room:1`)
 
         subscription.on('publication', context => {
             this.messages.push({ message: context.data.message, from_me: context.data.user_id === this.user })

@@ -3,10 +3,10 @@
         <div class="inter__header">
             <div class="inter__monet">
                 <img src="./sources/coin1.svg" alt=""/>
-                <span>{{ dc_coins }}</span>
+                <span>{{ user.coins }}</span>
             </div>
             <div class="inter__monet">
-                <span>{{ dollars }}</span>
+                <span>{{ user.cash }}</span>
                 <img src="./sources/coin2.svg" alt=""/>
             </div>
         </div>
@@ -181,19 +181,23 @@
     </section>
 </template>
 <script>
+import axios from "axios";
+
 export default {
     data() {
         return {
             photo: './sources/profile.jpg',
-            dc_coins: 0,
-            dollars: 0,
+            user: [],
         }
     },
-    mounted() {
-        console.log(this.user)
-        this.dc_coins = this.user.balance
-    },
-    created() {
+    async mounted() {
+        this.user = (await axios.get('/api/profile', {
+            params: {
+                id: 1,
+                username: 'KaptainMidnight'
+            }
+        })).data
+
         window.Telegram.WebApp.BackButton.hide()
     }
 }

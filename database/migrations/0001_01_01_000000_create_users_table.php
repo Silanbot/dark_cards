@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id()->unique();
             $table->string('username');
-            $table->float('balance')->default(0);
+            $table->float('coins')->default(0);
+            $table->float('cash')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

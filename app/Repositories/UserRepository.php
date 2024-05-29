@@ -21,6 +21,6 @@ final readonly class UserRepository implements UserRepositoryContract
 
     public function findOrCreateUser(int $id, string $username): Model|User
     {
-        return User::query()->firstOrCreate(['id' => $id], ['id' => $id, 'username' => $username]);
+        return User::query()->firstOrCreate(['id' => $id], ['id' => $id, 'username' => $username, 'coins' => 0, 'cash' => 0]);
     }
 }
