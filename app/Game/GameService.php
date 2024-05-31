@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Game;
 
-use App\Contracts\GameContract;
+use App\Contracts\Game\GameContract;
+use App\Models\Room;
 use phpcent\Client;
 
 class GameService implements GameContract
@@ -16,25 +17,93 @@ class GameService implements GameContract
         $this->centrifugo = $centrifugo;
     }
 
-    public function distribute(int $id): void
+    public function distribute(int $id, array $players): void
     {
-        $this->centrifugo->publish("room:{$id}", [
+        $deck = (new Deck($players));
+        Room::query()->find($id)->update([
+            'deck' => collect([
+                'cards' => $deck->getCards(),
+                'players' => $deck->getPlayers(),
+                'table' => [],
+                'trump' => $deck->getTrumpCard()->getSuit(),
+            ]),
+        ]);
 
+        $this->centrifugo->publish("room:{$id}", [
+            'deck' => $deck->getCards(),
+            'event' => 'game_started',
         ]);
     }
 
-    public function takeFromDeck(): array
+    public function takeFromDeck(int $id, int $player): array
     {
-        // TODO: Implement takeFromDeck() method.
+        $room = Room::query()->find($id);
+
+        $card = $room->deck->get('cards')[0];
+        $playerCards = $room->deck->get('players')[$player];
+        $playerCards[] = strtolower($card['rank'].$card['suit'][0]);
+        $players = $room->deck->get('players');
+        $players[$player] = $playerCards;
+
+        $this->centrifugo->publish("room:{$id}", [
+            'card' => $card,
+            'event' => 'player_take_card',
+        ]);
+
+        unset($room->deck->get('cards')[0]);
+        $room->update([
+            'deck' => collect([
+                'cards' => $room->deck->get('cards'),
+                'players' => $players,
+                'table' => [],
+                'trump' => last($room->deck->get('cards'))['suit'],
+            ]),
+        ]);
+
+        return $players[$player];
     }
 
     public function beat(Card $fightCard, Card $card): bool
     {
-        // TODO: Implement beat() method.
+        return $fightCard->isHigherThan($card, $card->suit, $card->rank);
     }
 
-    public function takeFromTable(): array
+    public function takeFromTable(int $room, int $player): void
     {
-        // TODO: Implement takeFromTable() method.
+        $room = Room::query()->find($room);
+        $table = $room->deck->get('table');
+        $playerCards = $table;
+
+        $room->deck->get('player')[$player][] = $playerCards;
+        unset($room->deck->get('table')[$player]);
+
+        $room->update([
+            'deck' => [
+                'cards' => $room->deck->get('cards'),
+                'players' => $room->deck->get('players'),
+                'table' => [],
+                'trump' => last($room->deck->get('cards'))['suit'],
+            ],
+        ]);
+
+        $this->centrifugo->publish("room:{$room->id}", [
+            'event' => 'player_take_table',
+            'deck' => $room->deck,
+        ]);
+    }
+
+    public function discardCard(Card $card, int $room): void
+    {
+        $room = Room::query()->find($room);
+        $table = $room->deck->get('table');
+        $table[] = $card->toString();
+        $room->update([
+            'deck' => [
+                'cards' => $room->deck->get('cards'),
+                'table' => $table,
+                'players' => $room->deck->get('players'),
+                'trump' => last($room->deck->get('cards'))['suit'],
+            ],
+        ]);
     }
 }

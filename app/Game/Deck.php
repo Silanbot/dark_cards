@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Game;
 
-use App\Contracts\DeckContract;
+use App\Contracts\Game\DeckContract;
 
 final class Deck implements DeckContract
 {
@@ -20,14 +20,14 @@ final class Deck implements DeckContract
      */
     private array $players = [];
 
-    public function __construct(int $players)
+    public function __construct(array $players)
     {
         $suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
         $ranks = ['6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
         foreach ($suits as $suit) {
             foreach ($ranks as $rank) {
-                $this->cards[] = new Card($suit, $rank);
+                $this->cards[] = new Card(suit: $suit, rank: $rank);
             }
 
             shuffle($this->cards);
@@ -36,11 +36,11 @@ final class Deck implements DeckContract
         $this->distribute($players);
     }
 
-    public function distribute(int $players): void
+    public function distribute(array $players): void
     {
-        for ($i = 0; $i < $players; $i++) {
+        for ($i = 0; $i < count($players); $i++) {
             $cards = array_splice($this->cards, offset: self::MAX_CARDS * $i, length: self::MAX_CARDS);
-            $this->players[] = (new Player(hand: $cards))->toArray();
+            $this->players[] = (new Player(hand: $cards, id: $players[$i]))->toArray();
         }
     }
 
@@ -52,5 +52,10 @@ final class Deck implements DeckContract
     public function getCards(): array
     {
         return $this->cards;
+    }
+
+    public function getTrumpCard(): Card
+    {
+        return last($this->cards);
     }
 }

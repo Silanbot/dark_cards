@@ -348,26 +348,30 @@ export default {
             selectMode: 1,
             step: false,
             centrifugo: null,
-            token: null,
         }
     },
     async mounted() {
-        //const response = await (await fetch(`/api/auth/token?id=1`)).json()
-        //this.token = response.token
-        //this.centrifugo = new Centrifuge('ws://127.0.0.1:3000/connection/websocket', {
-        //    token: this.token
-        //})
-        //this.centrifugo.on('connected', () => {
-        //    console.log('Connected')
-        //})
-//
-        //const sub = this.centrifugo.newSubscription(`room`)
-//
-        //sub.on('publication', context => {
-        //    console.log(context)
-        //}).subscribe()
-//
-        //this.centrifugo.connect()
+        console.log(this.$page.props)
+        const response = await (await fetch(`/api/auth/token?id=1`)).json()
+        const token = response.token
+        this.centrifugo = new Centrifuge('ws://127.0.0.1:8888/connection/websocket', {
+           token: token
+        })
+        this.centrifugo.on('connected', () => {
+           console.log('Successfully connected to WSS server')
+        })
+
+        const sub = this.centrifugo.newSubscription(`game:1`)
+
+        sub.on('publication', context => {
+            console.log(context)
+        }).on('join', context => {
+            console.log('User joined to channel', context)
+        }).on('leave', context => {
+            console.log('User left the chat', context)
+        }).subscribe()
+
+        this.centrifugo.connect()
 
         let gameCells = []
 
@@ -499,7 +503,7 @@ export default {
                     return mycards.splice(i, 0, element)
 
             mycards.push(element)
-        
+
         }
 
         function addMyCardElement(element) {

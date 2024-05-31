@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Contracts\Game\GameContract;
+use App\Contracts\WebsocketContract;
+use App\Game\GameService;
+use App\Services\WebsocketService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use phpcent\Client;
@@ -28,5 +32,8 @@ class AppServiceProvider extends ServiceProvider
 
             return $client;
         });
+
+        $this->app->bind(WebsocketContract::class, WebsocketService::class);
+        $this->app->bind(GameContract::class, GameService::class);
     }
 }

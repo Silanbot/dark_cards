@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contracts;
+namespace App\Contracts\Game;
 
 use App\Game\Card;
 
@@ -11,12 +11,15 @@ interface GameContract
      *
      * @param  int  $id  ID комнаты
      */
-    public function distribute(int $id): void;
+    public function distribute(int $id, array $players): void;
 
     /**
      * Взять карту из колоды
+     *
+     * @param  int  $id  ID комнаты
+     * @param  int  $player  ID игрока
      */
-    public function takeFromDeck(): array;
+    public function takeFromDeck(int $id, int $player): array;
 
     /**
      * Побить карту игрока
@@ -28,5 +31,10 @@ interface GameContract
     /**
      * Взять карты со стола
      */
-    public function takeFromTable(): array;
+    public function takeFromTable(int $room, int $player): void;
+
+    /**
+     * Выбросить карту на стол
+     */
+    public function discardCard(Card $card, int $room): void;
 }

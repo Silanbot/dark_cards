@@ -2,11 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property int $bank
+ * @property int $game_type
+ * @property int $max_gamers
+ * @property array $deck
+ */
 class Room extends Model
 {
     use HasFactory;
@@ -27,5 +35,12 @@ class Room extends Model
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class);
+    }
+
+    public function casts(): array
+    {
+        return [
+            'deck' => AsCollection::class,
+        ];
     }
 }

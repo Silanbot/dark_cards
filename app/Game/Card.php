@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Game;
 
-final readonly class Card
+use App\Contracts\Game\CardContract;
+
+final readonly class Card implements CardContract
 {
     public function __construct(public string $suit, public string $rank)
     {
@@ -31,5 +33,20 @@ final readonly class Card
         }
 
         return false;
+    }
+
+    public function getSuit(): string
+    {
+        return $this->suit;
+    }
+
+    public function getRank(): string
+    {
+        return $this->rank;
+    }
+
+    public function toString(): string
+    {
+        return strtolower($this->rank.$this->suit[0]);
     }
 }

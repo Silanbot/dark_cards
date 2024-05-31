@@ -4,24 +4,21 @@ declare(strict_types=1);
 
 namespace App\Game;
 
-final class Player
+use App\Contracts\Game\PlayerContract;
+
+final class Player implements PlayerContract
 {
-    public function __construct(public array $hand)
+    public function __construct(public array $hand, public int $id)
     {
     }
 
-    public function takeCard(Card $card): void
+    public function beat()
     {
-        $this->hand[] = $card;
-    }
 
-    public function playCard(): ?Card
-    {
-        return array_pop($this->hand);
     }
 
     public function toArray(): array
     {
-        return array_map(fn ($item) => strtolower($item->rank[0].$item->suit[0]), $this->hand);
+        return array_map(fn (Card $card) => strtolower($card->rank[0].$card->suit[0]), $this->hand);
     }
 }

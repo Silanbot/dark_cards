@@ -15,7 +15,7 @@ Route::post('create-game', [GameController::class, 'createGame'])->name('create-
 Route::prefix('/auth/')->group(function () {
     Route::get('token', TokenController::class)->name('auth.token');
 });
-Route::get('/deck', DeckController::class)->name('deck');
+//Route::get('/deck', DeckController::class)->name('deck');
 Route::get('/distribute', [PlayController::class, 'distribute']);
 
 Route::middleware(TelegramBotMiddleware::class)->group(function () {
