@@ -140,7 +140,7 @@ import modalDialog from './components/modalDialog.vue'
                         <div class="game__players__player__cart">
                             <img src="./sources/cartes.svg" alt="" />
                         </div>
-                        <div class="game__players__player__photo">
+                        <div class="game__players__player__photo" data-id="12345">
                             <img class="game__players__player__photo__img" src="./sources/player.png" alt="" />
                             <div class="game__players__player__photo__text">
                                 <img src="./sources/level-2.png" alt="" />
@@ -152,7 +152,7 @@ import modalDialog from './components/modalDialog.vue'
                         <div class="game__players__player__cart">
                             <img src="./sources/cartes.svg" alt="" />
                         </div>
-                        <div class="game__players__player__photo">
+                        <div class="game__players__player__photo" data-id="99999">
                             <img class="game__players__player__photo__img" src="./sources/player2.png" alt="" />
                             <div class="game__players__player__photo__text">
                                 <img src="./sources/level-2.png" alt="" />
@@ -402,6 +402,7 @@ export default {
             return `translate(${gamePos[0] + (r.top?25:0)}px, ${gamePos[1] + (r.top?10:0)}px)` + (r.top?` rotate(10deg)`:'')
         }
 
+        let allCards = []
         let gameCards = []
 
         let state = 1
@@ -414,7 +415,7 @@ export default {
 
         document.addEventListener('touchstart', e=>{
             e.preventDefault()
-            if (e.target.dataset.player==='me') {
+            if (e.target.dataset.player===myID) {
                 touch=true
                 tx=e.touches[0].clientX
                 ty=e.touches[0].clientY
@@ -422,7 +423,9 @@ export default {
                 return
             }
             if (state===1)
-                giveCards()
+                giveCards([{player: '12345', cards: ['7h', '7s', '8h', '8s']},
+                           {player: '99999', cards: ['6d', '7d', '9d', '9d']},
+                           {player: '00000', cards: ['7s', '7s', '8s', '8s']}])
             if (state===2)
                 playerStep(Math.floor(Math.random()*2), codes[Math.floor(Math.random()*codes.length)])
             if (state===3)
@@ -437,7 +440,7 @@ export default {
             tx = e.touches[0].clientX
             ty = e.touches[0].clientY
             let elem = document.elementFromPoint(tx, ty)
-            if (!dragging && elem.dataset.player==='me') activeCard = elem
+            if (!dragging && elem.dataset.player===myID) activeCard = elem
         })
         document.addEventListener('touchend', e=>{
             e.preventDefault()
@@ -456,6 +459,7 @@ export default {
 
                     activeCard.style.zIndex = r.top?5:3
 
+                    allCards.push(activeCard)
                     gameCards.push(activeCard)
 
                 } else {
@@ -561,22 +565,26 @@ export default {
         let countElem = document.querySelector('.game__cart__cold__count')
         let count = parseInt(countElem.innerHTML)
 
-        let players = document.querySelectorAll('.game__players__player__photo')
+        let players = {}
+        for (let playerElem of document.querySelectorAll('.game__players__player__photo'))
+            players[playerElem.dataset.id] = playerElem
+
+        let myID = '00000'
 
         function giveCard(player, code) {
-            if (player != 'me') code = 'b'
+            if (player != myID) code = 'b'
             let card = document.createElement('img')
             card.dataset.card = code
             card.dataset.player = player
             card.src = document.querySelector(`img[data-cardimg="${code}"]`).src
-            if (player==='me') {
+            if (player===myID) {
                 card.style.width = '30vw'
                 card.style.left = '-15vw'
                 card.style.top = '-28vw'
                 addMyCard(card)
             } else {
                 cardCnt.appendChild(card)
-                let playerRect = players[parseInt(player)].getBoundingClientRect()
+                let playerRect = players[player].getBoundingClientRect()
                 let playerX = playerRect.x + playerRect.width/2
                 let playerY = playerRect.y + playerRect.height/2
                 card.style.transform = `translate(${playerX}px, ${playerY}px)`
@@ -585,20 +593,25 @@ export default {
             countElem.innerHTML = --count
         }
 
-        function giveCards() {
+        function giveCards(data) {
             let i = 0
-            let usedCodes = []
+            let totalCards = data.reduce((a, b)=>a+b.cards.length, 0)
             let interval = setInterval(()=>{
-                let p = i%3
-                let newCodes = codes.filter(c=>!usedCodes.includes(c))
-                let newCode = newCodes[Math.floor(Math.random()*newCodes.length)]
-                usedCodes.push(newCode)
-                giveCard(p===2?'me':p, newCode)
-                if (++i===18) return clearInterval(interval)
+                let di = i%data.length
+                let p = data[di].player
+                giveCard(p, data[di].cards[Math.floor(i/data.length)])
+                if (++i===totalCards) return clearInterval(interval)
             }, 100)
         }
 
         window.giveCard = giveCard
+
+        function getPlayerPos(player) {
+            let playerRect = players[player].getBoundingClientRect()
+            let playerX = playerRect.x + playerRect.width/2
+            let playerY = playerRect.y + playerRect.height/2
+            return {x: playerX, y: playerY}
+        }
 
         let cardBack = document.querySelector('#card-back')
         let cardStep = document.querySelector('#card-step')
@@ -613,6 +626,7 @@ export default {
             card.style.width = '13vw'
             card.src = document.querySelector(`img[data-cardimg="${code}"]`).src
             let r = addGameCard(card)
+            allCards.push(card)
             gameCards.push(card)
             card.style.transform = `translate(${playerX}px, ${playerY}px)`
             card.style.zIndex = r.top?5:3
@@ -624,19 +638,31 @@ export default {
         window.playerStep = playerStep
 
         function endCards() {
-            gameCells = []
             for (let card of gameCards) {
                 card.style.transform = `translate(${window.innerWidth}px, ${window.innerHeight/2}px) rotate(${Math.random()*360}deg)`
                 setTimeout(()=>{card.src=cardBack.src}, 200)
             }
+            gameCells = []
+            gameCards = []
+        }
+
+        function cardsToPlayer(player) {
+            let playerPos = getPlayerPos(player)
+            for (let card of gameCards) {
+                card.style.transform = `translate(${playerPos.x}px, ${playerPos.y}px)`
+            }
+            gameCells = []
+            gameCards = []
         }
 
         function endCards1() {
-            gameCells = []
-            for (let card of gameCards) {
+            for (let card of allCards) {
                 card.style.transform = `translate(${-140}px, ${window.innerHeight/2}px) rotate(${Math.random()*360}deg)`
                 setTimeout(()=>{card.src=cardBack.src}, 200)
             }
+            gameCells = []
+            allCards = []
+            gameCards = []
         }
     }
 }
