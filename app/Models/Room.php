@@ -25,6 +25,7 @@ class Room extends Model
         'game_type',
         'max_gamers',
         'deck',
+        'ready_state',
     ];
 
     public function user(): BelongsTo
@@ -41,6 +42,7 @@ class Room extends Model
     {
         return [
             'deck' => AsCollection::class,
+            'ready_state' => AsCollection::class,
         ];
     }
 }

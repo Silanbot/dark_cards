@@ -40,7 +40,7 @@ final class Deck implements DeckContract
     {
         for ($i = 0; $i < count($players); $i++) {
             $cards = array_splice($this->cards, offset: self::MAX_CARDS * $i, length: self::MAX_CARDS);
-            $this->players[] = (new Player(hand: $cards, id: $players[$i]))->toArray();
+            $this->players[$players[$i]] = (new Player(hand: $cards, id: (int)$players[$i]))->toArray();
         }
     }
 

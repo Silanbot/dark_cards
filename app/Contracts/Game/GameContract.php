@@ -37,4 +37,8 @@ interface GameContract
      * Выбросить карту на стол
      */
     public function discardCard(Card $card, int $room): void;
+
+    public function allPlayersReady(int $id): void;
+
+    public function userJoin(int $room, int $player): void;
 }

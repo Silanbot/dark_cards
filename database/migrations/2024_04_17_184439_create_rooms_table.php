@@ -19,6 +19,7 @@ return new class extends Migration
             $table->tinyInteger('game_type');
             $table->unsignedTinyInteger('max_gamers')->default(2);
             $table->jsonb('deck')->nullable();
+            $table->jsonb('ready_state')->nullable();
             $table->timestamps();
         });
     }

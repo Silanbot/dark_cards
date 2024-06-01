@@ -6,6 +6,7 @@ namespace App\Game;
 
 use App\Contracts\Game\GameContract;
 use App\Models\Room;
+use App\Models\User;
 use phpcent\Client;
 
 class GameService implements GameContract
@@ -29,8 +30,9 @@ class GameService implements GameContract
             ]),
         ]);
 
-        $this->centrifugo->publish("room:{$id}", [
+        $this->centrifugo->publish("room", [
             'deck' => $deck->getCards(),
+            'players' => $deck->getPlayers(),
             'event' => 'game_started',
         ]);
     }
@@ -104,6 +106,21 @@ class GameService implements GameContract
                 'players' => $room->deck->get('players'),
                 'trump' => last($room->deck->get('cards'))['suit'],
             ],
+        ]);
+    }
+
+    public function allPlayersReady(int $id): void
+    {
+        $this->centrifugo->publish('room', [
+            'event' => 'all_players_ready',
+        ]);
+    }
+
+    public function userJoin(int $room, int $player): void
+    {
+        $this->centrifugo->publish('room', [
+            'event' => 'user_join_room',
+            'user' => User::query()->findOrFail($player),
         ]);
     }
 }
