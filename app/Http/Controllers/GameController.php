@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Contracts\Game\GameContract;
 use App\Models\Room;
 use Illuminate\Http\Request;
-use phpcent\Client;
 
 class GameController extends Controller
 {
@@ -24,7 +23,7 @@ class GameController extends Controller
 
     public function startGame(Request $request): void
     {
-        $this->contract->distribute((int)$request->room_id, $request->players);
+        $this->contract->distribute((int) $request->room_id, $request->players);
     }
 
     public function searching(Request $request): array
@@ -52,15 +51,15 @@ class GameController extends Controller
         if ($room->max_gamers === count($state)) {
             $this->contract->allPlayersReady($room->id);
         }
-//        if (in_array($request->user_id, $state->toArray())) {
-//            unset($state[array_search($request->user_id, $state->toArray())]);
-//        } else {
-//            if ($room->max_gamers === count($state)) {
-//                $this->contract->allPlayersReady($room->id);
-//            }
-//
-//            $state[] = $request->user_id;
-//        }
+        //        if (in_array($request->user_id, $state->toArray())) {
+        //            unset($state[array_search($request->user_id, $state->toArray())]);
+        //        } else {
+        //            if ($room->max_gamers === count($state)) {
+        //                $this->contract->allPlayersReady($room->id);
+        //            }
+        //
+        //            $state[] = $request->user_id;
+        //        }
 
         $room->update([
             'ready_state' => $state,

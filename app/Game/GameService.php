@@ -30,7 +30,7 @@ class GameService implements GameContract
             ]),
         ]);
 
-        $this->centrifugo->publish("room", [
+        $this->centrifugo->publish('room', [
             'deck' => $deck->getCards(),
             'players' => $deck->getPlayers(),
             'event' => 'game_started',
