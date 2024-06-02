@@ -114,7 +114,7 @@ class GameService implements GameContract
     {
         $this->centrifugo->publish('room', [
             'event' => 'all_players_ready',
-            'users' => Room::query()->find($id)->ready_state
+            'users' => Room::query()->find($id)->ready_state,
         ]);
     }
 

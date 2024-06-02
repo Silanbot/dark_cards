@@ -23,7 +23,7 @@ class GameController extends Controller
 
     public function startGame(Request $request): void
     {
-        $this->contract->distribute((int)$request->room_id);
+        $this->contract->distribute((int) $request->room_id);
     }
 
     public function searching(Request $request): array
