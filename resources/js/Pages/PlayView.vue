@@ -355,13 +355,13 @@ export default {
     },
     methods: {
         setReadyState() {
-            fetch(`/api/game/set-ready-state/${this.room.id}?user_id=1`)
+            fetch(`/api/game/set-ready-state/${this.room.id}?user_id=${window.Telegram.WebApp.initDataUnsafe.user.id}`)
         }
     },
     async mounted() {
-        const response = await (await fetch(`/api/auth/token?id=1`)).json()
+        const response = await (await fetch(`/api/auth/token?id=${window.Telegram.WebApp.initDataUnsafe.user.id}`)).json()
         const token = response.token
-        this.centrifugo = new Centrifuge('ws://127.0.0.1:8888/connection/websocket', {
+        this.centrifugo = new Centrifuge('wss://darkcards.de/connection/websocket', {
             token: token
         })
         this.centrifugo.on('connected', () => {
@@ -567,7 +567,7 @@ export default {
         let countElem = document.querySelector('.game__cart__cold__count')
         let count = parseInt(countElem.innerHTML)
 
-        let myID = 1
+        let myID = window.Telegram.WebApp.initDataUnsafe.user.id
 
         function giveCard(player, code) {
             if (player !== myID.toString()) code = 'b'
