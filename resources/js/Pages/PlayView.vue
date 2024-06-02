@@ -422,6 +422,10 @@ export default {
             if (cell === 4) return [x * 1.2, y * 1.3]
         }
 
+        function getPlayerPositions() {
+
+        }
+
         function getTransform(r) {
             let gamePos = getGamePos(r.gameCell)
             return `translate(${gamePos[0] + (r.top ? 25 : 0)}px, ${gamePos[1] + (r.top ? 10 : 0)}px)` + (r.top ? ` rotate(10deg)` : '')
@@ -439,7 +443,6 @@ export default {
         let activeCard = null
 
         document.addEventListener('touchstart', e=>{
-            e.preventDefault()
             if (e.target.dataset.player===myID) {
                 touch=true
                 tx=e.touches[0].clientX
@@ -448,11 +451,11 @@ export default {
                 return
             }
             if (state===1)
-                giveCards([{player: '12345', cards: ['7h', '7s', '8h', '8s']},
-                           {player: '99999', cards: ['6d', '7d', '9d', '9d']},
+                giveCards([{player: '213123', cards: ['7h', '7s', '8h', '8s']},
+                           {player: '111231', cards: ['6d', '7d', '9d', '9d']},
                            {player: '00000', cards: ['7s', '7s', '8s', '8s']}])
             if (state===2)
-                playerStep(Math.floor(Math.random()*2), codes[Math.floor(Math.random()*codes.length)])
+                playerStep(Object.keys(players)[Math.floor(Math.random()*2)], codes[Math.floor(Math.random()*codes.length)])
             if (state===3)
                 endCards()
             if (state===4)
@@ -461,19 +464,17 @@ export default {
             if (state===5) state=2
         })
         document.addEventListener('touchmove', e=>{
-            e.preventDefault()
             tx = e.touches[0].clientX
             ty = e.touches[0].clientY
             let elem = document.elementFromPoint(tx, ty)
             if (!dragging && elem.dataset.player===myID) activeCard = elem
         })
         document.addEventListener('touchend', e=>{
-            e.preventDefault()
             touch = false
             dragging = lastDragging = false
             if (activeCard) {
                 if (ty < window.innerHeight*0.75) {
-                    activeCard.dataset.player = ''
+                    activeCard.classList.remove('my-card')
 
                     let r = addGameCard(activeCard)
 
@@ -594,7 +595,7 @@ export default {
         for (let playerElem of document.querySelectorAll('.game__players__player__photo'))
             players[playerElem.dataset.id] = playerElem
 
-        let myID = '33213123'
+        let myID = '00000'
 
         function giveCard(player, code) {
             if (player != myID) code = 'b'
@@ -606,6 +607,7 @@ export default {
                 card.style.width = '30vw'
                 card.style.left = '-15vw'
                 card.style.top = '-28vw'
+                card.classList.add('my-card')
                 addMyCard(card)
             } else {
                 cardCnt.appendChild(card)
