@@ -5,6 +5,11 @@
 @import "./scss/section-filter.scss";
 @import "./scss/section-dev.scss";
 
+
+* {
+    user-select: none;
+}
+
 a {
     text-decoration: inherit;
     color: inherit;
@@ -690,11 +695,11 @@ body {
         transform: translate(0, 46vh);
     }
 
-    img:not([data-player=me]) {
+    img:not(.my-card) {
         transition: transform 0.3s, width 0.3s, left 0.3s, top 0.3s;
     }
 
-    img[data-player=me] {
+    img.my-card {
         transition: width 0.3s, left 0.3s, top 0.3s;
     }
 }
