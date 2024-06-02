@@ -11,7 +11,7 @@ interface GameContract
      *
      * @param  int  $id  ID комнаты
      */
-    public function distribute(int $id, array $players): void;
+    public function distribute(int $id): void;
 
     /**
      * Взять карту из колоды

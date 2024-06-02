@@ -47,6 +47,10 @@ final readonly class Card implements CardContract
 
     public function toString(): string
     {
+        if ($this->rank === '10') {
+            return strtolower($this->rank[0].$this->suit[0]);
+        }
+
         return strtolower($this->rank.$this->suit[0]);
     }
 }

@@ -18,9 +18,10 @@ class GameService implements GameContract
         $this->centrifugo = $centrifugo;
     }
 
-    public function distribute(int $id, array $players): void
+    public function distribute(int $id): void
     {
-        $deck = (new Deck($players));
+        $room = Room::query()->find($id);
+        $deck = (new Deck($room->ready_state->toArray()));
         Room::query()->find($id)->update([
             'deck' => collect([
                 'cards' => $deck->getCards(),
@@ -113,6 +114,7 @@ class GameService implements GameContract
     {
         $this->centrifugo->publish('room', [
             'event' => 'all_players_ready',
+            'users' => Room::query()->find($id)->ready_state
         ]);
     }
 

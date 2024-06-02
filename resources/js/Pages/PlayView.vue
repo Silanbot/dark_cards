@@ -136,30 +136,30 @@ import modalDialog from './components/modalDialog.vue'
             <section class="section-game game">
                 <div id="cards"></div>
                 <div class="game__players">
-                    <div  class="game__players__player">
+                    <div  class="game__players__player" v-for="user of users">
                         <div class="game__players__player__cart">
                             <img src="./sources/cartes.svg" alt=""/>
                         </div>
-                        <div class="game__players__player__photo" data-id="213123">
+                        <div class="game__players__player__photo" :data-id="user.id">
                             <img class="game__players__player__photo__img" src="./sources/player.png" alt=""/>
                             <div class="game__players__player__photo__text">
                                 <img src="./sources/level-2.png" alt=""/>
                             </div>
-                            <div class="game__players__player__photo__name">123123</div>
+                            <div class="game__players__player__photo__name">{{ user.username }}</div>
                         </div>
                     </div>
-                    <div class="game__players__player second" @click="modalProfileShow = true">
-                        <div class="game__players__player__cart">
-                            <img src="./sources/cartes.svg" alt=""/>
-                        </div>
-                        <div class="game__players__player__photo" data-id="111231">
-                            <img class="game__players__player__photo__img" src="./sources/player2.png" alt=""/>
-                            <div class="game__players__player__photo__text">
-                                <img src="./sources/level-2.png" alt=""/>
-                            </div>
-                            <div class="game__players__player__photo__name">Никита</div>
-                        </div>
-                    </div>
+<!--                    <div class="game__players__player second" @click="modalProfileShow = true">-->
+<!--                        <div class="game__players__player__cart">-->
+<!--                            <img src="./sources/cartes.svg" alt=""/>-->
+<!--                        </div>-->
+<!--                        <div class="game__players__player__photo" data-id="111231">-->
+<!--                            <img class="game__players__player__photo__img" src="./sources/player2.png" alt=""/>-->
+<!--                            <div class="game__players__player__photo__text">-->
+<!--                                <img src="./sources/level-2.png" alt=""/>-->
+<!--                            </div>-->
+<!--                            <div class="game__players__player__photo__name">Никита</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
                 <div class="game__cart">
                     <div class="game__cart__cold">
@@ -338,16 +338,6 @@ import modalDialog from './components/modalDialog.vue'
 <script>
 import {Centrifuge} from "centrifuge";
 
-// document.addEventListener(
-//     'touchmove',
-//     function (event) {
-//         event.preventDefault()
-//     },
-//     {
-//         passive: false
-//     }
-// )
-
 export default {
     props: {
         room: Object
@@ -365,11 +355,11 @@ export default {
     },
     methods: {
         setReadyState() {
-            fetch(`/api/game/set-ready-state/1?user_id=1`)
+            fetch(`/api/game/set-ready-state/${this.room.id}?user_id=1`)
         }
     },
     async mounted() {
-        const response = await (await fetch(`/api/auth/token?id=${this.room.id}`)).json()
+        const response = await (await fetch(`/api/auth/token?id=1`)).json()
         const token = response.token
         this.centrifugo = new Centrifuge('ws://127.0.0.1:8888/connection/websocket', {
             token: token
@@ -383,11 +373,10 @@ export default {
         sub.on('publication', context => {
             switch (context.data.event) {
                 case 'all_players_ready':
-                    fetch(`/api/game/start-game?room_id=${this.room.id}&players[]=213123213123&players[]=111231&players[]=33213123`);
+                    fetch(`/api/game/start-game?room_id=${this.room.id}`);
                     break
                 case 'game_started':
                     const players = Object.keys(context.data.players).map(k => ({ player: k, cards: context.data.players[k] }))
-                    console.log(players)
                     giveCards(players)
                     break
                 case 'user_join_room':
@@ -434,7 +423,6 @@ export default {
         let allCards = []
         let gameCards = []
 
-        let state = 1
         let touch = false
         let dragging = false
         let lastDragging = false
@@ -443,25 +431,13 @@ export default {
         let activeCard = null
 
         document.addEventListener('touchstart', e=>{
-            if (e.target.dataset.player===myID) {
+            if (e.target.dataset.player === myID.toString()) {
                 touch=true
                 tx=e.touches[0].clientX
                 ty=e.touches[0].clientY
                 activeCard=e.target
                 return
             }
-            if (state===1)
-                giveCards([{player: '213123', cards: ['7h', '7s', '8h', '8s']},
-                           {player: '111231', cards: ['6d', '7d', '9d', '9d']},
-                           {player: '00000', cards: ['js', '1s', '1h', '7d']}])
-            if (state===2)
-                playerStep(Object.keys(players)[Math.floor(Math.random()*2)], codes[Math.floor(Math.random()*codes.length)])
-            if (state===3)
-                endCards()
-            if (state===4)
-                endCards1()
-            state++
-            if (state===5) state=2
         })
         document.addEventListener('touchmove', e=>{
             tx = e.touches[0].clientX
@@ -591,25 +567,25 @@ export default {
         let countElem = document.querySelector('.game__cart__cold__count')
         let count = parseInt(countElem.innerHTML)
 
-        let players = {}
-        for (let playerElem of document.querySelectorAll('.game__players__player__photo'))
-            players[playerElem.dataset.id] = playerElem
-
-        let myID = '00000'
+        let myID = 1
 
         function giveCard(player, code) {
-            if (player != myID) code = 'b'
+            if (player !== myID.toString()) code = 'b'
             let card = document.createElement('img')
             card.dataset.card = code
             card.dataset.player = player
             card.src = document.querySelector(`img[data-cardimg="${code}"]`).src
-            if (player === myID) {
+            if (player === myID.toString()) {
                 card.style.width = '30vw'
                 card.style.left = '-15vw'
                 card.style.top = '-28vw'
                 card.classList.add('my-card')
                 addMyCard(card)
             } else {
+                let players = {}
+                for (const playerElem of document.querySelectorAll('.game__players__player__photo'))
+                    players[playerElem.dataset.id] = playerElem
+
                 cardCnt.appendChild(card)
                 let playerRect = players[player].getBoundingClientRect()
                 let playerX = playerRect.x + playerRect.width / 2
@@ -630,8 +606,6 @@ export default {
                 if (++i === totalCards) return clearInterval(interval)
             }, 100)
         }
-
-        window.giveCard = giveCard
 
         function getPlayerPos(player) {
             let playerRect = players[player].getBoundingClientRect()
