@@ -453,7 +453,7 @@ export default {
             if (state===1)
                 giveCards([{player: '213123', cards: ['7h', '7s', '8h', '8s']},
                            {player: '111231', cards: ['6d', '7d', '9d', '9d']},
-                           {player: '00000', cards: ['7s', '7s', '8s', '8s']}])
+                           {player: '00000', cards: ['js', '1s', '1h', '7d']}])
             if (state===2)
                 playerStep(Object.keys(players)[Math.floor(Math.random()*2)], codes[Math.floor(Math.random()*codes.length)])
             if (state===3)
@@ -537,7 +537,7 @@ export default {
         }
 
         function addMyCardElement(element) {
-            let cards = document.querySelectorAll('img[data-player=me]')
+            let cards = document.querySelectorAll('img.my-card')
 
             if (!cards.length) return cardCnt.appendChild(element)
 
