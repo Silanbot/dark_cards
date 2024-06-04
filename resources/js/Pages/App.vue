@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import telegram from './api/telegram.js'
+
 export default {
     data() {
         return {
@@ -27,7 +29,7 @@ export default {
         location.replace('/profile')
     },
     created() {
-        window.Telegram.WebApp.BackButton.hide()
+        telegram.hideBackButton()
     }
 }
 
@@ -35,5 +37,3 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms))
 }
 </script>
-
-<style scoped></style>

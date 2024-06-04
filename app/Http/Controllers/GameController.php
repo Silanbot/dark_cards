@@ -17,7 +17,7 @@ class GameController extends Controller
         $room = Room::query()->create($request->only(['bank', 'game_type', 'user_id']));
 
         return [
-            'room_id' => $room->id,
+            'id' => $room->id,
         ];
     }
 

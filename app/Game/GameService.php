@@ -47,19 +47,19 @@ class GameService implements GameContract
         $playerCards[] = strtolower($card['rank'].$card['suit'][0]);
         $players = $room->deck->get('players');
         $players[$player] = $playerCards;
-//        if ($card['rank'] === '10') {
-//            $card = strtolower($this->rank[0].$this->suit[0]);
-//
-//            $this->centrifugo->publish("room", [
-//                'card' => $card,
-//                'event' => 'player_take_card',
-//                'player' => $player,
-//            ]);
-//
-//            return [];
-//        }
-        $card =  strtolower($card['rank'].$card['suit'][0]);
-        $this->centrifugo->publish("room", [
+        //        if ($card['rank'] === '10') {
+        //            $card = strtolower($this->rank[0].$this->suit[0]);
+        //
+        //            $this->centrifugo->publish("room", [
+        //                'card' => $card,
+        //                'event' => 'player_take_card',
+        //                'player' => $player,
+        //            ]);
+        //
+        //            return [];
+        //        }
+        $card = strtolower($card['rank'].$card['suit'][0]);
+        $this->centrifugo->publish('room', [
             'card' => $card,
             'event' => 'player_take_card',
             'player' => $player,
@@ -81,15 +81,15 @@ class GameService implements GameContract
     public function beat(string $fightCard, string $card): bool
     {
         if ($fightCard === 'ts') {
-            return (bool)$this->centrifugo->publish('room', [
+            return (bool) $this->centrifugo->publish('room', [
                 'event' => 'game_beat',
-                'status' => true
+                'status' => true,
             ]);
         }
 
-        return (bool)$this->centrifugo->publish('room', [
+        return (bool) $this->centrifugo->publish('room', [
             'event' => 'game_beat',
-            'status' => false
+            'status' => false,
         ]);
     }
 
@@ -111,7 +111,7 @@ class GameService implements GameContract
             ],
         ]);
 
-        $this->centrifugo->publish("room", [
+        $this->centrifugo->publish('room', [
             'event' => 'player_take_table',
             'deck' => $room->deck,
         ]);

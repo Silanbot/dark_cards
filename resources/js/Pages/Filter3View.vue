@@ -5,10 +5,10 @@
         <div class="inter__header">
             <div class="inter__monet">
                 <img src="./sources/coin1.svg" alt=""/>
-                <span>{{ dc_coins}}</span>
+                <span>{{ user.coins }}</span>
             </div>
             <div class="inter__monet">
-                <span>0</span>
+                <span>{{ user.cash }}</span>
                 <img src="./sources/coin2.svg" alt=""/>
             </div>
         </div>
@@ -144,18 +144,15 @@
     </section>
 </template>
 <script>
-let back = window.Telegram.WebApp.BackButton
-back.show()
-back.onClick(() => {
-    location.replace('/home')
-})
+import telegram from './api/telegram.js'
+import api from './api/users.api.js'
+
 export default {
     data() {
         return {
             selectMode: 1,
-            dc_coins: 0,
-            dollars: 0,
-            range: []
+            range: [],
+            user: {}
         }
     },
     methods: {
@@ -164,7 +161,7 @@ export default {
             const to = window.getClosestRow(1)
 
             if (parseFloat(from.dataset.sum) > parseFloat(to.dataset.sum)) {
-                window.Telegram.WebApp.showAlert('Начальная ставка не должна превышать конечную')
+                telegram.alert('Начальная ставка не должна превышать конечную', true)
                 return
             }
             this.range = `${from.innerText} - ${to.innerText}`
@@ -266,7 +263,7 @@ export default {
             if (tx >= scrollRect.left && tx <= scrollRect.right &&
                 ty >= scrollRect.top && ty <= scrollRect.bottom)
             {
-                window.Telegram.WebApp.HapticFeedback.impactOccurred('light')
+                telegram.impactFeedback('light')
                 scroll = true
                 scrollIndex = tx>(scrollRect.left+scrollRect.right)/2 ? 1 : 0
                 scrollSY[scrollIndex] = scrollY[scrollIndex]
@@ -276,7 +273,7 @@ export default {
 
         document.addEventListener('touchend', e=>{
             scroll = false
-            window.Telegram.WebApp.HapticFeedback.impactOccurred('light')
+            telegram.impactFeedback('light')
         })
 
         document.addEventListener('touchmove', e=>{
@@ -286,18 +283,12 @@ export default {
         })
 
     },
-    created() {
-        // fetch(`/api/profile?id=${telegram.initDataUnsafe.user.id}&username=${telegram.initDataUnsafe.user.username}`)
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         this.dc_coins = data.balance
-        //     })
-        let back = window.Telegram.WebApp.BackButton
-        back.show()
-        back.onClick(() => {
-            location.replace('/home')
-        })
+    async created() {
+        const profile = telegram.profile()
+        this.user = await api.profile(profile.id, profile.username)
 
+        telegram.showBackButton()
+        telegram.addOnClickHandlerForBackButton('/home')
     }
 }
 </script>

@@ -181,24 +181,21 @@
     </section>
 </template>
 <script>
-import axios from "axios";
+import api from './api/users.api.js'
+import telegram from './api/telegram.js'
 
 export default {
     data() {
         return {
             photo: './sources/profile.jpg',
-            user: [],
+            user: {},
         }
     },
     async mounted() {
-        this.user = (await axios.get('/api/profile', {
-            params: {
-                id: window.Telegram.WebApp.initDataUnsafe.user.id,
-                username: 'KaptainMidnight'
-            }
-        })).data
+        let telegramProfile = telegram.profile()
+        this.user = await api.profile(telegramProfile.id, telegramProfile.username)
 
-        window.Telegram.WebApp.BackButton.hide()
+        telegram.hideBackButton()
     }
 }
 </script>

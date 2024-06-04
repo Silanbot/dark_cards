@@ -35,8 +35,14 @@
 </template>
 <script>
 import {Centrifuge} from "centrifuge";
+import telegram from '../api/telegram.js'
+import api from '../api/users.api.js'
+import messages from '../api/messages.api.js'
 
 export default {
+    props: {
+        room: Object
+    },
     data() {
         return {
             messages: [],
@@ -46,25 +52,18 @@ export default {
         }
     },
     methods: {
-        sendMessage() {
-            fetch(`/api/messages/send?user_id=${this.user}&message=${this.text}&room_id=1&room_name=room`)
+        async sendMessage() {
+            await messages.send(this.text, this.user.id, this.room.id, 'room')
             this.text = ''
         }
     },
     async created() {
-        this.user = window.Telegram.WebApp.initDataUnsafe.user.id
+        this.user = telegram.profile()
 
-        let token = ''
-        const response = await (await fetch(`/api/auth/token?id=${this.user}`)).json()
-        token = response.token
-        this.centrifugo = new Centrifuge('ws://127.0.0.1:8888/connection/websocket', {
-            token: token
-        })
-        fetch('/api/messages?room_id=1&room_name=room').then(response => response.json()).then(data => {
-            for (const message of data) {
-                this.messages.push({ message: message.message, from_me: message.user_id === this.user })
-            }
-        })
+        const token = await api.generateConnectionToken(this.user.id)
+        this.centrifugo = new Centrifuge('ws://127.0.0.1:8888/connection/websocket', { token })
+        const messages = await messages.load(this.room.id, 'room')
+        this.messages = messages.map(message => ({ message: message.message, from_me: message.user_id === this.user.id }))
 
         const subscription = this.centrifugo.newSubscription(`room:1`)
 

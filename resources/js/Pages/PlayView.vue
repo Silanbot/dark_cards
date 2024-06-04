@@ -338,6 +338,9 @@ import modalDialog from './components/modalDialog.vue'
 </template>
 <script>
 import {Centrifuge} from "centrifuge";
+import telegram from './api/telegram.js'
+import gameApi from './api/game.api.js'
+import api from './api/users.api.js'
 
 export default {
     props: {
@@ -357,31 +360,26 @@ export default {
         }
     },
     methods: {
-        setReadyState() {
-            fetch(`/api/game/set-ready-state/${this.room.id}?user_id=${window.Telegram.WebApp.initDataUnsafe.user.id}`)
+        async setReadyState() {
+            await gameApi.ready(telegram.profile().id, this.room.id)
             this.ready = !this.ready
         }
     },
     async mounted() {
-        // console.log(this.players)
-        // fetch(`/api/game/join?id=${this.room.id}&user_id=2`)
-        // ${window.Telegram.WebApp.initDataUnsafe.user.id}
-        const response = await (await fetch(`/api/auth/token?id=1`)).json()
-        const token = response.token
-        this.centrifugo = new Centrifuge('ws://127.0.0.1:8888/connection/websocket', {
-            token: token
-        })
+        const profile = telegram.profile()
+        const token = await api.generateConnectionToken(profile.id)
+        this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })
         this.centrifugo.on('connected', () => {
             console.log('Successfully connected to WSS server')
         })
 
         const sub = this.centrifugo.newSubscription(`room`)
 
-        sub.on('publication', context => {
+        sub.on('publication', async context => {
             console.log(context.data)
             switch (context.data.event) {
                 case 'all_players_ready':
-                    fetch(`/api/game/start-game?room_id=${this.room.id}`);
+                    await gameApi.start(this.room.id)
                     break
                 case 'game_started':
                     const players = Object.keys(context.data.players).map(k => ({ player: k, cards: context.data.players[k] }))
@@ -398,8 +396,8 @@ export default {
                     break
                 case 'user_defeat_card':
                     endCards()
-                    const count = 1; // А сколько брать как получить?????
-                    fetch(`/api/game/take-from-deck?id=${this.room.id}&user_id=1&count=${count}`)
+                    const count = 1;
+                    await gameApi.takeFromDeck(this.room.id, profile.id, count)
                     break
                 case 'user_take_from_deck':
                     break

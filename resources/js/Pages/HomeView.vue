@@ -5,10 +5,10 @@
         <div class="inter__header">
             <div class="inter__monet">
                 <img src="./sources/coin1.svg" alt=""/>
-                <span>{{ dc_coins }}</span>
+                <span>{{ user.coins }}</span>
             </div>
             <div class="inter__monet">
-                <span>{{ dollars }}</span>
+                <span>{{ user.cash }}</span>
                 <img src="./sources/coin2.svg" alt=""/>
             </div>
         </div>
@@ -486,36 +486,28 @@
 </template>
 <script>
 import axios from "axios";
-document.addEventListener(
-    'touchmove',
-    function (event) {
-        event.preventDefault()
-    },
-    {
-        passive: false
-    }
-)
+
+import telegram from "./api/telegram.js";
+import api from './api/users.api.js'
+import gameApi from "./api/game.api.js";
 
 export default {
     data() {
         return {
             selectMode: localStorage.getItem('selectMode') || 1,
-            dc_coins: 0,
-            dollars: 0,
+            user: {},
             token: '',
             coins: '1м - 1м',
             cash: '1м-1м'
         }
     },
     methods: {
-        createGame() {
-            axios.post('/api/create-game', {
-                bank: 100,
-                game_type: this.selectMode,
-                user_id: window.Telegram.WebApp.initDataUnsafe.user.id,
-            }).then(response => {
-                location.replace('/play/' + response.data.room_id)
-            })
+        async createGame() {
+            const room = await gameApi.createGame(1000, this.selectMode, telegram.profile().id)
+
+            if (Object.keys(room).includes('id')) {
+                return location.replace(`/play/${room.id}`)
+            }
         },
         isParamExists(name) {
             let storage = localStorage.getItem('params')
@@ -526,25 +518,18 @@ export default {
             return storage.split(',').includes(name)
         },
         changeCoins() {
-            window.Telegram.WebApp.HapticFeedback.selectionChanged();
+            telegram.switchSelectFeedback()
             this.selectMode = 2
         },
         changeCash() {
-            window.Telegram.WebApp.HapticFeedback.selectionChanged();
+            telegram.switchSelectFeedback()
             this.selectMode = 1
         }
     },
-    created() {
-        fetch(`/api/profile?id=${window.Telegram.WebApp.initDataUnsafe.user.id}&username=${window.Telegram.WebApp.initDataUnsafe.user.username}`)
-            .then(response => response.json())
-            .then(data => {
-                this.dc_coins = data.balance
-            })
-        let back = window.Telegram.WebApp.BackButton
-        back.show()
-        back.onClick(() => {
-            location.replace('/profile')
-        })
+    async created() {
+        this.user = await api.profile(telegram.profile().id, telegram.profile().username)
+        telegram.showBackButton()
+        telegram.addOnClickHandlerForBackButton('/profile')
     },
     mounted() {
         this.coins = localStorage.getItem('coins') ?? '1м - 1м'

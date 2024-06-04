@@ -15,12 +15,13 @@ return new class extends Migration
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class);
-            $table->float('bank');
+            $table->unsignedInteger('bank');
             $table->tinyInteger('game_type');
             $table->unsignedTinyInteger('max_gamers')->default(2);
             $table->jsonb('deck')->nullable();
             $table->jsonb('ready_state')->nullable();
             $table->jsonb('mode')->nullable();
+            $table->string('password', length: 6)->nullable();
             $table->timestamps();
         });
     }

@@ -5,10 +5,10 @@
         <div class="inter__header">
             <div class="inter__monet">
                 <img src="./sources/coin1.svg" alt=""/>
-                <span>{{ dc_coins }}</span>
+                <span>{{ user.coins }}</span>
             </div>
             <div class="inter__monet">
-                <span>{{ dollars }}</span>
+                <span>{{ user.cash }}</span>
                 <img src="./sources/coin2.svg" alt=""/>
             </div>
         </div>
@@ -426,40 +426,33 @@
     </section>
 </template>
 <script>
-import axios from "axios";
+import api from './api/users.api.js'
+import telegram from './api/telegram.js'
 
 export default {
     data() {
         return {
             selectMode: 1,
-            dc_coins: 0,
-            dollars: 0
+            user: {},
         }
     },
     methods: {
         addParams() {
             let filters = []
-            document.querySelectorAll('.active').forEach(elem => filters.push(elem.getAttribute('name')))
+            document.querySelectorAll('.active').forEach(filter => filters.push(filter.getAttribute('name')))
             filters.push(`select_mode_${this.selectMode}`)
             localStorage.setItem('params', filters.join(','))
-            location.replace('/home?')
+            location.replace('/home')
         },
         paramExists(name) {
             return localStorage.getItem('params') !== null ? localStorage.getItem('params').split(',').includes(name) : false
         }
     },
-    created() {
-        fetch(`/api/profile?id=${window.Telegram.WebApp.initDataUnsafe.user.id}&username=${window.Telegram.WebApp.initDataUnsafe.user.username}`)
-            .then(response => response.json())
-            .then(data => {
-                this.dc_coins = data.balance
-            })
-        let back = window.Telegram.WebApp.BackButton
-        back.show()
-        back.onClick(() => {
-            location.replace('/home')
-        })
-
+    async created() {
+        const profile = telegram.profile()
+        this.user = await api.profile(profile.id, profile.username)
+        telegram.showBackButton()
+        telegram.addOnClickHandlerForBackButton('/home')
     }
 }
 </script>
