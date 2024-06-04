@@ -127,7 +127,7 @@ import modalDialog from './components/modalDialog.vue'
                 </svg>
             </div>
             <div class="inter__monet inter__monet_right">
-                <span>0</span>
+                <span>{{ this.room.bank }}</span>
                 <img src="./sources/coin2.svg" alt=""/>
             </div>
         </div>
@@ -234,7 +234,8 @@ import modalDialog from './components/modalDialog.vue'
         <footer class="footer" style="z-index: 2">
             <div class="footer__inner footer__inner_play">
                 <!-- <div class="footer__button" @click="changeStep()">Ваш ход</div> -->
-                <div class="footer__button" @click="setReadyState">Готов</div>
+                <div class="footer__button" @click="setReadyState" v-if="!ready">Готов</div>
+                <div class="footer__button" @click="setReadyState" v-else>Не готов</div>
 
                 <div class=" footer__person">
                     <div class="footer__person__img">
@@ -340,7 +341,8 @@ import {Centrifuge} from "centrifuge";
 
 export default {
     props: {
-        room: Object
+        room: Object,
+        players: Array
     },
     data() {
         return {
@@ -351,17 +353,22 @@ export default {
             step: false,
             centrifugo: null,
             users: [],
+            ready: false,
         }
     },
     methods: {
         setReadyState() {
             fetch(`/api/game/set-ready-state/${this.room.id}?user_id=${window.Telegram.WebApp.initDataUnsafe.user.id}`)
+            this.ready = !this.ready
         }
     },
     async mounted() {
-        const response = await (await fetch(`/api/auth/token?id=${window.Telegram.WebApp.initDataUnsafe.user.id}`)).json()
+        // console.log(this.players)
+        // fetch(`/api/game/join?id=${this.room.id}&user_id=2`)
+        // ${window.Telegram.WebApp.initDataUnsafe.user.id}
+        const response = await (await fetch(`/api/auth/token?id=1`)).json()
         const token = response.token
-        this.centrifugo = new Centrifuge('wss://darkcards.de/connection/websocket', {
+        this.centrifugo = new Centrifuge('ws://127.0.0.1:8888/connection/websocket', {
             token: token
         })
         this.centrifugo.on('connected', () => {
@@ -371,6 +378,7 @@ export default {
         const sub = this.centrifugo.newSubscription(`room`)
 
         sub.on('publication', context => {
+            console.log(context.data)
             switch (context.data.event) {
                 case 'all_players_ready':
                     fetch(`/api/game/start-game?room_id=${this.room.id}`);
@@ -381,6 +389,19 @@ export default {
                     break
                 case 'user_join_room':
                     this.users.push(context.data.user)
+                    break
+                case 'take_from_table':
+                    giveCard(context.data.player, context.data.card)
+                    break
+                case 'user_left_room':
+                    document.querySelector(`div[data-id="${context.data.player}"]`).parentNode.remove()
+                    break
+                case 'user_defeat_card':
+                    endCards()
+                    const count = 1; // А сколько брать как получить?????
+                    fetch(`/api/game/take-from-deck?id=${this.room.id}&user_id=1&count=${count}`)
+                    break
+                case 'user_take_from_deck':
                     break
             }
         }).subscribe()
@@ -567,7 +588,7 @@ export default {
         let countElem = document.querySelector('.game__cart__cold__count')
         let count = parseInt(countElem.innerHTML)
 
-        let myID = window.Telegram.WebApp.initDataUnsafe.user.id
+        let myID = 1
 
         function giveCard(player, code) {
             if (player !== myID.toString()) code = 'b'

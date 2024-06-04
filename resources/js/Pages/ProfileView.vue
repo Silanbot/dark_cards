@@ -193,7 +193,7 @@ export default {
     async mounted() {
         this.user = (await axios.get('/api/profile', {
             params: {
-                id: 1,
+                id: window.Telegram.WebApp.initDataUnsafe.user.id,
                 username: 'KaptainMidnight'
             }
         })).data

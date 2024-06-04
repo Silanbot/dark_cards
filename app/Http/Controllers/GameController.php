@@ -60,4 +60,26 @@ class GameController extends Controller
             'ready_state' => $state,
         ]);
     }
+
+    public function leave(Request $request): void
+    {
+        $room = Room::query()->find($request->id);
+
+        $this->contract->userLeft($room->id, $request->user_id);
+    }
+
+    public function fight(Request $request): void
+    {
+        $this->contract->beat($request->fight_card, $request->card);
+    }
+
+    public function takeFromDeck(Request $request): void
+    {
+        $this->contract->takeFromDeck($request->id, $request->player);
+    }
+
+    public function takeFromTable(Request $request): void
+    {
+        $this->contract->takeFromTable($request->id, $request->player);
+    }
 }

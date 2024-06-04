@@ -47,10 +47,22 @@ class GameService implements GameContract
         $playerCards[] = strtolower($card['rank'].$card['suit'][0]);
         $players = $room->deck->get('players');
         $players[$player] = $playerCards;
-
-        $this->centrifugo->publish("room:{$id}", [
+//        if ($card['rank'] === '10') {
+//            $card = strtolower($this->rank[0].$this->suit[0]);
+//
+//            $this->centrifugo->publish("room", [
+//                'card' => $card,
+//                'event' => 'player_take_card',
+//                'player' => $player,
+//            ]);
+//
+//            return [];
+//        }
+        $card =  strtolower($card['rank'].$card['suit'][0]);
+        $this->centrifugo->publish("room", [
             'card' => $card,
             'event' => 'player_take_card',
+            'player' => $player,
         ]);
 
         unset($room->deck->get('cards')[0]);
@@ -66,9 +78,19 @@ class GameService implements GameContract
         return $players[$player];
     }
 
-    public function beat(Card $fightCard, Card $card): bool
+    public function beat(string $fightCard, string $card): bool
     {
-        return $fightCard->isHigherThan($card, $card->suit, $card->rank);
+        if ($fightCard === 'ts') {
+            return (bool)$this->centrifugo->publish('room', [
+                'event' => 'game_beat',
+                'status' => true
+            ]);
+        }
+
+        return (bool)$this->centrifugo->publish('room', [
+            'event' => 'game_beat',
+            'status' => false
+        ]);
     }
 
     public function takeFromTable(int $room, int $player): void
@@ -89,7 +111,7 @@ class GameService implements GameContract
             ],
         ]);
 
-        $this->centrifugo->publish("room:{$room->id}", [
+        $this->centrifugo->publish("room", [
             'event' => 'player_take_table',
             'deck' => $room->deck,
         ]);
@@ -123,6 +145,14 @@ class GameService implements GameContract
         $this->centrifugo->publish('room', [
             'event' => 'user_join_room',
             'user' => User::query()->findOrFail($player),
+        ]);
+    }
+
+    public function userLeft(int $room, int $player): void
+    {
+        $this->centrifugo->publish('room', [
+            'event' => 'user_left_room',
+            'player' => $player,
         ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Game\Deck;
 use App\Models\Room;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Response;
 use Inertia\ResponseFactory;
@@ -15,6 +16,7 @@ class PlayController extends Controller
     {
         return inertia('PlayView', [
             'room' => $room,
+            'players' => User::query()->whereIn('id', $room->ready_state)->get(),
         ]);
     }
 
