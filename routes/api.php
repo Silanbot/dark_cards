@@ -10,6 +10,14 @@ use App\Http\Controllers\UserController;
 use App\Http\Middleware\TelegramBotMiddleware;
 use Illuminate\Support\Facades\Route;
 
+
+Route::prefix('/friends/')->group(function () {
+    Route::post('/request', [FriendController::class, 'send'])->name('friends.send');
+    Route::post('/accept', [FriendController::class, 'accept'])->name('friends.accept');
+    Route::get('/', [FriendController::class, 'index'])->name('friends');
+    Route::get('/pending', [FriendController::class, 'pending'])->name('friends.pending');
+});
+
 Route::get('profile', [UserController::class, 'profile'])->name('api.profile');
 Route::post('create-game', [GameController::class, 'createGame'])->name('create-game');
 Route::prefix('/auth/')->group(function () {
@@ -27,12 +35,5 @@ Route::prefix('/messages')->group(function () {
 });
 
 Route::get('/join-by-password', ConnectController::class);
-
-Route::prefix('/friends')->group(function () {
-    Route::post('/send', [FriendController::class, 'send'])->name('friends.send');
-    Route::post('/accept', [FriendController::class, 'accept'])->name('friends.accept');
-    Route::get('/', [FriendController::class, 'index'])->name('friends');
-    Route::get('/pending', [FriendController::class, 'pending'])->name('friends.pending');
-});
 
 require 'game.php';
