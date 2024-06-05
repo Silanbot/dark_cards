@@ -3,9 +3,9 @@ import axios from "axios";
 export default new class {
     async send(message, player, room_id, channel) {
         await axios({
-            method: 'GET',
+            method: 'POST',
             url: '/api/messages/send',
-            params: {message, user_id: player, room_id, room_name: channel}
+            data: {message, user_id: player, room_id, room_name: channel}
         })
     }
 

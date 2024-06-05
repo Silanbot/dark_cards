@@ -61,7 +61,7 @@ export default {
         this.user = telegram.profile()
 
         const token = await api.generateConnectionToken(this.user.id)
-        this.centrifugo = new Centrifuge('ws://127.0.0.1:8888/connection/websocket', { token })
+        this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })
         const messages = await messages.load(this.room.id, 'room')
         this.messages = messages.map(message => ({ message: message.message, from_me: message.user_id === this.user.id }))
 
