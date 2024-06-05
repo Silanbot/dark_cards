@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ConnectController;
+use App\Http\Controllers\FriendController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\StatisticController;
@@ -26,5 +27,12 @@ Route::prefix('/messages')->group(function () {
 });
 
 Route::get('/join-by-password', ConnectController::class);
+
+Route::prefix('/friends')->group(function () {
+    Route::post('/send', [FriendController::class, 'send'])->name('friends.send');
+    Route::post('/accept', [FriendController::class, 'accept'])->name('friends.accept');
+    Route::get('/', [FriendController::class, 'index'])->name('friends');
+    Route::get('/pending', [FriendController::class, 'pending'])->name('friends.pending');
+});
 
 require 'game.php';
