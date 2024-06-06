@@ -14,6 +14,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $game_type
  * @property int $max_gamers
  * @property array $deck
+ * @property array $ready_state
+ * @property array $mode
+ * @property string $password
  */
 class Room extends Model
 {

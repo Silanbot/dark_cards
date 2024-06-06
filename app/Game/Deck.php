@@ -54,7 +54,7 @@ final class Deck implements DeckContract
         return $this->cards;
     }
 
-    public function getTrumpCard(): Card
+    public function getTrumpCard(): ?Card
     {
         return last($this->cards);
     }

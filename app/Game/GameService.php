@@ -7,6 +7,7 @@ namespace App\Game;
 use App\Contracts\Game\GameContract;
 use App\Models\Room;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use phpcent\Client;
 
 class GameService implements GameContract
@@ -47,17 +48,6 @@ class GameService implements GameContract
         $playerCards[] = strtolower($card['rank'].$card['suit'][0]);
         $players = $room->deck->get('players');
         $players[$player] = $playerCards;
-        //        if ($card['rank'] === '10') {
-        //            $card = strtolower($this->rank[0].$this->suit[0]);
-        //
-        //            $this->centrifugo->publish("room", [
-        //                'card' => $card,
-        //                'event' => 'player_take_card',
-        //                'player' => $player,
-        //            ]);
-        //
-        //            return [];
-        //        }
         $card = strtolower($card['rank'].$card['suit'][0]);
         $this->centrifugo->publish('room', [
             'card' => $card,
@@ -78,18 +68,14 @@ class GameService implements GameContract
         return $players[$player];
     }
 
-    public function beat(string $fightCard, string $card): bool
+    public function beat(string $fightCard, string $card, Model $room): bool
     {
-        if ($fightCard === 'ts') {
-            return (bool) $this->centrifugo->publish('room', [
-                'event' => 'game_beat',
-                'status' => true,
-            ]);
-        }
+        $fightCard = Card::build($fightCard);
+        $card = Card::build($card);
 
         return (bool) $this->centrifugo->publish('room', [
             'event' => 'game_beat',
-            'status' => false,
+            'status' => $fightCard->isHigherThan($card, $room->deck->get('trump'), '6'),
         ]);
     }
 

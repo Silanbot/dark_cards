@@ -70,7 +70,8 @@ class GameController extends Controller
 
     public function fight(Request $request): void
     {
-        $this->contract->beat($request->fight_card, $request->card);
+        $room = Room::query()->find($request->room_id)->get();
+        $this->contract->beat($request->fight_card, $request->card, $room);
     }
 
     public function takeFromDeck(Request $request): void
