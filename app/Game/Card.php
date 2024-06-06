@@ -62,8 +62,7 @@ final readonly class Card implements CardContract
         if ($card[0] === '1') {
             $rank = '10';
         }
-        switch ($card[1])
-        {
+        switch ($card[1]) {
             case 's':
                 $suit = 'Spades';
                 break;

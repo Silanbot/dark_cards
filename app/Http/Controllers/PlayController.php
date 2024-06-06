@@ -16,7 +16,7 @@ class PlayController extends Controller
     {
         return inertia('PlayView', [
             'room' => $room,
-            'players' => !empty($room->ready_state) ? User::query()->whereIn('id', $room->ready_state)->get() : [],
+            'players' => ! empty($room->ready_state) ? User::query()->whereIn('id', $room->ready_state)->get() : [],
         ]);
     }
 

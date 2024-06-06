@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateAcquaintancesFriendshipTable extends Migration
 {
-
     public function up()
     {
 
@@ -23,5 +22,4 @@ class CreateAcquaintancesFriendshipTable extends Migration
     {
         Schema::dropIfExists(config('acquaintances.tables.friendships'));
     }
-
 }

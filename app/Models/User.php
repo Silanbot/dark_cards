@@ -16,7 +16,7 @@ use Multicaret\Acquaintances\Traits\Friendable;
  */
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, Friendable;
+    use Friendable, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.

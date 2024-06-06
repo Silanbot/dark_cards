@@ -1,6 +1,5 @@
 <?php
 
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -25,12 +24,11 @@ class CreateAcquaintancesInteractionsTable extends Migration
             $table->string('relation_type')->nullable();
             $table->timestamps();
 
-
             $table->foreign('user_id')
-                  ->references($userModel->getKeyName())
-                  ->on($userModel->getTable())
-                  ->onUpdate('cascade')
-                  ->onDelete('cascade');
+                ->references($userModel->getKeyName())
+                ->on($userModel->getTable())
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

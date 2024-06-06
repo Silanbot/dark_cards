@@ -10,7 +10,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Middleware\TelegramBotMiddleware;
 use Illuminate\Support\Facades\Route;
 
-
 Route::prefix('/friends/')->group(function () {
     Route::post('/request', [FriendController::class, 'send'])->name('friends.send');
     Route::post('/accept', [FriendController::class, 'accept'])->name('friends.accept');
