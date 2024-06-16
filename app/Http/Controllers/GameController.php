@@ -46,14 +46,14 @@ class GameController extends Controller
     public function setReadyState(Request $request, Room $room): void
     {
         $state = $room->ready_state;
-        if (in_array($request->user_id, $state->toArray())) {
+        if (is_null($state)) $state = [];
+        if (in_array($request->user_id, $state->toArray()))
             unset($state[array_search($request->user_id, $state->toArray())]);
-        } else {
+        else {
             $state[] = $request->user_id;
 
-            if ($room->max_gamers === count($state)) {
+            if ($room->max_gamers === count($state))
                 $this->contract->allPlayersReady($room->id);
-            }
         }
 
         $room->update([
