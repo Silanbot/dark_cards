@@ -382,9 +382,12 @@ export default {
                     await gameApi.start(this.room.id)
                     break
                 case 'game_started':
-                    const players = Object.keys(context.data.players).map(k => ({ player: k, cards: context.data.players[k] }))
-                    giveCards(players)
-                    break
+                    for (const [player, cards] of Object.entries(context.data.players))
+                        for (const code of cards) {
+                            giveCard(player, code)
+                            await new Promise(r => setTimeout(r, 100))
+                        }
+                    return
                 case 'user_join_room':
                     this.users.push(context.data.user)
                     break
@@ -613,17 +616,6 @@ export default {
                 card.style.width = '10vw'
             }
             countElem.innerHTML = --count
-        }
-
-        function giveCards(data) {
-            let i = 0
-            let totalCards = data.reduce((a, b) => a + b.cards.length, 0)
-            let interval = setInterval(() => {
-                let di = i % data.length
-                let p = data[di].player
-                giveCard(p, data[di].cards[Math.floor(i / data.length)])
-                if (++i === totalCards) return clearInterval(interval)
-            }, 100)
         }
 
         function getPlayerPos(player) {
