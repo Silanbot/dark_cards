@@ -454,7 +454,7 @@ export default {
         let activeCard = null
 
         document.addEventListener('touchstart', e=>{
-            if (e.target.dataset.player === myID.toString()) {
+            if (e.target.dataset.player == profile.id) {
                 touch=true
                 tx=e.touches[0].clientX
                 ty=e.touches[0].clientY
@@ -466,7 +466,7 @@ export default {
             tx = e.touches[0].clientX
             ty = e.touches[0].clientY
             let elem = document.elementFromPoint(tx, ty)
-            if (!dragging && elem.dataset.player===myID) activeCard = elem
+            if (!dragging && elem.dataset.player == profile.id) activeCard = elem
         })
         document.addEventListener('touchend', e=>{
             touch = false
@@ -590,15 +590,12 @@ export default {
         let countElem = document.querySelector('.game__cart__cold__count')
         let count = parseInt(countElem.innerHTML)
 
-        let myID = 1
-
         function giveCard(player, code) {
-            if (player !== myID.toString()) code = 'b'
             let card = document.createElement('img')
-            card.dataset.card = code
+            card.dataset.card = player == profile.id ? code : 'b'
             card.dataset.player = player
             card.src = document.querySelector(`img[data-cardimg="${code}"]`).src
-            if (player === myID.toString()) {
+            if (player == profile.id) {
                 card.style.width = '30vw'
                 card.style.left = '-15vw'
                 card.style.top = '-28vw'
