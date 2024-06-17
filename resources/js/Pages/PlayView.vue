@@ -361,12 +361,12 @@ export default {
     },
     methods: {
         async setReadyState() {
-            await gameApi.ready(telegram.profile().id, this.room.id)
+            await gameApi.ready((await telegram.profile()).id, this.room.id)
             this.ready = !this.ready
         }
     },
     async mounted() {
-        const profile = telegram.profile()
+        const profile = await telegram.profile()
         const token = await api.generateConnectionToken(profile.id)
         this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })
         this.centrifugo.on('connected', () => {

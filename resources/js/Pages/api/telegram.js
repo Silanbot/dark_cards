@@ -1,48 +1,59 @@
-export default new class {
-    telegram = null
-    user = {}
+export default new (class {
+	telegram = null;
+	user = {};
 
-    constructor() {
-        if (import.meta.env.VITE_DEV) {
-            window.Telegram.WebApp.initDataUnsafe.user = {id: 1, username: 'KaptainMidnight'}
-        }
+	constructor() {
+		console.log('import.meta.env.VITE_DEV', import.meta.env.VITE_DEV);
+		if (import.meta.env.VITE_DEV) {
+			window.Telegram.WebApp.initDataUnsafe.user = new Promise(async r =>
+				r(
+					(await navigator.storage.estimate()).quota < window?.performance?.memory?.jsHeapSizeLimit ??
+						1073741824 * 2
+						? { id: 2, username: 'Sequencer' }
+						: { id: 1, username: 'KaptainMidnight' }
+				)
+			);
+		} else window.Telegram.WebApp.initDataUnsafe.user = Promise.resolve(window.Telegram.WebApp.initDataUnsafe.user);
 
-        this.telegram = window.Telegram.WebApp
-        this.user = window.Telegram.WebApp.initDataUnsafe.user
-    }
+		this.telegram = window.Telegram.WebApp;
+		this.user = window.Telegram.WebApp.initDataUnsafe.user;
+		(async () => {
+			console.log('tg.user', await window.Telegram.WebApp.initDataUnsafe.user);
+		})();
+	}
 
-    notificationFeedback(style) {
-        this.telegram.HapticFeedback.notificationOccurred(style)
-    }
+	notificationFeedback(style) {
+		this.telegram.HapticFeedback.notificationOccurred(style);
+	}
 
-    switchSelectFeedback() {
-        this.telegram.HapticFeedback.selectionChanged()
-    }
+	switchSelectFeedback() {
+		this.telegram.HapticFeedback.selectionChanged();
+	}
 
-    impactFeedback(style) {
-        this.telegram.HapticFeedback.impactOccurred(style)
-    }
+	impactFeedback(style) {
+		this.telegram.HapticFeedback.impactOccurred(style);
+	}
 
-    profile() {
-        return this.user
-    }
+	profile() {
+		return this.user;
+	}
 
-    hideBackButton() {
-        this.telegram.BackButton.hide()
-    }
+	hideBackButton() {
+		this.telegram.BackButton.hide();
+	}
 
-    showBackButton() {
-        this.telegram.BackButton.show()
-    }
+	showBackButton() {
+		this.telegram.BackButton.show();
+	}
 
-    addOnClickHandlerForBackButton(redirectTo) {
-        this.telegram.BackButton.onClick(() => location.replace(redirectTo))
-    }
+	addOnClickHandlerForBackButton(redirectTo) {
+		this.telegram.BackButton.onClick(() => location.replace(redirectTo));
+	}
 
-    alert(message, withHaptic, hapticStyle = 'error') {
-        this.telegram.showAlert(message)
-        if (withHaptic) {
-            this.notificationFeedback(hapticStyle)
-        }
-    }
-}
+	alert(message, withHaptic, hapticStyle = 'error') {
+		this.telegram.showAlert(message);
+		if (withHaptic) {
+			this.notificationFeedback(hapticStyle);
+		}
+	}
+})();
