@@ -8,13 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 interface GameContract
 {
     /**
-     * Раздать карты игрокам
-     *
-     * @param  int  $id  ID комнаты
-     */
-    public function distribute(int $id): void;
-
-    /**
      * Взять карту из колоды
      *
      * @param  int  $id  ID комнаты
@@ -38,8 +31,6 @@ interface GameContract
      * Выбросить карту на стол
      */
     public function discardCard(Card $card, int $room): void;
-
-    public function allPlayersReady(int $id): void;
 
     public function userJoin(int $room, int $player): void;
 

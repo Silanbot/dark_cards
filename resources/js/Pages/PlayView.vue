@@ -378,9 +378,6 @@ export default {
         sub.on('publication', async context => {
             console.log(context.data)
             switch (context.data.event) {
-                case 'all_players_ready':
-                    await gameApi.start(this.room.id)
-                    break
                 case 'game_started':
                     for (const [player, cards] of Object.entries(context.data.players))
                         for (const code of cards) {
