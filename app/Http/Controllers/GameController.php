@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Contracts\Game\GameContract;
 use App\Game\Deck;
 use App\Models\Room;
+use App\Models\User;
 use Illuminate\Http\Request;
 use phpcent\Client;
 
@@ -37,9 +38,23 @@ class GameController extends Controller
         ];
     }
 
-    public function join(Request $request): void
+    public function join(Request $request)
     {
-        $this->contract->userJoin($request->id, $request->user_id);
+        $player = $request->user_id;
+        $room = Room::query()->find($request->id);
+
+        $already_joined = $room->join_state ?? collect([]);
+        if ($already_joined->doesntContain($player)) $already_joined->add($player);
+        $room->update(['join_state' => $already_joined->toArray()]);
+        unset($already_joined[$already_joined->search($player)]);
+        $already_joined = User::query()->findMany($already_joined);
+
+        $this->centrifugo->publish('room', [
+            'event' => 'user_join_room',
+            'user' => User::query()->findOrFail($player),
+        ]);
+
+        return response($already_joined->toArray());
     }
 
     public function setReadyState(Request $request, Room $room)

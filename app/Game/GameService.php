@@ -6,7 +6,6 @@ namespace App\Game;
 
 use App\Contracts\Game\GameContract;
 use App\Models\Room;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use phpcent\Client;
 
@@ -95,14 +94,6 @@ class GameService implements GameContract
                 'players' => $room->deck->get('players'),
                 'trump' => last($room->deck->get('cards'))['suit'],
             ],
-        ]);
-    }
-
-    public function userJoin(int $room, int $player): void
-    {
-        $this->centrifugo->publish('room', [
-            'event' => 'user_join_room',
-            'user' => User::query()->findOrFail($player),
         ]);
     }
 

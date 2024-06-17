@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $max_gamers
  * @property array $deck
  * @property array $ready_state
+ * @property array $join_state
  * @property array $mode
  * @property string $password
  */
@@ -29,6 +30,7 @@ class Room extends Model
         'max_gamers',
         'deck',
         'ready_state',
+        'join_state',
         'mode',
     ];
 
@@ -47,6 +49,7 @@ class Room extends Model
         return [
             'deck' => AsCollection::class,
             'ready_state' => AsCollection::class,
+            'join_state' => AsCollection::class,
             'mode' => AsCollection::class,
         ];
     }

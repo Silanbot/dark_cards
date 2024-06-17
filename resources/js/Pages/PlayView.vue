@@ -369,8 +369,11 @@ export default {
         const profile = await telegram.profile()
         const token = await api.generateConnectionToken(profile.id)
         this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })
-        this.centrifugo.on('connected', () => {
+        this.centrifugo.on('connected', async () => {
             console.log('Successfully connected to WSS server')
+            const res = await fetch(`/api/game/join?${new URLSearchParams({ id: this.room.id, user_id: profile.id })}`)
+            for (const user of await res.json())
+                this.users.push(user);
         })
 
         const sub = this.centrifugo.newSubscription(`room`)
@@ -386,8 +389,9 @@ export default {
                         }
                     return
                 case 'user_join_room':
-                    this.users.push(context.data.user)
-                    break
+                    if (context.data.user.id == profile.id) return
+                    if (this.users.findIndex(u => u.id == context.data.user.id) !== -1) return
+                    return this.users.push(context.data.user)
                 case 'take_from_table':
                     giveCard(context.data.player, context.data.card)
                     break
