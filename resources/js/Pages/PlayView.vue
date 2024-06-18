@@ -127,7 +127,7 @@ import modalDialog from './components/modalDialog.vue'
                 </svg>
             </div>
             <div class="inter__monet inter__monet_right">
-                <span>{{ this.room.bank }}</span>
+                <span>{{ room.bank }}</span>
                 <img src="./sources/coin2.svg" alt=""/>
             </div>
         </div>

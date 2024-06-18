@@ -141,4 +141,19 @@ class GameService implements GameContract
             'player' => $player,
         ]);
     }
+
+    public function revertCard(string $card, int $room, int $player): void
+    {
+        $room = Room::query()->find($room);
+        $table = collect($room->deck->get('table'));
+
+        if ($table->contains($card)) {
+            $this->centrifugo->publish('room', [
+                'event' => 'revert_card',
+                'card' => $card,
+                'player' => $player,
+                'table' => $table
+            ]);
+        }
+    }
 }

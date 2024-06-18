@@ -83,4 +83,9 @@ class GameController extends Controller
     {
         $this->contract->takeFromTable($request->id, $request->player);
     }
+
+    public function revertCard(Request $request): void
+    {
+        $this->contract->revertCard($request->card, $request->room_id, $request->player);
+    }
 }

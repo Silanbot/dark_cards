@@ -44,4 +44,6 @@ interface GameContract
     public function userJoin(int $room, int $player): void;
 
     public function userLeft(int $room, int $player): void;
+
+    public function revertCard(string $card, int $room, int $player): void;
 }
