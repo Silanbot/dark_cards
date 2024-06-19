@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use Multicaret\Acquaintances\Traits\Friendable;
 
 /**
@@ -16,7 +17,7 @@ use Multicaret\Acquaintances\Traits\Friendable;
  */
 class User extends Authenticatable
 {
-    use Friendable, HasFactory, Notifiable;
+    use Friendable, HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.

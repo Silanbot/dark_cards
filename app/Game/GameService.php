@@ -152,7 +152,7 @@ class GameService implements GameContract
                 'event' => 'revert_card',
                 'card' => $card,
                 'player' => $player,
-                'table' => $table
+                'table' => $table,
             ]);
         }
     }
