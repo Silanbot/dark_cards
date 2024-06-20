@@ -58,7 +58,7 @@ export default {
         }
     },
     async created() {
-        this.user = telegram.profile()
+        this.user = await telegram.profile()
 
         const token = await api.generateConnectionToken(this.user.id)
         this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })

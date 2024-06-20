@@ -9,14 +9,6 @@ export default new class {
         })
     }
 
-    async start(room_id) {
-        await axios({
-            method: 'GET',
-            url: '/api/game/start-game',
-            params: { room_id }
-        })
-    }
-
     async takeFromDeck(id, user_id, count) {
         await axios({
             method: 'GET',

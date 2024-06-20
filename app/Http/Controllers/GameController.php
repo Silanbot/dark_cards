@@ -3,13 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Game\GameContract;
+use App\Game\Deck;
 use App\Models\Room;
+use App\Models\User;
 use Illuminate\Http\Request;
+use phpcent\Client;
 
 class GameController extends Controller
 {
-    public function __construct(private readonly GameContract $contract)
-    {
+    public function __construct(
+        private readonly GameContract $contract,
+        private readonly Client $centrifugo
+    ) {
     }
 
     public function createGame(Request $request): array
@@ -19,11 +24,6 @@ class GameController extends Controller
         return [
             'id' => $room->id,
         ];
-    }
-
-    public function startGame(Request $request): void
-    {
-        $this->contract->distribute((int) $request->room_id);
     }
 
     public function searching(Request $request): array
@@ -38,26 +38,53 @@ class GameController extends Controller
         ];
     }
 
-    public function join(Request $request): void
+    public function join(Request $request)
     {
-        $this->contract->userJoin($request->id, $request->user_id);
+        $player = $request->user_id;
+        $room = Room::query()->find($request->id);
+
+        $already_joined = $room->join_state ?? collect([]);
+        if ($already_joined->doesntContain($player)) $already_joined->add($player);
+        $room->update(['join_state' => $already_joined->toArray()]);
+        unset($already_joined[$already_joined->search($player)]);
+        $already_joined = User::query()->findMany($already_joined);
+
+        $this->centrifugo->publish('room', [
+            'event' => 'user_join_room',
+            'user' => User::query()->findOrFail($player),
+        ]);
+
+        return response($already_joined->toArray());
     }
 
-    public function setReadyState(Request $request, Room $room): void
+    public function setReadyState(Request $request, Room $room)
     {
-        $state = $room->ready_state;
-        if (in_array($request->user_id, $state->toArray())) {
-            unset($state[array_search($request->user_id, $state->toArray())]);
-        } else {
-            $state[] = $request->user_id;
+        $state = $room->ready_state ?? collect([]);
+        if ($state->contains($request->user_id)) {
+            if ($room->max_gamers === count($state)) return response(null, 400);
 
-            if ($room->max_gamers === count($state)) {
-                $this->contract->allPlayersReady($room->id);
-            }
+            unset($state[$state->search($request->user_id)]);
+        } else $state->add($request->user_id);
+
+        if ($room->max_gamers !== count($state)) {
+            $room->update(['ready_state' => $state->toArray()]);
+            return;
         }
 
+        $deck = new Deck($room->ready_state->toArray());
         $room->update([
-            'ready_state' => $state,
+            'ready_state' => $state->toArray(),
+            'deck' => collect([
+                'cards' => $deck->getCards(),
+                'players' => $deck->getPlayers(),
+                'table' => [],
+                'trump' => $deck->getTrumpCard()->getSuit(),
+            ]),
+        ]);
+        $this->centrifugo->publish('room', [
+            'deck' => $deck->getCards(),
+            'players' => $deck->getPlayers(),
+            'event' => 'game_started',
         ]);
     }
 

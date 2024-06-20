@@ -284,7 +284,7 @@ export default {
 
     },
     async created() {
-        const profile = telegram.profile()
+        const profile = await telegram.profile()
         this.user = await api.profile(profile.id, profile.username)
 
         telegram.showBackButton()

@@ -361,16 +361,19 @@ export default {
     },
     methods: {
         async setReadyState() {
-            await gameApi.ready(telegram.profile().id, this.room.id)
+            await gameApi.ready((await telegram.profile()).id, this.room.id)
             this.ready = !this.ready
         }
     },
     async mounted() {
-        const profile = telegram.profile()
+        const profile = await telegram.profile()
         const token = await api.generateConnectionToken(profile.id)
         this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })
-        this.centrifugo.on('connected', () => {
+        this.centrifugo.on('connected', async () => {
             console.log('Successfully connected to WSS server')
+            const res = await fetch(`/api/game/join?${new URLSearchParams({ id: this.room.id, user_id: profile.id })}`)
+            for (const user of await res.json())
+                this.users.push(user);
         })
 
         const sub = this.centrifugo.newSubscription(`room`)
@@ -378,16 +381,17 @@ export default {
         sub.on('publication', async context => {
             console.log(context.data)
             switch (context.data.event) {
-                case 'all_players_ready':
-                    await gameApi.start(this.room.id)
-                    break
                 case 'game_started':
-                    const players = Object.keys(context.data.players).map(k => ({ player: k, cards: context.data.players[k] }))
-                    giveCards(players)
-                    break
+                    for (const [player, cards] of Object.entries(context.data.players))
+                        for (const code of cards) {
+                            giveCard(player, code)
+                            await new Promise(r => setTimeout(r, 100))
+                        }
+                    return
                 case 'user_join_room':
-                    this.users.push(context.data.user)
-                    break
+                    if (context.data.user.id == profile.id) return
+                    if (this.users.findIndex(u => u.id == context.data.user.id) !== -1) return
+                    return this.users.push(context.data.user)
                 case 'take_from_table':
                     giveCard(context.data.player, context.data.card)
                     break
@@ -450,7 +454,7 @@ export default {
         let activeCard = null
 
         document.addEventListener('touchstart', e=>{
-            if (e.target.dataset.player === myID.toString()) {
+            if (e.target.dataset.player == profile.id) {
                 touch=true
                 tx=e.touches[0].clientX
                 ty=e.touches[0].clientY
@@ -462,7 +466,7 @@ export default {
             tx = e.touches[0].clientX
             ty = e.touches[0].clientY
             let elem = document.elementFromPoint(tx, ty)
-            if (!dragging && elem.dataset.player===myID) activeCard = elem
+            if (!dragging && elem.dataset.player == profile.id) activeCard = elem
         })
         document.addEventListener('touchend', e=>{
             touch = false
@@ -586,15 +590,12 @@ export default {
         let countElem = document.querySelector('.game__cart__cold__count')
         let count = parseInt(countElem.innerHTML)
 
-        let myID = 1
-
         function giveCard(player, code) {
-            if (player !== myID.toString()) code = 'b'
             let card = document.createElement('img')
-            card.dataset.card = code
+            card.dataset.card = player == profile.id ? code : 'b'
             card.dataset.player = player
             card.src = document.querySelector(`img[data-cardimg="${code}"]`).src
-            if (player === myID.toString()) {
+            if (player == profile.id) {
                 card.style.width = '30vw'
                 card.style.left = '-15vw'
                 card.style.top = '-28vw'
@@ -613,17 +614,6 @@ export default {
                 card.style.width = '10vw'
             }
             countElem.innerHTML = --count
-        }
-
-        function giveCards(data) {
-            let i = 0
-            let totalCards = data.reduce((a, b) => a + b.cards.length, 0)
-            let interval = setInterval(() => {
-                let di = i % data.length
-                let p = data[di].player
-                giveCard(p, data[di].cards[Math.floor(i / data.length)])
-                if (++i === totalCards) return clearInterval(interval)
-            }, 100)
         }
 
         function getPlayerPos(player) {

@@ -25,22 +25,20 @@ final class Deck implements DeckContract
         $suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
         $ranks = ['6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
-        foreach ($suits as $suit) {
-            foreach ($ranks as $rank) {
+        foreach ($suits as $suit)
+            foreach ($ranks as $rank)
                 $this->cards[] = new Card(suit: $suit, rank: $rank);
-            }
-
-            shuffle($this->cards);
-        }
+        shuffle($this->cards);
 
         $this->distribute($players);
     }
 
     public function distribute(array $players): void
     {
-        for ($i = 0; $i < count($players); $i++) {
-            $cards = array_splice($this->cards, offset: self::MAX_CARDS * $i, length: self::MAX_CARDS);
-            $this->players[$players[$i]] = (new Player(hand: $cards, id: (int) $players[$i]))->toArray();
+        $offset = -self::MAX_CARDS;
+        foreach ($players as $v) {
+            $cards = array_splice($this->cards, $offset += self::MAX_CARDS, self::MAX_CARDS);
+            $this->players[$v] = (new Player(hand: $cards, id: (int) $v))->toArray();
         }
     }
 

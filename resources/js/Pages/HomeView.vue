@@ -503,7 +503,7 @@ export default {
     },
     methods: {
         async createGame() {
-            const room = await gameApi.createGame(1000, this.selectMode, telegram.profile().id)
+            const room = await gameApi.createGame(1000, this.selectMode, (await telegram.profile()).id)
 
             if (Object.keys(room).includes('id')) {
                 return location.replace(`/play/${room.id}`)
@@ -527,7 +527,8 @@ export default {
         }
     },
     async created() {
-        this.user = await api.profile(telegram.profile().id, telegram.profile().username)
+        const profile = await telegram.profile()
+        this.user = await api.profile(profile.id, profile.username)
         telegram.showBackButton()
         telegram.addOnClickHandlerForBackButton('/profile')
     },
