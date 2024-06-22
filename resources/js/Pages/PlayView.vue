@@ -485,7 +485,7 @@ export default {
                 card.data.ty = window.innerHeight * 0.75 - (touch ? (card === activeCard ? 40 : i && mycards[i - 1] === activeCard ? 10 : 0) : 0)
                 card.data.x += (card.data.tx - card.data.x) * 0.01 * dt
                 card.data.y += (card.data.ty - card.data.y) * 0.01 * dt
-                card.style.transform = `translate(${card.data.x}px, ${card.data.y}px) rotate(${fromCenter * 2}deg)`
+                card.style.transform = `translate(${card.data.x.toFixed(0)}px, ${card.data.y.toFixed(0)}px) rotate(${fromCenter * 2}deg)`
             })
 
             if (touch && activeCard && ty < window.innerHeight * 0.75) {
@@ -565,24 +565,20 @@ export default {
             card.style.top = '-28vw'
             card.classList.add('my-card')
 
-            if (mycards.includes(card)) return
-            if (addElement) {
-                let cards = document.querySelectorAll('img.my-card')
-                if (!cards.length) return cardCnt.appendChild(card)
+            if (mycards.includes(card)) return;
+            (() => {
+                for (let i = 0; i != mycards.length; ++i)
+                    if (lt(card.dataset.card, mycards[i].dataset.card))
+                        return mycards.splice(i, 0, card)
+                mycards.push(card)
+            })()
 
-                for (let i = 0; i < cards.length; i++)
-                    if (lt(card.dataset.card, cards[i].dataset.card))
-                        return cardCnt.insertBefore(card, cards[i])
+            if (!addElement) return
 
-                cardCnt.appendChild(card)
-            }
-            if (!mycards.length) return mycards.push(card)
-
-            for (let i = 0; i < mycards.length; i++)
-                if (lt(card.dataset.card, mycards[i].dataset.card))
-                    return mycards.splice(i, 0, card)
-
-            mycards.push(card)
+            for (const cardHand of document.querySelectorAll('img.my-card'))
+                if (lt(card.dataset.card, cardHand.dataset.card))
+                    return cardCnt.insertBefore(card, cardHand)
+            cardCnt.appendChild(card)
         }
 
         function addGameCard(card) {
