@@ -489,7 +489,6 @@ export default {
                     gameCards.push(activeCard)
 
                 } else {
-                    activeCard.style.removeProperty('z-index')
                     addMyCard(activeCard, false)
                 }
                 activeCard = null
@@ -525,20 +524,22 @@ export default {
         let cardCnt = document.querySelector('#cards')
         let mycards = []
 
-        function addMyCard(element, addElement = true) {
+        function addMyCard(card, addElement = true) {
+            card.style.removeProperty('z-index')
+            card.style.width = '30vw'
+            card.style.left = '-15vw'
+            card.style.top = '-28vw'
+            card.classList.add('my-card')
 
-            if (mycards.includes(element)) return
-
-            if (addElement) addMyCardElement(element)
-
-            if (!mycards.length) return mycards.push(element)
+            if (mycards.includes(card)) return
+            if (addElement) addMyCardElement(card)
+            if (!mycards.length) return mycards.push(card)
 
             for (let i = 0; i < mycards.length; i++)
-                if (lt(element.dataset.card, mycards[i].dataset.card))
-                    return mycards.splice(i, 0, element)
+                if (lt(card.dataset.card, mycards[i].dataset.card))
+                    return mycards.splice(i, 0, card)
 
-            mycards.push(element)
-
+            mycards.push(card)
         }
 
         function addMyCardElement(element) {
@@ -602,10 +603,6 @@ export default {
             card.dataset.player = player
             card.src = document.querySelector(`img[data-cardimg="${code}"]`).src
             if (player == profile.id) {
-                card.style.width = '30vw'
-                card.style.left = '-15vw'
-                card.style.top = '-28vw'
-                card.classList.add('my-card')
                 addMyCard(card)
             } else {
                 let players = {}
