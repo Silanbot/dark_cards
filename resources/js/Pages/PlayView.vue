@@ -411,41 +411,17 @@ export default {
 
         this.centrifugo.connect()
 
-        let gameCells = []
-
-        function addGameCard(card) {
-            for (let i = 0; i < gameCells.length; i++)
-                if (gameCells[i].length < 2) {
-                    gameCells[i].push(card)
-                    return {gameCell: i, top: gameCells[i].length === 2}
-                }
-            let newGameCell = [card]
-            gameCells.push(newGameCell)
-            return {gameCell: gameCells.length - 1, top: false}
+        let cardValues = {
+            2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 1: 10,
+            j: 11, q: 12, k: 13, a: 14
         }
-
-        function getGamePos(cell) {
-            cell = cell % 5
-            let x = window.innerWidth / 2
-            let y = window.innerHeight / 2
-            if (cell === 0) return [x * 0.6, y * 0.9]
-            if (cell === 1) return [x, y * 0.9]
-            if (cell === 2) return [x * 1.4, y * 0.9]
-            if (cell === 3) return [x * 0.8, y * 1.3]
-            if (cell === 4) return [x * 1.2, y * 1.3]
-        }
-
-        function getPlayerPositions() {
-
-        }
-
-        function getTransform(r) {
-            let gamePos = getGamePos(r.gameCell)
-            return `translate(${gamePos[0] + (r.top ? 25 : 0)}px, ${gamePos[1] + (r.top ? 10 : 0)}px)` + (r.top ? ` rotate(10deg)` : '')
+        let cardSuits = {
+            s: 1, c: 2, h: 3, d: 4, j: 5
         }
 
         let allCards = []
         let gameCards = []
+        let gameCells = []
 
         let touch = false
         let dragging = false
@@ -453,6 +429,11 @@ export default {
         let tx, ty
 
         let activeCard = null
+        let mycards = []
+
+        let cardCnt = document.querySelector('#cards')
+        let countElem = document.querySelector('.game__cart__cold__count')
+        let count = parseInt(countElem.innerHTML)
 
         document.addEventListener('touchstart', e=>{
             if (e.target.dataset.player == profile.id) {
@@ -472,92 +453,26 @@ export default {
         document.addEventListener('touchend', e=>{
             touch = false
             dragging = lastDragging = false
-            if (activeCard) {
-                if (ty < window.innerHeight*0.75) {
-                    activeCard.classList.remove('my-card')
+            if (!activeCard) return
+            if (ty > window.innerHeight*0.75) addMyCard(activeCard, false);
+            else {
+                activeCard.classList.remove('my-card')
 
-                    let r = addGameCard(activeCard)
+                let r = addGameCard(activeCard)
 
-                    activeCard.style.transform = getTransform(r)
-                    activeCard.style.width = '13vw'
-                    activeCard.style.removeProperty('left')
-                    activeCard.style.removeProperty('top')
+                activeCard.style.transform = getTransform(r)
+                activeCard.style.width = '13vw'
+                activeCard.style.removeProperty('left')
+                activeCard.style.removeProperty('top')
+                activeCard.style.zIndex = r.top?5:3
 
-                    activeCard.style.zIndex = r.top?5:3
-
-                    allCards.push(activeCard)
-                    gameCards.push(activeCard)
-
-                } else {
-                    addMyCard(activeCard, false)
-                }
-                activeCard = null
+                allCards.push(activeCard)
+                gameCards.push(activeCard)
             }
+            activeCard = null
         })
-
-        let cardValues = {
-            2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 1: 10,
-            j: 11, q: 12, k: 13, a: 14
-        }
-
-        let cardSuits = {
-            s: 1, c: 2, h: 3, d: 4, j: 5
-        }
-
-        function lt(a, b) {
-            if (cardSuits[a[1]] < cardSuits[b[1]]) return true
-            if (cardSuits[a[1]] > cardSuits[b[1]]) return false
-            return cardValues[a[0]] < cardValues[b[0]]
-        }
-
-        function gt(a, b) {
-            return a != b && !lt(a, b)
-        }
-
-        function setTrumpCard(card) {
-            const code = (card.rank[0] + card.suit[0]).toLowerCase()
-            document.querySelector('.game__cart__cold__carts__second').src = document.querySelector(`img[data-cardimg="${code}"]`).src
-        }
-
-        let codes = Array.from(document.querySelectorAll('img[data-cardimg]')).map(img => img.dataset.cardimg).filter(c => c.length === 2)
-
-        let cardCnt = document.querySelector('#cards')
-        let mycards = []
-
-        function addMyCard(card, addElement = true) {
-            card.style.removeProperty('z-index')
-            card.style.width = '30vw'
-            card.style.left = '-15vw'
-            card.style.top = '-28vw'
-            card.classList.add('my-card')
-
-            if (mycards.includes(card)) return
-            if (addElement) addMyCardElement(card)
-            if (!mycards.length) return mycards.push(card)
-
-            for (let i = 0; i < mycards.length; i++)
-                if (lt(card.dataset.card, mycards[i].dataset.card))
-                    return mycards.splice(i, 0, card)
-
-            mycards.push(card)
-        }
-
-        function addMyCardElement(element) {
-            let cards = document.querySelectorAll('img.my-card')
-
-            if (!cards.length) return cardCnt.appendChild(element)
-
-            for (let i = 0; i < cards.length; i++)
-                if (lt(element.dataset.card, cards[i].dataset.card))
-                    return cardCnt.insertBefore(element, cards[i])
-
-            cardCnt.appendChild(element)
-        }
-
         let time = null
-
         function updateCards(t) {
-
             if (time === null) time = t
             let dt = t - time
             time = t
@@ -589,22 +504,47 @@ export default {
             }
 
             requestAnimationFrame(updateCards)
-
         }
-
         requestAnimationFrame(updateCards)
 
-        let countElem = document.querySelector('.game__cart__cold__count')
-        let count = parseInt(countElem.innerHTML)
+        function lt(a, b) {
+            if (cardSuits[a[1]] < cardSuits[b[1]]) return true
+            if (cardSuits[a[1]] > cardSuits[b[1]]) return false
+            return cardValues[a[0]] < cardValues[b[0]]
+        }
+
+        function gt(a, b) {
+            return a != b && !lt(a, b)
+        }
+
+        function getGamePos(cell) {
+            cell = cell % 5
+            let x = window.innerWidth / 2
+            let y = window.innerHeight / 2
+            if (cell === 0) return [x * 0.6, y * 0.9]
+            if (cell === 1) return [x, y * 0.9]
+            if (cell === 2) return [x * 1.4, y * 0.9]
+            if (cell === 3) return [x * 0.8, y * 1.3]
+            if (cell === 4) return [x * 1.2, y * 1.3]
+        }
+
+        function getTransform(r) {
+            let gamePos = getGamePos(r.gameCell)
+            return `translate(${gamePos[0] + (r.top ? 25 : 0)}px, ${gamePos[1] + (r.top ? 10 : 0)}px)` + (r.top ? ` rotate(10deg)` : '')
+        }
+
+        function setTrumpCard(card) {
+            const code = (card.rank[0] + card.suit[0]).toLowerCase()
+            document.querySelector('.game__cart__cold__carts__second').src = document.querySelector(`img[data-cardimg="${code}"]`).src
+        }
 
         function giveCard(player, code) {
             let card = document.createElement('img')
             card.dataset.card = player == profile.id ? code : 'b'
             card.dataset.player = player
             card.src = document.querySelector(`img[data-cardimg="${code}"]`).src
-            if (player == profile.id) {
-                addMyCard(card)
-            } else {
+            if (player == profile.id) addMyCard(card);
+            else {
                 let players = {}
                 for (const playerElem of document.querySelectorAll('.game__players__player__photo'))
                     players[playerElem.dataset.id] = playerElem
@@ -619,11 +559,42 @@ export default {
             countElem.innerHTML = --count
         }
 
-        function getPlayerPos(player) {
-            let playerRect = players[player].getBoundingClientRect()
-            let playerX = playerRect.x + playerRect.width / 2
-            let playerY = playerRect.y + playerRect.height / 2
-            return {x: playerX, y: playerY}
+        function addMyCard(card, addElement = true) {
+            card.style.removeProperty('z-index')
+            card.style.width = '30vw'
+            card.style.left = '-15vw'
+            card.style.top = '-28vw'
+            card.classList.add('my-card')
+
+            if (mycards.includes(card)) return
+            if (addElement) {
+                let cards = document.querySelectorAll('img.my-card')
+                if (!cards.length) return cardCnt.appendChild(card)
+
+                for (let i = 0; i < cards.length; i++)
+                    if (lt(card.dataset.card, cards[i].dataset.card))
+                        return cardCnt.insertBefore(card, cards[i])
+
+                cardCnt.appendChild(card)
+            }
+            if (!mycards.length) return mycards.push(card)
+
+            for (let i = 0; i < mycards.length; i++)
+                if (lt(card.dataset.card, mycards[i].dataset.card))
+                    return mycards.splice(i, 0, card)
+
+            mycards.push(card)
+        }
+
+        function addGameCard(card) {
+            for (let i = 0; i < gameCells.length; i++)
+                if (gameCells[i].length < 2) {
+                    gameCells[i].push(card)
+                    return {gameCell: i, top: gameCells[i].length === 2}
+                }
+            let newGameCell = [card]
+            gameCells.push(newGameCell)
+            return {gameCell: gameCells.length - 1, top: false}
         }
 
         let cardBack = document.querySelector('#card-back')
@@ -661,6 +632,13 @@ export default {
             }
             gameCells = []
             gameCards = []
+        }
+
+        function getPlayerPos(player) {
+            let playerRect = players[player].getBoundingClientRect()
+            let playerX = playerRect.x + playerRect.width / 2
+            let playerY = playerRect.y + playerRect.height / 2
+            return {x: playerX, y: playerY}
         }
 
         function cardsToPlayer(player) {
