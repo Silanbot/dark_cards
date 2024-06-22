@@ -9,9 +9,8 @@ import modalDialog from './components/modalDialog.vue'
                   v-if="modalProfileShow"/>
     <modalChat @hide="modalChatShow = false" v-if="modalChatShow"/>
     <modalDialog @hide="modalDialogShow = false" v-if="modalDialogShow"/>
-    <img id="card-back" style="display:none" src="./sources/cards/back.svg">
-    <img id="card-step" style="display:none" src="./sources/cards/6_of_hearts.svg">
     <div style="display:none">
+        <img id="card-back" style="display:none" src="./sources/cards/back.svg">
         <img data-cardimg="6s" src="./sources/cards/6_of_spades.svg">
         <img data-cardimg="ac" src="./sources/cards/ace_of_clubs.svg">
         <img data-cardimg="kc" src="./sources/cards/king_of_clubs.svg">
@@ -48,7 +47,6 @@ import modalDialog from './components/modalDialog.vue'
         <img data-cardimg="5h" src="./sources/cards/5_of_hearts.svg">
         <img data-cardimg="8d" src="./sources/cards/8_of_diamonds.svg">
         <img data-cardimg="js" src="./sources/cards/jack_of_spades.svg">
-        <img data-cardimg="b" src="./sources/cards/back.svg">
         <img data-cardimg="1c" src="./sources/cards/10_of_clubs.svg">
         <img data-cardimg="4s" src="./sources/cards/4_of_spades.svg">
         <img data-cardimg="as" src="./sources/cards/ace_of_spades.svg">
@@ -428,6 +426,7 @@ export default {
         let lastDragging = false
         let tx, ty
 
+        let cardBack = document.querySelector('#card-back')
         let activeCard = null
         let mycards = []
 
@@ -597,9 +596,6 @@ export default {
             return {gameCell: gameCells.length - 1, top: false}
         }
 
-        let cardBack = document.querySelector('#card-back')
-        let cardStep = document.querySelector('#card-step')
-
         function playerStep(player, code) {
             let playerRect = players[player].getBoundingClientRect()
             let playerX = playerRect.x + playerRect.width / 2
@@ -620,7 +616,6 @@ export default {
                 card.style.transform = getTransform(r)
             })
         }
-
         window.playerStep = playerStep
 
         function endCards() {
