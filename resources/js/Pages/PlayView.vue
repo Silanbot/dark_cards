@@ -166,7 +166,7 @@ import modalDialog from './components/modalDialog.vue'
                         <div class="game__cart__cold__count">36</div>
                         <div class="game__cart__cold__carts">
                             <img class="game__cart__cold__carts__side" src="./sources/cold-card.png" alt=""/>
-                            <img class="game__cart__cold__carts__second" src="./sources/side-A.png" alt=""/>
+                            <img class="game__cart__cold__carts__second" src="" alt=""/>
                         </div>
                     </div>
                 </div>
@@ -382,6 +382,7 @@ export default {
             console.log(context.data)
             switch (context.data.event) {
                 case 'game_started':
+                    setTrumpCard(context.data.deck.at(-1))
                     for (const [player, cards] of Object.entries(context.data.players))
                         for (const code of cards) {
                             giveCard(player, code)
@@ -512,6 +513,11 @@ export default {
 
         function gt(a, b) {
             return a != b && !lt(a, b)
+        }
+
+        function setTrumpCard(card) {
+            const code = (card.rank[0] + card.suit[0]).toLowerCase()
+            document.querySelector('.game__cart__cold__carts__second').src = document.querySelector(`img[data-cardimg="${code}"]`).src
         }
 
         let codes = Array.from(document.querySelectorAll('img[data-cardimg]')).map(img => img.dataset.cardimg).filter(c => c.length === 2)
