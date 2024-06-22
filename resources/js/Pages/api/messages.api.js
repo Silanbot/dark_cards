@@ -1,21 +1,21 @@
-import axios from "axios";
+import { api } from './axios.js';
 
-export default new class {
-    async send(message, player, room_id, channel) {
-        await axios({
-            method: 'POST',
-            url: '/api/messages/send',
-            data: {message, user_id: player, room_id, room_name: channel}
-        })
-    }
+export default new (class {
+	async send(message, player, room_id, channel) {
+		await api({
+			method: 'POST',
+			url: '/api/messages/send',
+			data: { message, user_id: player, room_id, room_name: channel }
+		});
+	}
 
-    async load(room_id, room_name) {
-        const response = await axios({
-            method: 'GET',
-            url: '/api/messages',
-            params: { room_id, room_name }
-        })
+	async load(room_id, room_name) {
+		const response = await api({
+			method: 'GET',
+			url: '/api/messages',
+			params: { room_id, room_name }
+		});
 
-        return response.data
-    }
-}
+		return response.data;
+	}
+})();
