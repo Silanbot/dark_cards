@@ -531,23 +531,22 @@ export default {
             document.querySelector('.game__cart__cold__carts__second').src = document.querySelector(`img[data-cardimg="${code}"]`).src
         }
 
-        function giveCard(player, code) {
+        function giveCard(playerId, code) {
             const card = document.createElement('img')
-            card.dataset.player = player
-            card.dataset.card = player == profile.id ? code : 'b'
+            card.dataset.player = playerId
+            card.dataset.card = playerId == profile.id ? code : 'b'
             card.src = document.querySelector(`img[data-cardimg="${card.dataset.card}"]`).src
-            if (player == profile.id) addMyCard(card);
+            if (playerId == profile.id) addMyCard(card);
             else {
-                let players = {}
-                for (const playerElem of document.querySelectorAll('.game__players__player__photo'))
-                    players[playerElem.dataset.id] = playerElem
-
-                cardCnt.appendChild(card)
-                let playerRect = players[player].getBoundingClientRect()
-                let playerX = playerRect.x + playerRect.width / 2
-                let playerY = playerRect.y + playerRect.height / 2
-                card.style.transform = `translate(${playerX}px, ${playerY}px)`
-                card.style.width = '10vw'
+                const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.id == playerId)
+                if (!player) console.error(`opponent player ${playerId} not found to give card`);
+                else {
+                    cardCnt.appendChild(card)
+                    const playerRect = player.getBoundingClientRect()
+                    const [playerX, playerY] = [playerRect.x + playerRect.width / 2, playerRect.y + playerRect.height / 2]
+                    card.style.transform = `translate(${playerX}px, ${playerY}px)`
+                    card.style.width = '10vw'
+                }
             }
             countElem.innerHTML = --count
         }
