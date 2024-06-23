@@ -10,7 +10,7 @@ import modalDialog from './components/modalDialog.vue'
     <modalChat @hide="modalChatShow = false" v-if="modalChatShow"/>
     <modalDialog @hide="modalDialogShow = false" v-if="modalDialogShow"/>
     <div style="display:none">
-        <img id="card-back" style="display:none" src="./sources/cards/back.svg">
+        <img data-cardimg="b" src="./sources/cards/back.svg">
         <img data-cardimg="6s" src="./sources/cards/6_of_spades.svg">
         <img data-cardimg="ac" src="./sources/cards/ace_of_clubs.svg">
         <img data-cardimg="kc" src="./sources/cards/king_of_clubs.svg">
@@ -65,7 +65,6 @@ import modalDialog from './components/modalDialog.vue'
         <img data-cardimg="6c" src="./sources/cards/6_of_clubs.svg">
         <img data-cardimg="7c" src="./sources/cards/7_of_clubs.svg">
         <img data-cardimg="jd" src="./sources/cards/jack_of_diamonds.svg">
-
     </div>
     <section class="inter section section-inter">
         <div class="inter__header inter__header_play">
@@ -435,7 +434,6 @@ export default {
         let lastDragging = false
         let tx, ty
 
-        let cardBack = document.querySelector('#card-back')
         let activeCard = null
         let mycards = []
 
@@ -534,10 +532,10 @@ export default {
         }
 
         function giveCard(player, code) {
-            let card = document.createElement('img')
-            card.dataset.card = player == profile.id ? code : 'b'
+            const card = document.createElement('img')
             card.dataset.player = player
-            card.src = document.querySelector(`img[data-cardimg="${code}"]`).src
+            card.dataset.card = player == profile.id ? code : 'b'
+            card.src = document.querySelector(`img[data-cardimg="${card.dataset.card}"]`).src
             if (player == profile.id) addMyCard(card);
             else {
                 let players = {}
@@ -594,7 +592,7 @@ export default {
             for (let card of gameCards) {
                 card.style.transform = `translate(${window.innerWidth}px, ${window.innerHeight / 2}px) rotate(${Math.random() * 360}deg)`
                 setTimeout(() => {
-                    card.src = cardBack.src
+                    card.src = document.querySelector('img[data-cardimg="b"]').src
                 }, 200)
             }
             gameCells = Array.from({ length: 5 }, () => [])
