@@ -417,7 +417,6 @@ export default {
             s: 1, c: 2, h: 3, d: 4, j: 5
         }
 
-        let allCards = []
         let gameCards = []
         let gameCells = []
 
@@ -512,10 +511,6 @@ export default {
             return cardValues[a[0]] < cardValues[b[0]]
         }
 
-        function gt(a, b) {
-            return a != b && !lt(a, b)
-        }
-
         function getGamePos(cell) {
             cell = cell % 5
             let x = window.innerWidth / 2
@@ -592,28 +587,6 @@ export default {
             return {gameCell: gameCells.length - 1, top: false}
         }
 
-        function playerStep(player, code) {
-            let playerRect = players[player].getBoundingClientRect()
-            let playerX = playerRect.x + playerRect.width / 2
-            let playerY = playerRect.y + playerRect.height / 2
-            let card = document.createElement('img')
-            card.dataset.card = code
-            card.dataset.player = player
-            card.style.width = '13vw'
-            card.src = document.querySelector(`img[data-cardimg="${code}"]`).src
-            let r = addGameCard(card)
-            allCards.push(card)
-            gameCards.push(card)
-            card.style.transform = `translate(${playerX}px, ${playerY}px)`
-            card.style.zIndex = r.top ? 5 : 3
-            cardCnt.appendChild(card)
-            card.offsetWidth
-            requestAnimationFrame(() => {
-                card.style.transform = getTransform(r)
-            })
-        }
-        window.playerStep = playerStep
-
         function endCards() {
             for (let card of gameCards) {
                 card.style.transform = `translate(${window.innerWidth}px, ${window.innerHeight / 2}px) rotate(${Math.random() * 360}deg)`
@@ -622,34 +595,6 @@ export default {
                 }, 200)
             }
             gameCells = []
-            gameCards = []
-        }
-
-        function getPlayerPos(player) {
-            let playerRect = players[player].getBoundingClientRect()
-            let playerX = playerRect.x + playerRect.width / 2
-            let playerY = playerRect.y + playerRect.height / 2
-            return {x: playerX, y: playerY}
-        }
-
-        function cardsToPlayer(player) {
-            let playerPos = getPlayerPos(player)
-            for (let card of gameCards) {
-                card.style.transform = `translate(${playerPos.x}px, ${playerPos.y}px)`
-            }
-            gameCells = []
-            gameCards = []
-        }
-
-        function endCards1() {
-            for (let card of allCards) {
-                card.style.transform = `translate(${-140}px, ${window.innerHeight / 2}px) rotate(${Math.random() * 360}deg)`
-                setTimeout(() => {
-                    card.src = cardBack.src
-                }, 200)
-            }
-            gameCells = []
-            allCards = []
             gameCards = []
         }
     }
