@@ -1,13 +1,13 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ConnectController;
-use App\Http\Controllers\FriendController;
-use App\Http\Controllers\GameController;
-use App\Http\Controllers\MessageController;
-use App\Http\Controllers\StatisticController;
-use App\Http\Controllers\TokenController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Friend\FriendController;
+use App\Http\Controllers\Game\ConnectController;
+use App\Http\Controllers\Game\GameController;
+use App\Http\Controllers\Message\MessageController;
+use App\Http\Controllers\User\StatisticController;
+use App\Http\Controllers\User\TokenController;
+use App\Http\Controllers\User\UserController;
 use App\Http\Middleware\TelegramBotMiddleware;
 use Illuminate\Support\Facades\Route;
 

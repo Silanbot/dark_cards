@@ -45,10 +45,10 @@ class GameService implements GameContract
 
         $card = $room->deck->get('cards')[0];
         $playerCards = $room->deck->get('players')[$player];
-        $playerCards[] = strtolower($card['rank'].$card['suit'][0]);
+        $playerCards[] = strtolower($card['rank'] . $card['suit'][0]);
         $players = $room->deck->get('players');
         $players[$player] = $playerCards;
-        $card = strtolower($card['rank'].$card['suit'][0]);
+        $card = strtolower($card['rank'] . $card['suit'][0]);
         $this->centrifugo->publish('room', [
             'card' => $card,
             'event' => 'player_take_card',
@@ -68,10 +68,65 @@ class GameService implements GameContract
         return $players[$player];
     }
 
+    public function calculateWinnerAmount(Model $model): array
+    {
+        $maxGamers = $model->max_gamers;
+        $winners = $model->winners;
+
+        if ($maxGamers == 2) {
+            $winners[auth()->id()] = $model->bank * 0.92;
+        }
+        if ($maxGamers == 3 && blank($winners)) {
+            $winners[auth()->id()] = $model->bank * 0.6;
+        } else if ($maxGamers == 3 && count($winners) === 1) {
+            $winners[auth()->id()] = $model->bank * 0.32;
+        }
+        if ($maxGamers == 4 && blank($winners)) { // 1
+            $winners[auth()->id()] = $model->bank * 0.5;
+        } else if ($maxGamers == 4 && count($winners) === 1) { // 2
+            $winners[auth()->id()] = $model->bank * 0.3;
+        } else if ($maxGamers == 4 && count($winners) == 2) { // 3
+            $winners[auth()->id()] = $model->bank * 0.12;
+        }
+        if ($maxGamers == 5 && blank($winners)) {
+            $winners[auth()->id()] = $model->bank * 0.45;
+        } else if ($maxGamers == 5 && count($winners) === 1) {
+            $winners[auth()->id()] = $model->bank * 0.25;
+        } else if ($maxGamers == 5 && count($winners) === 2) {
+            $winners[auth()->id()] = $model->bank * 0.15;
+        } else if ($maxGamers == 5 && count($winners) === 3) {
+            $winners[auth()->id()] = $model->bank * 0.07;
+        }
+        if ($maxGamers == 6 && blank($winners)) {
+            $winners[auth()->id()] = $model->bank * 0.35;
+        } else if ($maxGamers == 6 && count($winners) === 1) {
+            $winners[auth()->id()] = $model->bank * 0.22;
+        } else if ($maxGamers == 6 && count($winners) === 2) {
+            $winners[auth()->id()] = $model->bank * 0.17;
+        } else if ($maxGamers == 6 && count($winners) === 3) {
+            $winners[auth()->id()] = $model->bank * 0.12;
+        } else if ($maxGamers == 6 && count($winners) === 4) {
+            $winners[auth()->id()] = $model->bank * 0.06;
+        }
+
+        $model->update([
+            'winners' => $winners
+        ]);
+
+        return $winners;
+    }
+
     public function beat(string $fightCard, string $card, Model $room): bool
     {
         $fightCard = Card::build($fightCard);
         $card = Card::build($card);
+        if ($fightCard->isHigherThan($card, $room->deck->get('trump'), '6') && blank($room->deck->get('deck')) && blank($room->deck->get('players')[auth()->id()])) {
+            return (bool) $this->centrifugo->publish('room', [
+                'event' => 'user_win',
+                'user_id' => auth()->id(),
+                'winners' => $this->calculateWinnerAmount($room)
+            ]);
+        }
 
         return (bool) $this->centrifugo->publish('room', [
             'event' => 'game_beat',

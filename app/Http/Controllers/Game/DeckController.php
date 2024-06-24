@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Game;
 
 use App\Game\Deck;
+use App\Http\Controllers\Controller;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use phpcent\Client;

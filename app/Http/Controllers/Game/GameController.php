@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Game;
 
 use App\Contracts\Game\GameContract;
+use App\Http\Controllers\Controller;
 use App\Models\Room;
 use Illuminate\Http\Request;
 

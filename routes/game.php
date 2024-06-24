@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\GameController;
+use App\Http\Controllers\Game\GameController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('game')->group(function () {
