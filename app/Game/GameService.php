@@ -171,6 +171,11 @@ class GameService implements GameContract
                 'trump' => last($room->deck->get('cards'))['suit'],
             ],
         ]);
+
+        $this->centrifugo->publish('room', [
+            'event' => 'discard_card',
+            'deck' => $room->deck,
+        ]);
     }
 
     public function allPlayersReady(int $id): void

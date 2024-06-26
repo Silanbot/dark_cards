@@ -89,4 +89,9 @@ class GameController extends Controller
     {
         $this->contract->revertCard($request->card, $request->room_id, $request->player);
     }
+
+    public function discardCard(Request $request): void
+    {
+        $this->contract->discardCard($request->card, $request->room_id);
+    }
 }
