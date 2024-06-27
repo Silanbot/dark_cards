@@ -108,7 +108,7 @@
                         />
                     </svg>
                 </a>
-                <div class="inter__buttons__item">
+                <a href="/friends" class="inter__buttons__item">
                     <div class="svg">
                         <img src="./sources/i4.svg" alt=""/>
                     </div>
@@ -128,7 +128,7 @@
                             stroke-linejoin="round"
                         />
                     </svg>
-                </div>
+                </a>
             </div>
         </div>
         <footer class="footer">
