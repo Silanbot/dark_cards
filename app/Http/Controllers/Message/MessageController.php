@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Message;
 
+use App\Http\Controllers\Controller;
 use App\Models\Message;
 use App\Repositories\Contracts\MessageRepositoryContract;
 use Illuminate\Http\Request;

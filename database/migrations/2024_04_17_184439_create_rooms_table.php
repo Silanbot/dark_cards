@@ -21,6 +21,7 @@ return new class extends Migration
             $table->jsonb('deck')->nullable();
             $table->jsonb('ready_state')->nullable();
             $table->jsonb('mode')->nullable();
+            $table->jsonb('winners')->nullable();
             $table->string('password', length: 6)->nullable();
             $table->timestamps();
         });

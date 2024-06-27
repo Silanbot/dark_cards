@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\GameController;
+use App\Http\Controllers\Game\GameController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('game')->group(function () {
@@ -11,4 +11,5 @@ Route::prefix('game')->group(function () {
     Route::get('/take-from-deck', [GameController::class, 'takeFromDeck'])->name('game.takeFromDeck');
     Route::get('/take-from-table', [GameController::class, 'takeFromTable'])->name('game.takeFromTable');
     Route::get('/fight', [GameController::class, 'fight'])->name('game.fight');
+    Route::get('/discard-card', [GameController::class, 'discardCard'])->name('game.discardCard');
 });

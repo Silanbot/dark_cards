@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Game;
 
 use App\Contracts\Game\GameContract;
+use App\Http\Controllers\Controller;
 use App\Game\Deck;
 use App\Models\Room;
 use App\Models\User;
@@ -114,5 +115,10 @@ class GameController extends Controller
     public function revertCard(Request $request): void
     {
         $this->contract->revertCard($request->card, $request->room_id, $request->player);
+    }
+
+    public function discardCard(Request $request): void
+    {
+        $this->contract->discardCard($request->card, $request->room_id);
     }
 }
