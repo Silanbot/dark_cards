@@ -87,7 +87,7 @@
                         />
                     </svg>
                 </div>
-                <div class="inter__buttons__item">
+                <a href="/achievements" class="inter__buttons__item">
                     <div class="svg">
                         <img src="./sources/i3.svg" alt=""/>
                     </div>
@@ -107,7 +107,7 @@
                             stroke-linejoin="round"
                         />
                     </svg>
-                </div>
+                </a>
                 <div class="inter__buttons__item">
                     <div class="svg">
                         <img src="./sources/i4.svg" alt=""/>
