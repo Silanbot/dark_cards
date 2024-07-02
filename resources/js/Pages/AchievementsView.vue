@@ -91,6 +91,7 @@
         align-items: center;
 
         .achievements__counter__wrapper {
+            font-size: 16px;
             background: #622D2D;
             padding: 6px 12px;
             border-radius: 100vmax;
