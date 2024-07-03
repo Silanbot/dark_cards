@@ -45,7 +45,7 @@
             </svg>
 
             <div class="inter__buttons">
-                <div class="inter__buttons__item">
+                <a href="/friends" class="inter__buttons__item">
                     <div class="svg">
                         <img src="./sources/i1.svg" alt=""/>
                     </div>
@@ -65,7 +65,7 @@
                             stroke-linejoin="round"
                         />
                     </svg>
-                </div>
+                </a>
                 <div class="inter__buttons__item">
                     <div class="svg">
                         <img src="./sources/i2.svg" alt=""/>
@@ -108,7 +108,7 @@
                         />
                     </svg>
                 </a>
-                <a href="/friends" class="inter__buttons__item">
+                <div class="inter__buttons__item">
                     <div class="svg">
                         <img src="./sources/i4.svg" alt=""/>
                     </div>
@@ -128,7 +128,7 @@
                             stroke-linejoin="round"
                         />
                     </svg>
-                </a>
+                </div>
             </div>
         </div>
         <footer class="footer">
