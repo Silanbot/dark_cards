@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Game;
 
 use App\Contracts\Game\GameContract;
+use App\Game\Card;
 use App\Http\Controllers\Controller;
 use App\Game\Deck;
 use App\Models\Room;
@@ -119,6 +120,6 @@ class GameController extends Controller
 
     public function discardCard(Request $request): void
     {
-        $this->contract->discardCard($request->card, $request->room_id);
+        $this->contract->discardCard(Card::build($request->card), $request->room_id);
     }
 }

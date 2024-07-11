@@ -47,36 +47,17 @@ final readonly class Card implements CardContract
 
     public function toString(): string
     {
-        if ($this->rank === '10') {
-            return strtolower($this->rank[0].$this->suit[0]);
-        }
-
-        return strtolower($this->rank.$this->suit[0]);
+        return strtolower($this->rank[0].$this->suit[0]);
     }
 
     public static function build(string $card): self
     {
-        $suit = '';
-        $rank = null;
-
-        if ($card[0] === '1') {
-            $rank = '10';
-        }
+        $rank = $card[0] === '1' ? '10' : $card[0];
         switch ($card[1]) {
-            case 's':
-                $suit = 'Spades';
-                break;
-            case 'd':
-                $suit = 'Diamonds';
-                break;
-            case 'h':
-                $suit = 'Hearts';
-                break;
-            case 'c':
-                $suit = 'Clubs';
-                break;
+            case 's': return new self('Spades', $rank);
+            case 'd': return new self('Diamonds', $rank);
+            case 'h': return new self('Hearts', $rank);
+            case 'c': return new self('Clubs', $rank);
         }
-
-        return new self($suit, $rank);
     }
 }

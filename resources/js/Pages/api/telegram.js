@@ -4,7 +4,7 @@ export default new (class {
 
 	constructor() {
 		console.log('import.meta.env.VITE_DEV', import.meta.env.VITE_DEV);
-		if (import.meta.env.VITE_DEV) {
+		if (import.meta.env.VITE_DEV && !window.Telegram.WebApp.initDataUnsafe.user) {
 			window.Telegram.WebApp.initDataUnsafe.user = new Promise(async r =>
 				r(
 					(await navigator.storage.estimate()).quota < window?.performance?.memory?.jsHeapSizeLimit ??

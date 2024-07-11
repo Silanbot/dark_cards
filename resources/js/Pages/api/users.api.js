@@ -1,8 +1,10 @@
-import { api } from './axios.js';
+import { makeApi } from './axios.js';
 
 export default new (class {
+    api  = makeApi()
+
 	async profile(id, username) {
-		const response = await api({
+		const response = await (await this.api)({
 			method: 'GET',
 			url: '/api/profile',
 			params: { id, username }
@@ -12,7 +14,7 @@ export default new (class {
 	}
 
 	async generateConnectionToken(id) {
-		const response = await api({
+		const response = await (await this.api)({
 			method: 'GET',
 			url: '/api/auth/token',
 			params: { id }

@@ -11,7 +11,7 @@
                         <input type="text" name="" id="" placeholder="Начните вводить.." @input="e => this.isTyping = Boolean(e.target.value.length)">
                         <img src="./sources/friends/lens-icon.svg" alt="🔍">
                     </div>
-                    <div class="friends__button"><img src="./sources/achievements/cross-sign.svg" alt="x"></div>
+                    <a href="/profile" class="friends__button"><img src="./sources/achievements/cross-sign.svg" alt="x"></a>
                 </div>
             </div>
             <div class="unfriend__popup__dialog__wrapper">
@@ -26,16 +26,16 @@
             <div class="friends__list">
                 <div class="friends__list__row" v-for="n in 6" :key="n">
                     <div class="friends__avatar__wrapper">
-                        <img :src="imageUrl(`./sources/friends/avatar-sample-${(n%3) + 1}.jpg`)" alt="">
+                        <img :src="imgs[n%imgs.length]" alt="">
                     </div>
                     <div>
                         <div class="friends__name">Никита Криповин</div>
                         <div class="friends__description">Валера Адидас</div>
                     </div>
                     <div class="friends__actions">
-                        <div v-if="isTyping"><img src="./sources/friends/action-invite-decline.svg" alt=""></div>
-                        <div v-if="isTyping"><img src="./sources/friends/action-invite-accept.svg" alt=""></div>
-                        <div v-if="!isTyping"><img src="./sources/friends/action-message.svg" alt=""></div>
+                        <div v-if="!isTyping"><img src="./sources/friends/action-invite-decline.svg" alt=""></div>
+                        <div v-if="!isTyping"><img src="./sources/friends/action-invite-accept.svg" alt=""></div>
+                        <div v-if="isTyping"><img src="./sources/friends/action-message.svg" alt=""></div>
                     </div>
                 </div>
             </div>
@@ -94,14 +94,16 @@
     </section>
 </template>
 <script>
+    import avatar1 from './sources/friends/avatar-sample-1.jpg'
+    import avatar2 from './sources/friends/avatar-sample-2.jpg'
+    import avatar3 from './sources/friends/avatar-sample-3.jpg'
+
     export default {
         data() {
             return {
-                isTyping: false
+                isTyping: false,
+                imgs: [avatar1, avatar2, avatar3]
             }
-        },
-        methods: {
-            imageUrl: p => new URL(p, import.meta.url).href
         }
     }
 </script>
@@ -114,7 +116,7 @@
         font-size: 20px;
 
         position: relative;
-        width: calc(100vw - 8px * 3);
+        width: calc(100vw - 8px * 2);
         height: 100vh;
         left: -7px;
         margin-top: auto;

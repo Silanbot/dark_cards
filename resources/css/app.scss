@@ -57,6 +57,7 @@ a {
 }
 
 body {
+    margin: 0;
     background: rgba(23, 10, 10, 1);
     // overflow-x: hidden;
 }
@@ -563,6 +564,12 @@ body {
         display: flex;
         justify-content: center;
         gap: 30px;
+        max-width: 86vw;
+        margin: 0 auto;
+
+        &:has(.small1) {
+            margin: 0 0 0 20px
+        }
 
         .game__players__player {
             display: flex;
@@ -571,6 +578,40 @@ body {
             width: 30vw;
             position: relative;
             height: 15vh;
+
+
+            &.small1 {
+                transform: scale(0.87);
+                .game__players__player__cart img {
+                    transform: scale(0.7);
+                    overflow: visible;
+                }
+            }
+            &.small2 {
+                transform: scale(0.65);
+                .game__players__player__cart img {
+                    transform: scale(0.65);
+                    overflow: visible;
+                }
+            }
+            &.down1 {
+                transform: translateY(10px);
+            }
+            &.down2 {
+                transform: translateY(20px);
+            }
+            &.down1.small1 {
+                transform: translateY(10px) scale(0.87);
+            }
+            &.down2.small1 {
+                transform: translateY(20px) scale(0.87);
+            }
+            &.down1.small2 {
+                transform: translateY(10px) scale(0.65);
+            }
+            &.down2.small2 {
+                transform: translateY(20px) scale(0.65);
+            }
 
             &.second {
                 .game__players__player__photo {
@@ -584,8 +625,8 @@ body {
                 height: 100%;
 
                 img {
-                    width: 105%;
-                    height: 114%;
+                    width: 100%;
+                    height: 144px;
                     object-fit: cover;
                     z-index: 1;
                     position: absolute;

@@ -133,11 +133,21 @@ import modalDialog from './components/modalDialog.vue'
             <section class="section-game game">
                 <div id="cards"></div>
                 <div class="game__players">
-                    <div  class="game__players__player" v-for="user of users">
+                    <div class="game__players__player" :key="i" v-for="(user, i) of users" :class="(() => {
+                        const d = i + 1 - ~~(users.length / 2)
+                        const m = Math.abs(users.length % 2 != 0 || d > 0 ? d - 1 : d);
+                        return {
+                            small1: users.length > 3,
+                            small2: users.length > 4,
+                            down1: m > 0,
+                            down2: m > 1,
+                        }
+                    })()">
                         <div class="game__players__player__cart">
                             <img src="./sources/cartes.svg" alt=""/>
                         </div>
-                        <div class="game__players__player__photo" :data-id="user.id">
+                        <div class="game__players__player__photo" :data-player="user.id">
+                            <div class="win__amount">+100</div>
                             <img class="game__players__player__photo__img" src="./sources/player.png" alt=""/>
                             <div class="game__players__player__photo__text">
                                 <img src="./sources/level-2.png" alt=""/>
@@ -145,18 +155,6 @@ import modalDialog from './components/modalDialog.vue'
                             <div class="game__players__player__photo__name">{{ user.username }}</div>
                         </div>
                     </div>
-<!--                    <div class="game__players__player second" @click="modalProfileShow = true">-->
-<!--                        <div class="game__players__player__cart">-->
-<!--                            <img src="./sources/cartes.svg" alt=""/>-->
-<!--                        </div>-->
-<!--                        <div class="game__players__player__photo" data-id="111231">-->
-<!--                            <img class="game__players__player__photo__img" src="./sources/player2.png" alt=""/>-->
-<!--                            <div class="game__players__player__photo__text">-->
-<!--                                <img src="./sources/level-2.png" alt=""/>-->
-<!--                            </div>-->
-<!--                            <div class="game__players__player__photo__name">Никита</div>-->
-<!--                        </div>-->
-<!--                    </div>-->
                 </div>
                 <div class="game__cart">
                     <div class="game__cart__cold">
@@ -235,6 +233,7 @@ import modalDialog from './components/modalDialog.vue'
                 <div class="footer__button" @click="setReadyState" v-else>Не готов</div>
 
                 <div class=" footer__person">
+                    <div class="win__amount win__amount__self">+100</div>
                     <div class="footer__person__img">
                         <img src="./sources/person.png" alt=""/>
                         <div class="text">
@@ -375,44 +374,11 @@ export default {
 
         const sub = this.centrifugo.newSubscription(`room`)
 
-        sub.on('publication', async context => {
-            console.log(context.data)
-            switch (context.data.event) {
-                case 'game_started':
-                    setTrumpCard(context.data.deck.at(-1))
-                    for (const [player, cards] of Object.entries(context.data.players))
-                        for (const code of cards) {
-                            giveCard(player, code)
-                            await new Promise(r => setTimeout(r, 100))
-                        }
-                    return
-                case 'user_join_room':
-                    if (context.data.user.id == profile.id) return
-                    if (this.users.findIndex(u => u.id == context.data.user.id) !== -1) return
-                    return this.users.push(context.data.user)
-                case 'take_from_table':
-                    giveCard(context.data.player, context.data.card)
-                    break
-                case 'user_left_room':
-                    document.querySelector(`div[data-id="${context.data.player}"]`).parentNode.remove()
-                    break
-                case 'user_defeat_card':
-                    endCards()
-                    const count = 1;
-                    await gameApi.takeFromDeck(this.room.id, profile.id, count)
-                    break
-                case 'user_take_from_deck':
-                    break
-            }
-        }).subscribe()
-
-        this.centrifugo.connect()
-
-        let cardValues = {
+        const cardValues = {
             2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 1: 10,
             j: 11, q: 12, k: 13, a: 14
         }
-        let cardSuits = {
+        const cardSuits = {
             s: 1, c: 2, h: 3, d: 4, j: 5
         }
 
@@ -424,8 +390,8 @@ export default {
                 [x * 0.6, y * 0.9],
                 [x,       y * 0.9],
                 [x * 1.4, y * 0.9],
-                [x * 0.8, y * 1.3],
-                [x * 1.2, y * 1.3]
+                [x * 0.8, y * 1.14],
+                [x * 1.2, y * 1.14]
             ]
         }
 
@@ -441,55 +407,180 @@ export default {
         let countElem = document.querySelector('.game__cart__cold__count')
         let count = parseInt(countElem.innerHTML)
 
-        document.addEventListener('touchstart', e=>{
-            if (e.target.dataset.player == profile.id) {
-                touch=true;
-                [tx, ty] = [e.touches[0].clientX, e.touches[0].clientY];
-                activeCard=e.target
-                return
+        sub.on('publication', async ({ data }) => {
+            console.log(data.event, data)
+            switch (data.event) {
+                case 'game_started':
+                    setTrumpCard(data.deck.at(-1))
+                    for (const [player, cards] of Object.entries(data.players))
+                        (async () => {
+                            for (const code of cards) {
+                                giveCard(player, code)
+                                await new Promise(r => setTimeout(r, 100))
+                            }
+                        })();
+                    return
+                case 'user_join_room':
+                    if (data.user.id == profile.id) return
+                    if (this.users.findIndex(u => u.id == data.user.id) !== -1) return
+                    return this.users.push(data.user)
+                case 'player_take_table':
+                    for (const cell of gameCells)
+                        for (const card of cell)
+                            if (card.dataset.player == profile.id) addMyCard(card, false)
+                            else {
+                                card.dataset.player = profile.id;
+                                addMyCard(card, true)
+                            }
+                    return
+                case 'user_left_room':
+                    return document.querySelector(`div[data-id="${data.player}"]`).parentNode.remove()
+                case 'discard_card':
+                    const cardId = data.deck.table.at(-1)
+                    if (gameCells.find(c => c.find(c => c.dataset.card == cardId))) return
+                    const [playerId] = Object.entries(data.deck.players).find(h => h[1].find(c => c == cardId)) ?? []
+                    if (playerId === undefined) return console.error('user thrown unowned card')
+                    if (playerId == profile.id) return
+
+                    const card = document.createElement('img')
+                    card.dataset.player = playerId
+                    card.dataset.card = cardId
+                    card.src = document.querySelector(`img[data-cardimg="${card.dataset.card}"]`).src
+                    const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
+                    if (!player) return console.error(`opponent player ${playerId} not found to give card`);
+
+                    const playerRect = player.getBoundingClientRect()
+                    card.style.transform = `translate(${playerRect.x + playerRect.width / 2}px, ${playerRect.y + playerRect.height / 2}px)`
+                    card.style.width = '10vw'
+                    cardCnt.appendChild(card)
+
+                    const gameCell = gameCells.findIndex(c => c.length < 2 && c.every(c => c.dataset.player != playerId));
+                    if (gameCell == -1) return
+                    const top = gameCells[gameCell].length != 0;
+                    gameCells[gameCell][Number(top)] = card;
+                    const [x, y] = gameCellPos()[gameCell];
+
+                    card.style.transform = `translate(${x + (top ? 25 : 0)}px, ${y + (top ? 5 : 0)}px)` + (top ? ` rotate(10deg)` : '')
+                    card.style.zIndex = top?5:3
+                    card.style.width = '13vw'
+                    card.dataset.gameCell = gameCell
+
+                    return gameCards.push(card)
+                case 'revet_card':
+                    const cardd = gameCells.find(c => c.find(c => c.dataset.card == data.card))
+
+                    const playerr = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
+                    if (!playerr) return console.error(`opponent player ${cardd.dataset.player} not found to give card`);
+
+                    const playerRectr = playerr.getBoundingClientRect()
+                    cardd.style.transform = `translate(${playerRectr.x + playerRectr.width / 2}px, ${playerRectr.y + playerRectr.height / 2}px)`
+                    cardd.style.width = '10vw'
+                    return cardCnt.removeChild(cardd)
+                case 'user_defeat_card':
+                    endCards()
+                    const count = 1;
+                    return await gameApi.takeFromDeck(this.room.id, profile.id, count)
+
             }
+        }).subscribe()
+        this.centrifugo.connect()
+
+        // touch events, strictly speaking - cards manipulation, won't work on "non touch surface" devices (imagine DIY mobile without touch screen 😀). a some workaround needs to be done with mouse events. either separate functions or bluntly write polyfill (note that im not talking about regular implementation/version polyfill you think off. it is an already implemented touch api by browser and our mouse -> touch polyfill kinda. not sure we can call this polyfill at this point)
+        document.addEventListener('touchstart', async e=>{
+            const card = e.target;
+            if (!card.dataset?.card) return
+            if (card.dataset.gameCell !== undefined) {
+                const otherCard = gameCells[card.dataset.gameCell].find(c => c.dataset.card != card.dataset.card)
+                const top = otherCard?.style.zIndex == 3;
+
+                const isCheaters = localStorage.getItem('params')?.split(',').includes('cheaters') ?? false;
+                if (!isCheaters || !top || !cannotBeat(card.dataset.card, otherCard.dataset.card)) return
+
+                const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
+                if (!player) return console.error(`opponent player ${card.dataset.player} not found to give card`);
+
+                const playerRect = player.getBoundingClientRect()
+                card.style.transform = `translate(${playerRect.x + playerRect.width / 2}px, ${playerRect.y + playerRect.height / 2}px)`
+                card.style.width = '10vw'
+                player.style.zIndex = 6
+                await new Promise(r => setTimeout(r, 300))
+                cardCnt.removeChild(card)
+                player.style.zIndex = 1
+                return gameApi.revert(this.room.id, card.dataset.player, card.dataset.card)
+            }
+            touch=true;
+            [tx, ty] = [e.touches[0].clientX, e.touches[0].clientY];
+            activeCard=card
         })
         document.addEventListener('touchmove', e=>{
             [tx, ty] = [e.touches[0].clientX, e.touches[0].clientY]
             let elem = document.elementFromPoint(tx, ty)
-            if (!dragging && elem?.dataset.player == profile.id) activeCard = elem
+            if (touch && !dragging && elem?.dataset.player == profile.id) activeCard = elem
         })
         document.addEventListener('touchend', e=>{
             touch = false
             dragging = lastDragging = false
             if (!activeCard) return
-            if (ty > window.innerHeight*0.75) addMyCard(activeCard, false);
-            else {
-                if (activeCard.dataset.gameCell !== undefined) {
-                    const [x, y] = gameCellPos()[activeCard.dataset.gameCell];
-                    const otherCard = gameCells[activeCard.dataset.gameCell].find(c => c.dataset.card != activeCard.dataset.card)
-                    const top = otherCard ? otherCard.style.zIndex == 3 : false;
-                    activeCard.style.transform = `translate(${x + (top ? 25 : 0)}px, ${y + (top ? 10 : 0)}px)` + (top ? ` rotate(10deg)` : '')
-                    activeCard.style.zIndex = top?5:3
-                } else {
-                    const gameCell = gameCells.findIndex(c => c.length < 2);
-                    const top = gameCells[gameCell].length != 0;
-                    gameCells[gameCell][Number(top)] = activeCard;
-                    const [x, y] = gameCellPos()[gameCell];
-
-                    activeCard.style.transform = `translate(${x + (top ? 25 : 0)}px, ${y + (top ? 10 : 0)}px)` + (top ? ` rotate(10deg)` : '')
-                    activeCard.style.zIndex = top?5:3
-
-                    activeCard.style.width = '13vw'
-                    activeCard.style.removeProperty('left')
-                    activeCard.style.removeProperty('top')
-                    activeCard.classList.remove('my-card')
-                    activeCard.dataset.gameCell = gameCell
-
-                    gameCards.push(activeCard)
-                }
-            }
+            const card = activeCard
             activeCard = null
+
+            if (card.dataset.gameCell !== undefined) {
+                const [x, y] = gameCellPos()[card.dataset.gameCell];
+                const otherCard = gameCells[card.dataset.gameCell].find(c => c.dataset.card != card.dataset.card)
+                const top = otherCard?.style.zIndex == 3;
+
+                card.style.transform = `translate(${x + (top ? 25 : 0)}px, ${y + (top ? 5 : 0)}px)` + (top ? ` rotate(10deg)` : '')
+                card.style.zIndex = top?5:3
+            } else if (ty > window.innerHeight*0.75) return addMyCard(card, false)
+
+            const gameCell = gameCells.findIndex(c => c.length < 2 && c.every(c => c.dataset.player != profile.id));
+
+            if (gameCell == -1) {
+                const a = [...document.querySelectorAll('.win__amount')]
+                // const b = a[~~(Math.random() * a.length)]
+                const b = a.find(e => !e.parentElement.dataset.player)
+                b.classList.add('visible')
+                setTimeout(() => b.classList.remove('visible'), 3000)
+                if (!b.parentElement.dataset.player) setTimeout(() => window.Telegram.WebApp.showAlert(`Ты выиграл: ${100}!`), 3000)
+
+                for (const cell of gameCells)
+                    for (const card of cell)
+                        if (card.dataset.player == profile.id) addMyCard(card, false)
+                        else {
+                            card.dataset.player = profile.id;
+                            addMyCard(card, true)
+                        }
+                return addMyCard(card, false)
+            }
+            const top = gameCells[gameCell].length != 0;
+
+            const isCheaters = localStorage.getItem('params')?.split(',').includes('cheaters') ?? false;
+            if (!isCheaters && top && cannotBeat(card.dataset.card, gameCells[gameCell][Number(!top)].dataset.card)) {
+                addMyCard(card, false)
+                // alert(`cannot beat "${gameCells[gameCell][Number(!top)].dataset.card}" with "${card.dataset.card}"`)
+                return
+            }
+
+            if (top) gameApi.fight(this.room.id, gameCells[gameCell][Number(!top)].dataset.card, card.dataset.card)
+            gameApi.discard(card.dataset.card, this.room.id)
+            gameCells[gameCell][Number(top)] = card;
+            const [x, y] = gameCellPos()[gameCell];
+
+            card.style.width = '13vw'
+            card.style.removeProperty('left')
+            card.style.removeProperty('top')
+            card.classList.remove('my-card')
+            mycards = mycards.filter(c => c.dataset.card != card.dataset.card)
+            card.dataset.gameCell = gameCell
+
+            card.style.transform = `translate(${x + (top ? 25 : 0)}px, ${y + (top ? 5 : 0)}px)` + (top ? ` rotate(10deg)` : '')
+            card.style.zIndex = top?5:3
+
+            gameCards.push(card)
         })
-        let time = null
+        let time = performance.now();
         function updateCards(t) {
-            if (time === null) time = t
-            let dt = t - time
+            const dt = t - time
             time = t
 
             mycards.forEach((card, i) => {
@@ -521,14 +612,24 @@ export default {
         requestAnimationFrame(updateCards)
 
         function lt(a, b) {
-            return cardValues[a[0]] == cardValues[b[0]]
-                ? cardSuits[a[1]] < cardSuits[b[1]]
-                : cardValues[a[0]] < cardValues[b[0]]
+            return cardSuits[a[1]] == cardSuits[b[1]]
+                ? cardValues[a[0]] < cardValues[b[0]]
+                : cardSuits[a[1]] < cardSuits[b[1]]
+        }
+        function cannotBeat(a, b) {
+            const cardValues = {
+                2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 1: 10,
+                j: 11, q: 12, k: 13, a: 14
+            }
+            return a[1] == b[1]
+                ? cardValues[a[0]] < cardValues[b[0]]
+                : a[1] != document.querySelector('.game__cart__cold__carts__second').dataset.card[1]
         }
 
         function setTrumpCard(card) {
             const code = (card.rank[0] + card.suit[0]).toLowerCase()
-            document.querySelector('.game__cart__cold__carts__second').src = document.querySelector(`img[data-cardimg="${code}"]`).src
+            const trumpCardElem = document.querySelector('.game__cart__cold__carts__second')
+            trumpCardElem.src = document.querySelector(`img[data-cardimg="${trumpCardElem.dataset.card = code}"]`).src
         }
 
         function giveCard(playerId, code) {
@@ -538,13 +639,12 @@ export default {
             card.src = document.querySelector(`img[data-cardimg="${card.dataset.card}"]`).src
             if (playerId == profile.id) addMyCard(card);
             else {
-                const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.id == playerId)
+                const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == playerId)
                 if (!player) console.error(`opponent player ${playerId} not found to give card`);
                 else {
                     cardCnt.appendChild(card)
                     const playerRect = player.getBoundingClientRect()
-                    const [playerX, playerY] = [playerRect.x + playerRect.width / 2, playerRect.y + playerRect.height / 2]
-                    card.style.transform = `translate(${playerX}px, ${playerY}px)`
+                    card.style.transform = `translate(${playerRect.x + playerRect.width / 2}px, ${playerRect.y + playerRect.height / 2}px)`
                     card.style.width = '10vw'
                 }
             }
@@ -559,19 +659,19 @@ export default {
             card.classList.add('my-card');
 
             if (card.dataset.gameCell !== undefined) {
-                const cardInCell = gameCells[activeCard.dataset.gameCell].findIndex(c => c.dataset.card == activeCard.dataset.card);
-                gameCells[activeCard.dataset.gameCell].splice(cardInCell, 1)
+                const cardInCell = gameCells[card.dataset.gameCell].findIndex(c => c.dataset.card == card.dataset.card);
+                gameCells[card.dataset.gameCell].splice(cardInCell, 1)
 
-                if (gameCells[activeCard.dataset.gameCell][0]) {
-                    const [x, y] = gameCellPos()[activeCard.dataset.gameCell];
-                    gameCells[activeCard.dataset.gameCell][0].style.transform = `translate(${x}px, ${y}px)`
-                    gameCells[activeCard.dataset.gameCell][0].style.zIndex = 3
+                if (gameCells[card.dataset.gameCell][0]) {
+                    const [x, y] = gameCellPos()[card.dataset.gameCell];
+                    gameCells[card.dataset.gameCell][0].style.transform = `translate(${x}px, ${y}px)`
+                    gameCells[card.dataset.gameCell][0].style.zIndex = 3
                 }
 
                 delete card.dataset.gameCell;
             }
 
-            if (mycards.includes(card)) return;
+            if (mycards.find(c => c.dataset.card == card.dataset.card)) return;
             (() => {
                 for (let i = 0; i != mycards.length; ++i)
                     if (lt(card.dataset.card, mycards[i].dataset.card))
@@ -635,5 +735,25 @@ export default {
             width: 18% !important;
         }
     }
+}
+
+:has(.win__amount) {
+    position: relative;
+    overflow: visible !important;
+}
+.win__amount {
+    visibility: hidden;
+    position: absolute;
+    z-index: 1;
+    color: white;
+    font-weight: 600;
+    font-size: 24px;
+    font-family: "SF Pro Display";
+    text-shadow: #000 5px 0 5px;
+    top: -15px;
+    left: -5px;
+}
+.win__amount.visible {
+    visibility: inherit;
 }
 </style>
