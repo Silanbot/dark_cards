@@ -56,4 +56,8 @@ export default new (class {
 			this.notificationFeedback(hapticStyle);
 		}
 	}
+
+    confirm(message, callback) {
+        this.telegram.showConfirm(message, callback)
+    }
 })();

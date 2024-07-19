@@ -362,6 +362,8 @@ export default {
         }
     },
     async mounted() {
+        window.Telegram.WebApp.BackButton.onClick(() => telegram.confirm('Ты действительно хочешь выйти из комнаты?', () => location.replace('/home')))
+        telegram.showBackButton()
         const profile = await telegram.profile()
         const token = await api.generateConnectionToken(profile.id)
         this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })

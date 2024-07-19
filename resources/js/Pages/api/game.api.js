@@ -64,4 +64,14 @@ export default new (class {
 
 		return response.data;
 	}
+
+    async findRoomID(bank, type, maxPlayers) {
+        const response = await (await this.api)({
+            method: 'POST',
+            url: '/api/game/searching',
+            data: { bank, type, max_players: maxPlayers }
+        })
+
+        return response.data.room_id
+    }
 })();

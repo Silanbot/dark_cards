@@ -10,6 +10,7 @@ use App\Models\Room;
 use App\Models\User;
 use Illuminate\Http\Request;
 use phpcent\Client;
+use function Psy\debug;
 
 class GameController extends Controller
 {
@@ -32,7 +33,7 @@ class GameController extends Controller
     {
         $room = Room::query()->whereBetween('bank', $request->bank)
             ->where('game_type', $request->type)
-            ->where('max_gamers', $request->max_gamers)
+            ->where('max_gamers', $request->max_players)
             ->first();
 
         return [

@@ -359,7 +359,7 @@
                     <div class="play__down__text">УКАЖИТЕ НЕОБХОДИМЫЙ ДИАПАЗОН</div>
                 </div>
                 <div class="play__two">
-                    <div class="play__two__item active">
+                    <div class="play__two__item active" @click="findRoom">
                         <div>Присоединиться к столу</div>
                         <img src="./sources/2/play.svg" alt=""/>
                     </div>
@@ -524,10 +524,15 @@ export default {
         changeCash() {
             telegram.switchSelectFeedback()
             this.selectMode = 1
+        },
+        async findRoom() {
+            const id = await gameApi.findRoomID([1000, 10000000], this.selectMode, 2)
+
+            location.replace('/play/' + id)
         }
     },
     async created() {
-        const profile = await telegram.profile()
+        const profile = telegram.profile()
         this.user = await api.profile(profile.id, profile.username)
         telegram.showBackButton()
         telegram.addOnClickHandlerForBackButton('/profile')
