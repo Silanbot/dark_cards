@@ -16,6 +16,7 @@ Route::post('/authorize', [AuthController::class, 'authorize'])->name('auth.auth
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('/friends/')->group(function () {
         Route::post('/request', [FriendController::class, 'send'])->name('friends.send');
+        Route::get('/search', [FriendController::class, 'search'])->name('friends.search');
         Route::post('/accept', [FriendController::class, 'accept'])->name('friends.accept');
         Route::get('/', [FriendController::class, 'index'])->name('friends');
         Route::get('/pending', [FriendController::class, 'pending'])->name('friends.pending');

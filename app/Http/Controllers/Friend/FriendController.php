@@ -32,7 +32,7 @@ class FriendController extends Controller
         ];
     }
 
-    public function index(Request $request): array
+    public function index(Request $request)
     {
         $user = User::query()->findOrFail($request->user_id);
 
@@ -44,5 +44,10 @@ class FriendController extends Controller
         $user = User::query()->findOrFail($request->user_id);
 
         return $user->getFriendRequests();
+    }
+
+    public function search(Request $request)
+    {
+        return response()->json(User::query()->where('id', $request->id)->get());
     }
 }

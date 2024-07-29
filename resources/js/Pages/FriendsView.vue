@@ -4,17 +4,17 @@
             <div class="friends__header">
                 <div class="friends__title">
                     Друзья
-                    <span id="invite__id__wrapper">Твой ID для друзей: <span id="invite__id">823838</span></span>
+                    <span id="invite__id__wrapper">Твой ID для друзей: <span id="invite__id">1</span></span>
                 </div>
                 <div class="friends__header__actions">
                     <div class="input">
-                        <input type="text" name="" id="" placeholder="Начните вводить.." @input="e => this.isTyping = Boolean(e.target.value.length)">
+                        <input type="text" name="" id="" placeholder="Начните вводить.." v-model="query" @input="search">
                         <img src="./sources/friends/lens-icon.svg" alt="🔍">
                     </div>
                     <a href="/profile" class="friends__button"><img src="./sources/achievements/cross-sign.svg" alt="x"></a>
                 </div>
             </div>
-            <div class="unfriend__popup__dialog__wrapper">
+            <div class="unfriend__popup__dialog__wrapper" v-show="false">
                 <div class="unfriend__popup__dialog">
                     <div class="dialog__question">Вы действительно хотите удалить ‘Никита’ из друзей?</div>
                     <div class="dialog__answer__buttons">
@@ -24,13 +24,13 @@
                 </div>
             </div>
             <div class="friends__list">
-                <div class="friends__list__row" v-for="n in 6" :key="n">
+                <div class="friends__list__row" v-for="friend in friends" :key="friend">
                     <div class="friends__avatar__wrapper">
-                        <img :src="imgs[n%imgs.length]" alt="">
+                        <img :src="imgs[friend.id%friends.length]" alt="">
                     </div>
                     <div>
-                        <div class="friends__name">Никита Криповин</div>
-                        <div class="friends__description">Валера Адидас</div>
+                        <div class="friends__name">{{ friend.username }}</div>
+<!--                        <div class="friends__description">Валера Адидас</div>-->
                     </div>
                     <div class="friends__actions">
                         <div v-if="!isTyping"><img src="./sources/friends/action-invite-decline.svg" alt=""></div>
@@ -39,7 +39,7 @@
                     </div>
                 </div>
             </div>
-            <div class="friends__pagination">
+            <div class="friends__pagination" v-if="friends.length > 3">
                 <div class="arrow"><img src="./sources/friends/arrow-next.svg" alt=""></div>
                 <div class="arrow active"><img src="./sources/friends/arrow-next.svg" alt=""></div>
             </div>
@@ -97,13 +97,27 @@
     import avatar1 from './sources/friends/avatar-sample-1.jpg'
     import avatar2 from './sources/friends/avatar-sample-2.jpg'
     import avatar3 from './sources/friends/avatar-sample-3.jpg'
+    import friendsApi from "./api/friends.api.js";
+    import telegram from "./api/telegram.js";
 
     export default {
         data() {
             return {
                 isTyping: false,
-                imgs: [avatar1, avatar2, avatar3]
+                imgs: [avatar1, avatar2, avatar3],
+                query: null,
+                friends: [],
+                user: telegram.profile()
             }
+        },
+        methods: {
+            async search() {
+                this.friends = await friendsApi.search(this.query)
+            }
+        },
+        async mounted() {
+            const id = (await telegram.profile()).id
+            this.friends = await friendsApi.load(id)
         }
     }
 </script>

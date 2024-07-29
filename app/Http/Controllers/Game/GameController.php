@@ -8,9 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Game\Deck;
 use App\Models\Room;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use phpcent\Client;
-use function Psy\debug;
 
 class GameController extends Controller
 {
@@ -41,23 +41,23 @@ class GameController extends Controller
         ];
     }
 
-    public function join(Request $request)
+    public function join(Request $request): JsonResponse
     {
         $player = $request->user_id;
         $room = Room::query()->find($request->id);
 
-        $already_joined = $room->join_state ?? collect([]);
-        if ($already_joined->doesntContain($player)) $already_joined->add($player);
-        $room->update(['join_state' => $already_joined->toArray()]);
-        unset($already_joined[$already_joined->search($player)]);
-        $already_joined = User::query()->findMany($already_joined);
+        $alreadyJoined = $room->join_state ?? collect([]);
+        if ($alreadyJoined->doesntContain($player)) $alreadyJoined->add($player);
+        $room->update(['join_state' => $alreadyJoined->toArray()]);
+        unset($alreadyJoined[$alreadyJoined->search($player)]);
+        $alreadyJoined = User::query()->findMany($alreadyJoined);
 
         $this->centrifugo->publish('room', [
             'event' => 'user_join_room',
             'user' => User::query()->findOrFail($player),
         ]);
 
-        return response($already_joined->toArray());
+        return response()->json($alreadyJoined);
     }
 
     public function setReadyState(Request $request, Room $room)

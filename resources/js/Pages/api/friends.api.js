@@ -1,4 +1,6 @@
 import { makeApi } from './axios.js';
+import telegram from "./telegram.js";
+import axios from "axios";
 
 export default new (class {
     api  = makeApi()
@@ -20,11 +22,16 @@ export default new (class {
 	}
 
 	async load(user_id) {
-		await (await this.api)({
-			method: 'GET',
-			url: '/api/friends',
-			params: { user_id }
-		});
+        const profile = await telegram.profile();
+        const tokenData = await axios.post(`/api/authorize?web_app_data=${JSON.stringify(profile)}`)
+        const authData = `${tokenData.data.token_type} ${tokenData.data.token}`
+
+        const friends =  await axios.get('/api/friends/', {
+            params: { user_id },
+            headers: { Authorization: authData }
+        })
+
+        return friends.data
 	}
 
 	async pending(user_id) {
@@ -34,4 +41,17 @@ export default new (class {
 			params: { user_id }
 		});
 	}
+
+    async search(user_id) {
+        const profile = await telegram.profile();
+        const tokenData = await axios.post(`/api/authorize?web_app_data=${JSON.stringify(profile)}`)
+        const authData = `${tokenData.data.token_type} ${tokenData.data.token}`
+
+        const friends =  await axios.get('/api/friends/search', {
+            params: { id: user_id },
+            headers: { Authorization: authData }
+        })
+
+        return friends.data
+    }
 })();
