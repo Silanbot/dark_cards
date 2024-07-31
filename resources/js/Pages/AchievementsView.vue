@@ -25,42 +25,42 @@
                 </div>
             </div>
             <div class="achievements__list">
-<!--                <div class="achievements__list__item">-->
-<!--                    <img src="./sources/achievements/rank-1.svg" alt="">-->
-<!--                    <span>Победить в 10 матчах</span>-->
-<!--                </div>-->
-<!--                <div class="achievements__list__item">-->
-<!--                    <img src="./sources/achievements/rank-1.svg" alt="">-->
-<!--                    <span>Выслуга лет, 2 года с нами</span>-->
-<!--                </div>-->
-<!--                <div class="achievements__list__item">-->
-<!--                    <img src="./sources/achievements/rank-1.svg" alt="">-->
-<!--                    <span>Победить в 20 матчах</span>-->
-<!--                </div>-->
-<!--                <div class="achievements__list__item">-->
-<!--                    <img src="./sources/achievements/rank-1.svg" alt="">-->
-<!--                    <span>Выслуга лет, 2 года с нами</span>-->
-<!--                </div>-->
-<!--                <div class="achievements__list__item">-->
-<!--                    <img src="./sources/achievements/rank-1.svg" alt="">-->
-<!--                    <span>Победить в 20 матчах</span>-->
-<!--                </div>-->
-<!--                <div class="achievements__list__item unachieved__inactive">-->
-<!--                    <img src="./sources/achievements/rank-1.svg" alt="">-->
-<!--                    <span>Победить в 10 матчах</span>-->
-<!--                </div>-->
-<!--                <div class="achievements__list__item unachieved__inactive">-->
-<!--                    <img src="./sources/achievements/rank-1.svg" alt="">-->
-<!--                    <span>Победить в 20 матчах</span>-->
-<!--                </div>-->
-<!--                <div class="achievements__list__item unachieved__inactive">-->
-<!--                    <img src="./sources/achievements/rank-1.svg" alt="">-->
-<!--                    <span>Выслуга лет, 2 года с нами</span>-->
-<!--                </div>-->
-<!--                <div class="achievements__list__item unachieved__inactive">-->
-<!--                    <img src="./sources/achievements/rank-1.svg" alt="">-->
-<!--                    <span>Победить в 10 матчах</span>-->
-<!--                </div>-->
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/rank-1.svg" alt="">
+                    <span>Победить в 10 матчах</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/rank-1.svg" alt="">
+                    <span>Выслуга лет, 2 года с нами</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/rank-1.svg" alt="">
+                    <span>Победить в 20 матчах</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/rank-1.svg" alt="">
+                    <span>Выслуга лет, 2 года с нами</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/rank-1.svg" alt="">
+                    <span>Победить в 20 матчах</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/rank-1.svg" alt="">
+                    <span>Победить в 10 матчах</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/rank-1.svg" alt="">
+                    <span>Победить в 20 матчах</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/rank-1.svg" alt="">
+                    <span>Выслуга лет, 2 года с нами</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/rank-1.svg" alt="">
+                    <span>Победить в 10 матчах</span>
+                </div>
             </div>
         </div>
         <footer class="footer">
