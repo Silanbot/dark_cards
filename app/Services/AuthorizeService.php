@@ -6,9 +6,7 @@ use App\Repositories\Contracts\UserRepositoryContract;
 
 readonly class AuthorizeService
 {
-    public function __construct(private UserRepositoryContract $contract)
-    {
-    }
+    public function __construct(private UserRepositoryContract $contract) {}
 
     public function authenticate(array $data): string
     {

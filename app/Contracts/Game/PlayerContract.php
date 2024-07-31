@@ -2,6 +2,4 @@
 
 namespace App\Contracts\Game;
 
-interface PlayerContract
-{
-}
+interface PlayerContract {}

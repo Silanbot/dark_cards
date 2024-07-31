@@ -40,7 +40,7 @@ test('impossible update user balance without system token', function () {
     Artisan::call('migrate');
     $request = Request::create(route('update-balance'));
     $next = fn () => response('Secret place');
-    $middleware = new TelegramBotMiddleware();
+    $middleware = new TelegramBotMiddleware;
     $response = $middleware->handle($request, $next);
 
     $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
@@ -51,7 +51,7 @@ test('user balance successfully updated with system token', function () {
     $request = Request::create(route('update-balance'));
     $request->headers->set('X-Api-Auth-Bot', config('services.bot.api_key'));
     $next = fn () => response('Secret place');
-    $middleware = new TelegramBotMiddleware();
+    $middleware = new TelegramBotMiddleware;
     $response = $middleware->handle($request, $next);
     $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     $this->assertEquals('Secret place', $response->getContent());

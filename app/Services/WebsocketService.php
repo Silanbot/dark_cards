@@ -9,8 +9,7 @@ final readonly class WebsocketService implements WebsocketContract
 {
     public function __construct(
         private Client $centrifuge
-    ) {
-    }
+    ) {}
 
     public function publish(string $channel, array $data): void
     {

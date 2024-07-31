@@ -8,9 +8,7 @@ use App\Contracts\Game\CardContract;
 
 final readonly class Card implements CardContract
 {
-    public function __construct(public string $suit, public string $rank)
-    {
-    }
+    public function __construct(public string $suit, public string $rank) {}
 
     public function isHigherThan(Card $card, string $trumpSuit, string $foolRank): bool
     {

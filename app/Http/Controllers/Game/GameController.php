@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Game;
 
 use App\Contracts\Game\GameContract;
 use App\Game\Card;
-use App\Http\Controllers\Controller;
 use App\Game\Deck;
+use App\Http\Controllers\Controller;
 use App\Models\Room;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -17,8 +17,7 @@ class GameController extends Controller
     public function __construct(
         private readonly GameContract $contract,
         private readonly Client $centrifugo
-    ) {
-    }
+    ) {}
 
     public function createGame(Request $request): array
     {
@@ -47,7 +46,9 @@ class GameController extends Controller
         $room = Room::query()->find($request->id);
 
         $alreadyJoined = $room->join_state ?? collect([]);
-        if ($alreadyJoined->doesntContain($player)) $alreadyJoined->add($player);
+        if ($alreadyJoined->doesntContain($player)) {
+            $alreadyJoined->add($player);
+        }
         $room->update(['join_state' => $alreadyJoined->toArray()]);
         unset($alreadyJoined[$alreadyJoined->search($player)]);
         $alreadyJoined = User::query()->findMany($alreadyJoined);
@@ -64,13 +65,18 @@ class GameController extends Controller
     {
         $state = $room->ready_state ?? collect([]);
         if ($state->contains($request->user_id)) {
-            if ($room->max_gamers === count($state)) return response(null, 400);
+            if ($room->max_gamers === count($state)) {
+                return response(null, 400);
+            }
 
             unset($state[$state->search($request->user_id)]);
-        } else $state->add($request->user_id);
+        } else {
+            $state->add($request->user_id);
+        }
 
         if ($room->max_gamers !== count($state)) {
             $room->update(['ready_state' => $state->toArray()]);
+
             return;
         }
 

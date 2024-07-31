@@ -13,8 +13,7 @@ final class UserController extends Controller
 {
     public function __construct(
         private readonly UserRepositoryContract $actor
-    ) {
-    }
+    ) {}
 
     public function profile(Request $request): Model|Builder
     {

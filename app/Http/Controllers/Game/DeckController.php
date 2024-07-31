@@ -12,7 +12,7 @@ class DeckController extends Controller
 {
     public function __invoke(Request $request, Room $room, Client $client): void
     {
-        $deck = new Deck();
+        $deck = new Deck;
         $deck->shuffle();
 
         $room->update(['deck' => $deck]);

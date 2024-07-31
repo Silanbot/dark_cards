@@ -61,8 +61,6 @@ jobs:
     - name: Analyzing code project via Laravel Pint
       run: ./vendor/bin/pint --test
 
-    - name: Execute tests via Pest
-      run: vendor/bin/pest
   deploy:
     name: Deploy on production
     needs: laravel-tests
@@ -78,6 +76,6 @@ jobs:
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git pull origin main && composer install && php artisan migrate && php artisan optimize:clear && npm run build && php artisan test && exit"
       - name: Cleanup
         run: rm -rf ~/.ssh
-#      - name: Notify about deploy in telegram
-#        run: |
-#          curl --silent -o /dev/null -X GET "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage?chat_id=${{ secrets.TELEGRAM_ADMIN_ID }}&text=🟢Деплой+завершен"
+      - name: Notify about deploy in telegram
+        run: |
+          curl --silent -o /dev/null -X GET "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage?chat_id=${{ secrets.TELEGRAM_ADMIN_ID }}&text=🟢Деплой+завершен"

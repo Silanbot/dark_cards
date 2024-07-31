@@ -8,14 +8,9 @@ use App\Contracts\Game\PlayerContract;
 
 final class Player implements PlayerContract
 {
-    public function __construct(public array $hand, public int $id)
-    {
-    }
+    public function __construct(public array $hand, public int $id) {}
 
-    public function beat()
-    {
-
-    }
+    public function beat() {}
 
     public function toArray(): array
     {

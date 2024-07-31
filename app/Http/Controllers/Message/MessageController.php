@@ -12,8 +12,7 @@ class MessageController extends Controller
 {
     public function __construct(
         private readonly MessageRepositoryContract $entity
-    ) {
-    }
+    ) {}
 
     public function index(Request $request, Client $centrifuge)
     {

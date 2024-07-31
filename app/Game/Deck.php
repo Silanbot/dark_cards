@@ -25,9 +25,11 @@ final class Deck implements DeckContract
         $suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
         $ranks = ['6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
-        foreach ($suits as $suit)
-            foreach ($ranks as $rank)
+        foreach ($suits as $suit) {
+            foreach ($ranks as $rank) {
                 $this->cards[] = new Card(suit: $suit, rank: $rank);
+            }
+        }
         shuffle($this->cards);
 
         $this->distribute($players);
