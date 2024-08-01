@@ -15,11 +15,4 @@ class ActivityLog extends Model
         'value',
         'user_id',
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'type' => GameResultEnum::class,
-        ];
-    }
 }
