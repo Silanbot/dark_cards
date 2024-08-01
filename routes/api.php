@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/authorize', [AuthController::class, 'authorize'])->name('auth.authorize');
 
+Route::middleware(TelegramBotMiddleware::class)->group(function () {
+    Route::put('/update-balance', [UserController::class, 'updateBalance'])->name('update-balance');
+    Route::get('/stats', StatisticController::class)->name('statistic');
+});
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('/friends/')->group(function () {
         Route::post('/request', [FriendController::class, 'send'])->name('friends.send');
@@ -26,11 +31,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('create-game', [GameController::class, 'createGame'])->name('create-game');
     Route::prefix('/auth/')->group(function () {
         Route::get('token', TokenController::class)->name('auth.token');
-    });
-
-    Route::middleware(TelegramBotMiddleware::class)->group(function () {
-        Route::put('/update-balance', [UserController::class, 'updateBalance'])->name('update-balance');
-        Route::get('/stats', StatisticController::class)->name('statistic');
     });
 
     Route::prefix('/messages')->group(function () {
