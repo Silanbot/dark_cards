@@ -15,7 +15,6 @@
         const telegram = window.Telegram.WebApp
         telegram.expand()
         telegram.enableClosingConfirmation()
-        telegram.onEvent('viewportChanged', () => telegram.expand())
     </script>
     @vite(['resources/js/app.js', 'resources/css/app.scss'])
     @inertiaHead

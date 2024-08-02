@@ -289,6 +289,7 @@ export default {
 
         telegram.showBackButton()
         telegram.addOnClickHandlerForBackButton('/home')
+        window.Telegram.WebApp.onEvent('viewportChanged', () => window.Telegram.WebApp.expand())
     }
 }
 </script>
