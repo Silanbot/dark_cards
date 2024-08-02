@@ -530,7 +530,7 @@ export default {
 
             this.redirect(`/play/${id}`)
         },
-        convertStringToNumber(bank) {
+        convertStringToNumber(str) {
             const conversionMap = {
                 'м': 1000000,
                 'к': 1000,
