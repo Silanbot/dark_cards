@@ -552,7 +552,7 @@ export default {
         },
         getBank() {
             const values = this.selectMode ? this.cash : this.coins;
-            const [min, max] = values.split(' - ').map(this.convertStringToNumber);
+            const [min, max] = values.split(' - ').map(value => this.convertStringToNumber(value));
 
             console.log([min, max])
 
