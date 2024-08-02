@@ -5,7 +5,7 @@
             <div class="achievements__header">
                 <div class="achievements__counter__wrapper"><span>0/28</span></div>
                 <div class="achievements__title">Достижения</div>
-                <a href="/profile" class="achievements__close__button"><img src="./sources/achievements/cross-sign.svg" alt="x"></a>
+<!--                <a href="/profile" class="achievements__close__button"><img src="./sources/achievements/cross-sign.svg" alt="x"></a>-->
             </div>
             <div class="achievement__categories">
                 <div class="achievement__category__switch"
@@ -113,11 +113,17 @@
     </section>
 </template>
 <script>
+    import telegram from "./api/telegram.js";
+
     export default {
         data() {
             return {
                 active: 1
             }
+        },
+        created() {
+            telegram.showBackButton()
+            telegram.addOnClickHandlerForBackButton('/profile')
         }
     }
 </script>
