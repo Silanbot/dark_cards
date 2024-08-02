@@ -503,7 +503,7 @@ export default {
     },
     methods: {
         async createGame() {
-            const room = await gameApi.createGame(Math.min(this.getBank()), this.selectMode, (await telegram.profile()).id)
+            const room = await gameApi.createGame(this.getBank()[0], this.selectMode, (await telegram.profile()).id)
 
             if (Object.keys(room).includes('id')) {
                 this.redirect(`/play/${room.id}`)
@@ -553,6 +553,8 @@ export default {
         getBank() {
             const values = this.selectMode ? this.cash : this.coins;
             const [min, max] = values.split(' - ').map(this.convertStringToNumber);
+
+            console.log([min, max])
 
             return [min, max];
 
