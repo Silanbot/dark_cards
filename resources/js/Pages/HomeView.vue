@@ -534,25 +534,24 @@ export default {
             const conversionMap = {
                 'м': 1000000,
                 'к': 1000,
-            }
+            };
 
-            const match = bank.match(/^(\d+)([мк]?)$/)
+            const match = str.match(/^(\d+(?:\.\d+)?)([мк]?)$/);
             if (match) {
-                const num = parseInt(match[1])
-                const unit = parseInt(match[2])
-
+                const num = parseFloat(match[1]);
+                const unit = match[2];
                 if (unit in conversionMap) {
-                    return num * conversionMap[unit]
+                    return num * (unit === 'м' ? 1000000 : 1000);
                 } else {
-                    return num
+                    return num;
                 }
             } else {
-                throw new Error('Invalid string')
+                throw new Error(`Некорректная строка: ${str}`);
             }
         },
         getBank() {
             const values = this.selectMode ? this.cash : this.coins;
-            const [min, max] = values.split(' - ').map(value => this.convertStringToNumber(value));
+            const [min, max] = values.split(' - ').map(this.convertStringToNumber);
 
             console.log([min, max])
 
