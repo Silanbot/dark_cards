@@ -503,10 +503,10 @@ export default {
     },
     methods: {
         async createGame() {
-            const room = await gameApi.createGame(1000, this.selectMode, (await telegram.profile()).id)
+            const room = await gameApi.createGame(Math.min(this.getBank()), this.selectMode, (await telegram.profile()).id)
 
             if (Object.keys(room).includes('id')) {
-                return location.replace(`/play/${room.id}`)
+                this.redirect(`/play/${room.id}`)
             }
         },
         isParamExists(name) {
@@ -526,13 +526,55 @@ export default {
             this.selectMode = 1
         },
         async findRoom() {
-            const id = await gameApi.findRoomID([1000, 10000000], this.selectMode, 2)
+            const id = await gameApi.findRoomID(this.getBank(), this.selectMode, 2)
 
-            location.replace('/play/' + id)
+            this.redirect(`/play/${id}`)
+        },
+        convertStringToNumber(bank) {
+            const conversionMap = {
+                'м': 1000000,
+                'к': 1000,
+            }
+
+            const match = bank.match(/^(\d+)([мк]?)$/)
+            if (match) {
+                const num = parseInt(match[1])
+                const unit = parseInt(match[2])
+
+                if (unit in conversionMap) {
+                    return num * conversionMap[unit]
+                } else {
+                    return num
+                }
+            } else {
+                throw new Error('Invalid string')
+            }
+        },
+        getBank() {
+            const values = this.selectMode ? this.cash : this.coins;
+            const [min, max] = values.split(' - ').map(this.convertStringToNumber);
+
+            return [min, max];
+
+            // let bank = 1000;
+            // if (this.selectMode === 1) {
+            //     const min = this.convertStringToNumber(this.cash.split(' - ')[0])
+            //     const max = this.convertStringToNumber(this.cash.split(' - ')[1])
+            //     bank = [min, max]
+            // } else {
+            //     const min = this.convertStringToNumber(this.coins.split(' - ')[0])
+            //     const max = this.convertStringToNumber(this.coins.split(' - ')[1])
+            //     bank = [min, max]
+            // }
+
+            // return bank;
+        },
+        redirect(route) {
+            location.replace(route)
         }
     },
     async created() {
-        const profile = telegram.profile()
+        const profile = await telegram.profile()
         this.user = await api.profile(profile.id, profile.username)
         telegram.showBackButton()
         telegram.addOnClickHandlerForBackButton('/profile')

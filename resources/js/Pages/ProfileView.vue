@@ -192,7 +192,6 @@ export default {
         }
     },
     async mounted() {
-        console.log(window.Telegram.WebApp.initDataUnsafe.user)
         let telegramProfile = await telegram.profile()
         this.user = await api.profile(telegramProfile.id, telegramProfile.username)
 

@@ -30,36 +30,36 @@
                     <span>Победить в 10 матчах</span>
                 </div>
                 <div class="achievements__list__item unachieved__inactive">
-                    <img src="./sources/achievements/rank-1.svg" alt="">
-                    <span>Выслуга лет, 2 года с нами</span>
+                    <img src="./sources/achievements/medal-1.svg" alt="">
+                    <span>Выслуга лет, 1 год с нами</span>
                 </div>
                 <div class="achievements__list__item unachieved__inactive">
-                    <img src="./sources/achievements/rank-1.svg" alt="">
+                    <img src="./sources/achievements/rank-2.svg" alt="">
                     <span>Победить в 20 матчах</span>
                 </div>
                 <div class="achievements__list__item unachieved__inactive">
-                    <img src="./sources/achievements/rank-1.svg" alt="">
+                    <img src="./sources/achievements/medal-2.svg" alt="">
                     <span>Выслуга лет, 2 года с нами</span>
                 </div>
                 <div class="achievements__list__item unachieved__inactive">
-                    <img src="./sources/achievements/rank-1.svg" alt="">
-                    <span>Победить в 20 матчах</span>
+                    <img src="./sources/achievements/rank-3.svg" alt="">
+                    <span>Победить в 30 матчах</span>
                 </div>
                 <div class="achievements__list__item unachieved__inactive">
-                    <img src="./sources/achievements/rank-1.svg" alt="">
-                    <span>Победить в 10 матчах</span>
+                    <img src="./sources/achievements/rank-4.svg" alt="">
+                    <span>Победить в 40 матчах</span>
                 </div>
                 <div class="achievements__list__item unachieved__inactive">
-                    <img src="./sources/achievements/rank-1.svg" alt="">
-                    <span>Победить в 20 матчах</span>
+                    <img src="./sources/achievements/medal-3.svg" alt="">
+                    <span>Выслуга лет, 3 года с нами</span>
                 </div>
                 <div class="achievements__list__item unachieved__inactive">
-                    <img src="./sources/achievements/rank-1.svg" alt="">
-                    <span>Выслуга лет, 2 года с нами</span>
+                    <img src="./sources/achievements/rank-5.svg" alt="">
+                    <span>Победить в 40 матчах</span>
                 </div>
-                <div class="achievements__list__item unachieved__inactive">
-                    <img src="./sources/achievements/rank-1.svg" alt="">
-                    <span>Победить в 10 матчах</span>
+                <div class="achievements__list__item unachieved__inactive" style="padding-bottom: 40px">
+                    <img src="./sources/achievements/medal-4.svg" alt="">
+                    <span>Выслуга лет, 4 года с нами</span>
                 </div>
             </div>
         </div>
