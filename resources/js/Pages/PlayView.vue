@@ -448,26 +448,7 @@ export default {
                     card.dataset.player = playerId
                     card.dataset.card = cardId
                     card.src = document.querySelector(`img[data-cardimg="${card.dataset.card}"]`).src
-                    const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
-                    if (!player) return console.error(`opponent player ${playerId} not found to give card`);
-
-                    const playerRect = player.getBoundingClientRect()
-                    card.style.transform = `translate(${playerRect.x + playerRect.width / 2}px, ${playerRect.y + playerRect.height / 2}px)`
-                    card.style.width = '10vw'
-                    cardCnt.appendChild(card)
-
-                    const gameCell = gameCells.findIndex(c => c.length < 2 && c.every(c => c.dataset.player != playerId));
-                    if (gameCell == -1) return
-                    const top = gameCells[gameCell].length != 0;
-                    gameCells[gameCell][Number(top)] = card;
-                    const [x, y] = gameCellPos()[gameCell];
-
-                    card.style.transform = `translate(${x + (top ? 25 : 0)}px, ${y + (top ? 5 : 0)}px)` + (top ? ` rotate(10deg)` : '')
-                    card.style.zIndex = top?5:3
-                    card.style.width = '13vw'
-                    card.dataset.gameCell = gameCell
-
-                    return gameCards.push(card)
+                    return discardCard(card)
                 case 'revet_card':
                     const cardd = gameCells.find(c => c.find(c => c.dataset.card == data.card))
 
@@ -523,62 +504,8 @@ export default {
             touch = false
             dragging = lastDragging = false
             if (!activeCard) return
-            const card = activeCard
+            ty > window.innerHeight*0.75 ? addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             activeCard = null
-
-            if (card.dataset.gameCell !== undefined) {
-                const [x, y] = gameCellPos()[card.dataset.gameCell];
-                const otherCard = gameCells[card.dataset.gameCell].find(c => c.dataset.card != card.dataset.card)
-                const top = otherCard?.style.zIndex == 3;
-
-                card.style.transform = `translate(${x + (top ? 25 : 0)}px, ${y + (top ? 5 : 0)}px)` + (top ? ` rotate(10deg)` : '')
-                card.style.zIndex = top?5:3
-            } else if (ty > window.innerHeight*0.75) return addMyCard(card, false)
-
-            const gameCell = gameCells.findIndex(c => c.length < 2 && c.every(c => c.dataset.player != profile.id));
-
-            if (gameCell == -1) {
-                const a = [...document.querySelectorAll('.win__amount')]
-                // const b = a[~~(Math.random() * a.length)]
-                const b = a.find(e => !e.parentElement.dataset.player)
-                b.classList.add('visible')
-                setTimeout(() => b.classList.remove('visible'), 3000)
-                if (!b.parentElement.dataset.player) setTimeout(() => window.Telegram.WebApp.showAlert(`Ты выиграл: ${100}!`), 3000)
-
-                for (const cell of gameCells)
-                    for (const card of cell)
-                        if (card.dataset.player == profile.id) addMyCard(card, false)
-                        else {
-                            card.dataset.player = profile.id;
-                            addMyCard(card, true)
-                        }
-                return addMyCard(card, false)
-            }
-            const top = gameCells[gameCell].length != 0;
-
-            const isCheaters = localStorage.getItem('params')?.split(',').includes('cheaters') ?? false;
-            if (!isCheaters && top && cannotBeat(card.dataset.card, gameCells[gameCell][Number(!top)].dataset.card)) {
-                addMyCard(card, false)
-                // alert(`cannot beat "${gameCells[gameCell][Number(!top)].dataset.card}" with "${card.dataset.card}"`)
-                return
-            }
-
-            if (top) gameApi.fight(this.room.id, gameCells[gameCell][Number(!top)].dataset.card, card.dataset.card)
-            gameApi.discard(card.dataset.card, this.room.id)
-            gameCells[gameCell][Number(top)] = card;
-            const [x, y] = gameCellPos()[gameCell];
-
-            card.style.width = '13vw'
-            card.style.removeProperty('left')
-            card.style.removeProperty('top')
-            card.classList.remove('my-card')
-            mycards = mycards.filter(c => c.dataset.card != card.dataset.card)
-            card.dataset.gameCell = gameCell
-
-            card.style.transform = `translate(${x + (top ? 25 : 0)}px, ${y + (top ? 5 : 0)}px)` + (top ? ` rotate(10deg)` : '')
-            card.style.zIndex = top?5:3
-
-            gameCards.push(card)
         })
         let time = performance.now();
         function updateCards(t) {
@@ -687,6 +614,69 @@ export default {
                 if (lt(card.dataset.card, cardHand.dataset.card))
                     return cardCnt.insertBefore(card, cardHand)
             cardCnt.appendChild(card)
+        }
+
+        function discardCard(card) {
+            const discardIsMine = card.dataset.player == profile.id
+
+            if (!discardIsMine) {
+                const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
+                if (!player) return console.error(`opponent player ${card.dataset.player} not found to give card`);
+
+                const playerRect = player.getBoundingClientRect()
+                card.style.transform = `translate(${playerRect.x + playerRect.width / 2}px, ${playerRect.y + playerRect.height / 2}px)`
+                card.style.width = '10vw'
+                cardCnt.appendChild(card)
+            }
+
+            const gameCell = gameCells.findIndex(c => c.length < 2 && (c.length == 0 || c[0].dataset.player != card.dataset.player));
+
+            if (gameCell == -1)
+                if (!discardIsMine) return
+                else {
+                    const a = [...document.querySelectorAll('.win__amount')]
+                    // const b = a[~~(Math.random() * a.length)]
+                    const b = a.find(e => !e.parentElement.dataset.player)
+                    b.classList.add('visible')
+                    setTimeout(() => b.classList.remove('visible'), 3000)
+                    if (!b.parentElement.dataset.player) setTimeout(() => window.Telegram.WebApp.showAlert(`Ты выиграл: ${100}!`), 3000)
+
+                    for (const cell of gameCells)
+                        for (const card of cell) {
+                            card.dataset.player = profile.id;
+                            addMyCard(card, card.dataset.player != profile.id)
+                        }
+                    return addMyCard(card, false)
+                }
+            const top = gameCells[gameCell].length != 0;
+
+            if (discardIsMine) {
+                const isCheaters = localStorage.getItem('params')?.split(',').includes('cheaters') ?? false;
+                if (!isCheaters && top && cannotBeat(card.dataset.card, gameCells[gameCell][Number(!top)].dataset.card)) {
+                    addMyCard(card, false)
+                    // alert(`cannot beat "${gameCells[gameCell][Number(!top)].dataset.card}" with "${card.dataset.card}"`)
+                    return
+                }
+
+                if (top) gameApi.fight(this.room.id, gameCells[gameCell][Number(!top)].dataset.card, card.dataset.card)
+                gameApi.discard(card.dataset.card, this.room.id)
+            }
+            gameCells[gameCell][Number(top)] = card;
+            const [x, y] = gameCellPos()[gameCell];
+
+            if (discardIsMine) {
+                card.style.removeProperty('left')
+                card.style.removeProperty('top')
+                card.classList.remove('my-card')
+                mycards = mycards.filter(c => c.dataset.card != card.dataset.card)
+            }
+            card.style.width = '13vw'
+            card.dataset.gameCell = gameCell
+
+            card.style.transform = `translate(${x + (top ? 25 : 0)}px, ${y + (top ? 5 : 0)}px)` + (top ? ` rotate(10deg)` : '')
+            card.style.zIndex = top?5:3
+
+            gameCards.push(card)
         }
 
         function endCards() {
