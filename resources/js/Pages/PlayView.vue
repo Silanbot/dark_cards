@@ -229,8 +229,13 @@ import modalDialog from './components/modalDialog.vue'
         <footer class="footer" style="z-index: 2">
             <div class="footer__inner footer__inner_play">
                 <!-- <div class="footer__button" @click="changeStep()">Ваш ход</div> -->
-                <div class="footer__button" @click="setReadyState" v-if="!ready">Готов</div>
-                <div class="footer__button" @click="setReadyState" v-else>Не готов</div>
+                <template v-if="!started">
+                    <div class="footer__button" @click="setReadyState" v-if="!ready">Готов</div>
+                    <div class="footer__button" @click="setReadyState" v-else>Не готов</div>
+                </template>
+                <template v-else>
+                    <div class="footer__button" @click="" id="do_beat">Бито</div>
+                </template>
 
                 <div class=" footer__person">
                     <div class="win__amount win__amount__self">+100</div>
@@ -353,6 +358,7 @@ export default {
             centrifugo: null,
             users: [],
             ready: false,
+            started: false,
         }
     },
     methods: {
@@ -413,6 +419,7 @@ export default {
             console.log(data.event, data)
             switch (data.event) {
                 case 'game_started':
+                    this.started = true
                     setTrumpCard(data.deck.at(-1))
                     for (const [player, cards] of Object.entries(data.players))
                         (async () => {
@@ -679,6 +686,7 @@ export default {
             gameCards.push(card)
         }
 
+        document.getElementById('do_beat').addEventListener('click', endCards)
         function endCards() {
             for (let card of gameCards) {
                 card.style.transform = `translate(${window.innerWidth}px, ${window.innerHeight / 2}px) rotate(${Math.random() * 360}deg)`
