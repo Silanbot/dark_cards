@@ -553,22 +553,7 @@ export default {
             const values = this.selectMode ? this.cash : this.coins;
             const [min, max] = values.split(' - ').map(this.convertStringToNumber);
 
-            console.log([min, max])
-
             return [min, max];
-
-            // let bank = 1000;
-            // if (this.selectMode === 1) {
-            //     const min = this.convertStringToNumber(this.cash.split(' - ')[0])
-            //     const max = this.convertStringToNumber(this.cash.split(' - ')[1])
-            //     bank = [min, max]
-            // } else {
-            //     const min = this.convertStringToNumber(this.coins.split(' - ')[0])
-            //     const max = this.convertStringToNumber(this.coins.split(' - ')[1])
-            //     bank = [min, max]
-            // }
-
-            // return bank;
         },
         redirect(route) {
             location.replace(route)

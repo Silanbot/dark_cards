@@ -24,42 +24,118 @@
                     <img src="./sources/achievements/category-3.svg" alt="">
                 </div>
             </div>
-            <div class="achievements__list">
-                <div class="achievements__list__item unachieved__inactive">
-                    <img src="./sources/achievements/rank-1.svg" alt="">
-                    <span>Победить в 10 матчах</span>
-                </div>
+            <div class="achievements__list" v-if="active == 1">
                 <div class="achievements__list__item unachieved__inactive">
                     <img src="./sources/achievements/medal-1.svg" alt="">
-                    <span>Выслуга лет, 1 год с нами</span>
-                </div>
-                <div class="achievements__list__item unachieved__inactive">
-                    <img src="./sources/achievements/rank-2.svg" alt="">
-                    <span>Победить в 20 матчах</span>
+                    <span>Достичь 20 кубков</span>
                 </div>
                 <div class="achievements__list__item unachieved__inactive">
                     <img src="./sources/achievements/medal-2.svg" alt="">
-                    <span>Выслуга лет, 2 года с нами</span>
-                </div>
-                <div class="achievements__list__item unachieved__inactive">
-                    <img src="./sources/achievements/rank-3.svg" alt="">
-                    <span>Победить в 30 матчах</span>
-                </div>
-                <div class="achievements__list__item unachieved__inactive">
-                    <img src="./sources/achievements/rank-4.svg" alt="">
-                    <span>Победить в 40 матчах</span>
+                    <span>Достичь 50 кубков</span>
                 </div>
                 <div class="achievements__list__item unachieved__inactive">
                     <img src="./sources/achievements/medal-3.svg" alt="">
-                    <span>Выслуга лет, 3 года с нами</span>
+                    <span>Достичь 100 кубков</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/medal-4.svg" alt="">
+                    <span>Достичь 200 кубков</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/medal-5.svg" alt="">
+                    <span>Достичь 500 кубков</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/medal-6.svg" alt="">
+                    <span>Достичь 1000 кубков</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/medal-7.svg" alt="">
+                    <span>Достичь 10к кубков</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/medal-8.svg" alt="">
+                    <span>Достичь 50к кубков</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive" style="padding-bottom: 40px">
+                    <img src="./sources/achievements/medal-9.svg" alt="">
+                    <span>Достичь 100к кубков</span>
+                </div>
+            </div>
+            <div class="achievements__list" v-if="active == 2">
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/rank-1.svg" alt="">
+                    <span>Заработать $2</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/rank-2.svg" alt="">
+                    <span>Заработать $20</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/rank-6.svg" alt="">
+                    <span>Заработать $100</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/rank-7.svg" alt="">
+                    <span>Заработать $1000</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/rank-3.svg" alt="">
+                    <span>Заработать $10к</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/rank-4.svg" alt="">
+                    <span>Заработать $50к</span>
                 </div>
                 <div class="achievements__list__item unachieved__inactive">
                     <img src="./sources/achievements/rank-5.svg" alt="">
-                    <span>Победить в 40 матчах</span>
+                    <span>Заработать $100к</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/rank-8.svg" alt="">
+                    <span>Заработать $500к</span>
                 </div>
                 <div class="achievements__list__item unachieved__inactive" style="padding-bottom: 40px">
-                    <img src="./sources/achievements/medal-4.svg" alt="">
-                    <span>Выслуга лет, 4 года с нами</span>
+                    <img src="./sources/achievements/rank-9.svg" alt="">
+                    <span>Заработать $1М</span>
+                </div>
+            </div>
+            <div class="achievements__list" v-if="active == 3">
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/achievement-1.svg" alt="">
+                    <span>Заработать 2000 DC</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/achievement-2.svg" alt="">
+                    <span>Заработать 10к DC</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/achievement-3.svg" alt="">
+                    <span>Заработать 50к DC</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/achievement-4.svg" alt="">
+                    <span>Заработать 200к DC</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/achievement-5.svg" alt="">
+                    <span>Заработать 500к DC</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/achievement-6.svg" alt="">
+                    <span>Заработать 1М DC</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/achievement-7.svg" alt="">
+                    <span>Заработать 10М DC</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive">
+                    <img src="./sources/achievements/achievement-8.svg" alt="">
+                    <span>Заработать 50М DC</span>
+                </div>
+                <div class="achievements__list__item unachieved__inactive" style="padding-bottom: 40px">
+                    <img src="./sources/achievements/achievement-9.svg" alt="">
+                    <span>Заработать 100М DC</span>
                 </div>
             </div>
         </div>
