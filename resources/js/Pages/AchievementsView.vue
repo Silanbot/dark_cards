@@ -3,7 +3,7 @@
     <section class="inter section section-inter">
         <div class="achievements__wrapper">
             <div class="achievements__header">
-                <div class="achievements__counter__wrapper"><span>0/28</span></div>
+                <div class="achievements__counter__wrapper"><span>0/27</span></div>
                 <div class="achievements__title">Достижения</div>
 <!--                <a href="/profile" class="achievements__close__button"><img src="./sources/achievements/cross-sign.svg" alt="x"></a>-->
             </div>

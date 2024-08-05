@@ -55,18 +55,21 @@ class GameService implements GameContract
         if ($maxGamers == 2) {
             $winners[auth()->id()] = $model->bank * 0.92;
         }
+
         if ($maxGamers == 3 && blank($winners)) {
             $winners[auth()->id()] = $model->bank * 0.6;
         } elseif ($maxGamers == 3 && count($winners) === 1) {
             $winners[auth()->id()] = $model->bank * 0.32;
         }
-        if ($maxGamers == 4 && blank($winners)) { // 1
+
+        if ($maxGamers == 4 && blank($winners)) {
             $winners[auth()->id()] = $model->bank * 0.5;
-        } elseif ($maxGamers == 4 && count($winners) === 1) { // 2
+        } elseif ($maxGamers == 4 && count($winners) === 1) {
             $winners[auth()->id()] = $model->bank * 0.3;
-        } elseif ($maxGamers == 4 && count($winners) == 2) { // 3
+        } elseif ($maxGamers == 4 && count($winners) == 2) {
             $winners[auth()->id()] = $model->bank * 0.12;
         }
+
         if ($maxGamers == 5 && blank($winners)) {
             $winners[auth()->id()] = $model->bank * 0.45;
         } elseif ($maxGamers == 5 && count($winners) === 1) {
@@ -76,6 +79,7 @@ class GameService implements GameContract
         } elseif ($maxGamers == 5 && count($winners) === 3) {
             $winners[auth()->id()] = $model->bank * 0.07;
         }
+
         if ($maxGamers == 6 && blank($winners)) {
             $winners[auth()->id()] = $model->bank * 0.35;
         } elseif ($maxGamers == 6 && count($winners) === 1) {
@@ -178,5 +182,29 @@ class GameService implements GameContract
                 'table' => $table,
             ]);
         }
+    }
+
+    /**
+     * Бито
+     *
+     * @param int $room
+     * @return void
+     */
+    public function beats(int $room): void
+    {
+        $room = Room::query()->find($room);
+        $room->update([
+            'deck' => [
+                'cards' => $room->deck->get('cards'),
+                'players' => $room->deck->get('players'),
+                'table' => [],
+                'trump' => last($room->deck->get('cards'))['suit'],
+            ],
+        ]);
+
+        $this->centrifugo->publish('room', [
+            'event' => 'beats',
+            'deck' => $room->deck,
+        ]);
     }
 }

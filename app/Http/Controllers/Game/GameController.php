@@ -129,4 +129,9 @@ class GameController extends Controller
     {
         $this->contract->discardCard(Card::build($request->card), $request->room_id);
     }
+
+    public function beats(Request $request): void
+    {
+        $this->contract->beats($request->id);
+    }
 }
