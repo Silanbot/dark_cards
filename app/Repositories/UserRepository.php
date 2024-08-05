@@ -26,6 +26,9 @@ final readonly class UserRepository implements UserRepositoryContract
             'username' => $username,
             'coins' => 1000,
             'cash' => 0,
+            'trophies' => 0,
+            'total_coins' => 0,
+            'total_cash' => 0,
         ])->load(['achievements']);
     }
 }

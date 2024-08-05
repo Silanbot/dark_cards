@@ -194,7 +194,7 @@ export default {
     async mounted() {
         let telegramProfile = await telegram.profile()
         this.user = await api.profile(telegramProfile.id, telegramProfile.username)
-
+        console.log('[tg.user]', window.Telegram.WebApp.initDataUnsafe.user)
         telegram.hideBackButton()
     }
 }

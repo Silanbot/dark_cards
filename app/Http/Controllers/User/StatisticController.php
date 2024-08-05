@@ -15,7 +15,7 @@ class StatisticController extends Controller
         $user = User::query()->find($request->id);
 
         return response()->json([
-            'id' => auth()->id(),
+            'id' => $user->id,
             'coins' => $user->coins,
             'cash' => $user->cash,
             'trophies' => $user->trophies,
