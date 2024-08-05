@@ -3,23 +3,24 @@ export default new (class {
 	user = {};
 
 	constructor() {
+        console.log('tg', window.Telegram.WebApp.initDataUnsafe.user)
 		console.log('import.meta.env.VITE_DEV', import.meta.env.VITE_DEV);
-		// if (import.meta.env.VITE_DEV && !window.Telegram.WebApp.initDataUnsafe.user) {
-		// 	window.Telegram.WebApp.initDataUnsafe.user = new Promise(async r =>
-		// 		r(
-		// 			(await navigator.storage.estimate()).quota < window?.performance?.memory?.jsHeapSizeLimit ??
-		// 				1073741824 * 2
-		// 				? { id: 2, username: 'Sequencer' }
-		// 				: { id: 1, username: 'KaptainMidnight' }
-		// 		)
-		// 	);
-		// } else window.Telegram.WebApp.initDataUnsafe.user = Promise.resolve(window.Telegram.WebApp.initDataUnsafe.user);
-        //
-		// this.telegram = window.Telegram.WebApp;
+		if (import.meta.env.VITE_DEV && !window.Telegram.WebApp.initDataUnsafe.user) {
+			window.Telegram.WebApp.initDataUnsafe.user = new Promise(async r =>
+				r(
+					(await navigator.storage.estimate()).quota < window?.performance?.memory?.jsHeapSizeLimit ??
+						1073741824 * 2
+						? { id: 2, username: 'Sequencer' }
+						: { id: 1, username: 'KaptainMidnight' }
+				)
+			);
+		} else window.Telegram.WebApp.initDataUnsafe.user = Promise.resolve(window.Telegram.WebApp.initDataUnsafe.user);
+
+		this.telegram = window.Telegram.WebApp;
 		this.user = window.Telegram.WebApp.initDataUnsafe.user;
-		// (async () => {
-		// 	console.log('tg.user', await window.Telegram.WebApp.initDataUnsafe.user);
-		// })();
+		(async () => {
+			console.log('tg.user', await window.Telegram.WebApp.initDataUnsafe.user);
+		})();
 	}
 
 	notificationFeedback(style) {
