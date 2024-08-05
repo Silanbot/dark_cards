@@ -24,7 +24,7 @@ final readonly class UserRepository implements UserRepositoryContract
         return User::query()->firstOrCreate(['id' => $id], [
             'id' => $id,
             'username' => $username,
-            'coins' => 0,
+            'coins' => 1000,
             'cash' => 0,
         ])->load(['achievements']);
     }
