@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\Contracts\UserRepositoryContract;
+use App\Services\ProfilePhotoAction;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
@@ -15,9 +16,13 @@ final class UserController extends Controller
         private readonly UserRepositoryContract $actor
     ) {}
 
-    public function profile(Request $request): Model|Builder
+    public function profile(Request $request): Model|Builder|array
     {
-        return $this->actor->findOrCreateUser($request->id, $request->username);
+        $service = new ProfilePhotoAction();
+        $user = $this->actor->findOrCreateUser($request->id, $request->username)->toArray();
+        $user['avatar'] =  $service->extract($request->id);
+
+        return $user;
     }
 
     public function updateBalance(Request $request): JsonResponse

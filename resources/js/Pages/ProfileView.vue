@@ -12,7 +12,7 @@
         </div>
         <div class="inter__profile">
             <div class="intro__profile__inner">
-                <img src="./sources/profile.jpg" alt="" id="profile"/>
+                <img :src="user.avatar" alt="" id="profile"/>
             </div>
         </div>
         <div class="inter__inner">
@@ -187,14 +187,12 @@ import telegram from './api/telegram.js'
 export default {
     data() {
         return {
-            photo: './sources/profile.jpg',
             user: {},
         }
     },
     async mounted() {
         let telegramProfile = await telegram.profile()
         this.user = await api.profile(telegramProfile.id, telegramProfile.username)
-        console.log('[tg.user]', window.Telegram.WebApp.initDataUnsafe.user)
         telegram.hideBackButton()
     }
 }

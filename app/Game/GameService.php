@@ -186,9 +186,6 @@ class GameService implements GameContract
 
     /**
      * Бито
-     *
-     * @param int $room
-     * @return void
      */
     public function beats(int $room): void
     {

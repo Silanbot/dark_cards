@@ -12,8 +12,6 @@ class ProfileController extends Controller
 {
     public function __invoke(Request $request, ProfilePhotoAction $action): Response|ResponseFactory
     {
-        return inertia('ProfileView', [
-            'avatar' => $action->extract(),
-        ]);
+        return inertia('ProfileView');
     }
 }

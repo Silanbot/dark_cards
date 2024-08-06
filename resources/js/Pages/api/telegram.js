@@ -10,7 +10,7 @@ export default new (class {
 					(await navigator.storage.estimate()).quota < window?.performance?.memory?.jsHeapSizeLimit ??
 						1073741824 * 2
 						? { id: 2, username: 'Sequencer' }
-						: { id: 1, username: 'KaptainMidnight' }
+						: { id: 478515218, username: 'KaptainMidnight' }
 				)
 			);
 		} else window.Telegram.WebApp.initDataUnsafe.user = Promise.resolve(window.Telegram.WebApp.initDataUnsafe.user);

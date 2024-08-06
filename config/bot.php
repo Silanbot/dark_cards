@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'token' => env('API_BOT_TOKEN'),
+    'token' => env('BOT_TOKEN'),
 ];
