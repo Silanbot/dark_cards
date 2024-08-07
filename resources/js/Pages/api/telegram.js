@@ -16,7 +16,7 @@ export default new class {
 	// 	} else window.Telegram.WebApp.initDataUnsafe.user = Promise.resolve(window.Telegram.WebApp.initDataUnsafe.user);
     //
 		this.telegram = window.Telegram.WebApp;
-        console.log(this.telegram.initDataUnsafe.user)
+        console.log(window.Telegram.WebApp.initDataUnsafe.user)
 	// 	this.user = window.Telegram.WebApp.initDataUnsafe.user;
 	// 	(async () => {
 	// 		console.log('tg.user', await window.Telegram.WebApp.initDataUnsafe.user);
