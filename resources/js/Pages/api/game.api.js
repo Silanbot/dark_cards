@@ -43,6 +43,14 @@ export default new (class {
 		});
 	}
 
+	async beats(room_id) {
+		await (await this.api)({
+			method: 'GET',
+			url: '/api/game/beats',
+			params: { id: room_id }
+		});
+	}
+
 	async createGame(bank, game_type, user_id) {
 		const response = await (await this.api)({
 			method: 'POST',

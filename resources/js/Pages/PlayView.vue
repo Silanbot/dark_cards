@@ -466,11 +466,11 @@ export default {
                     cardd.style.transform = `translate(${playerRectr.x + playerRectr.width / 2}px, ${playerRectr.y + playerRectr.height / 2}px)`
                     cardd.style.width = '10vw'
                     return cardCnt.removeChild(cardd)
-                case 'user_defeat_card':
-                    endCards()
+                case 'beats':
+                    if (!gameCards.length) return
                     const count = 1;
-                    return await gameApi.takeFromDeck(this.room.id, profile.id, count)
-
+                    await gameApi.takeFromDeck(this.room.id, profile.id, count)
+                    return endCards()
             }
         }).subscribe()
         this.centrifugo.connect()
@@ -686,8 +686,9 @@ export default {
             gameCards.push(card)
         }
 
-        document.getElementById('do_beat').addEventListener('click', endCards)
+        document.getElementById('do_beat').addEventListener('click', endCards.bind(this))
         function endCards() {
+            gameApi.beats(this.room.id)
             for (let card of gameCards) {
                 card.style.transform = `translate(${window.innerWidth}px, ${window.innerHeight / 2}px) rotate(${Math.random() * 360}deg)`
                 setTimeout(() => {
