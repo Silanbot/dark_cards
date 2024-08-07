@@ -15,8 +15,6 @@
     <script>
         const telegram = window.Telegram.WebApp
         telegram.expand()
-
-        console.log('tggg', telegram.initDataUnsafe.user)
     </script>
     @vite(['resources/js/app.js', 'resources/css/app.scss'])
     @inertiaHead

@@ -1,26 +1,25 @@
 export default new class {
 	telegram = null;
-	// user = {};
+	user = {};
 
 	constructor() {
-	// 	console.log('import.meta.env.VITE_DEV', import.meta.env.VITE_DEV);
-	// 	if (import.meta.env.VITE_DEV && !window.Telegram.WebApp.initDataUnsafe.user) {
-	// 		window.Telegram.WebApp.initDataUnsafe.user = new Promise(async r =>
-	// 			r(
-	// 				(await navigator.storage.estimate()).quota < window?.performance?.memory?.jsHeapSizeLimit ??
-	// 					1073741824 * 2
-	// 					? { id: 2, username: 'Sequencer' }
-	// 					: { id: 478515218, username: 'KaptainMidnight' }
-	// 			)
-	// 		);
-	// 	} else window.Telegram.WebApp.initDataUnsafe.user = Promise.resolve(window.Telegram.WebApp.initDataUnsafe.user);
-    //
+		console.log('import.meta.env.VITE_DEV', import.meta.env.VITE_DEV);
+		if (import.meta.env.VITE_DEV && !window.Telegram.WebApp.initDataUnsafe.user) {
+			window.Telegram.WebApp.initDataUnsafe.user = new Promise(async r =>
+				r(
+					(await navigator.storage.estimate()).quota < window?.performance?.memory?.jsHeapSizeLimit ??
+						1073741824 * 2
+						? { id: 2, username: 'Sequencer' }
+						: { id: 478515218, username: 'KaptainMidnight' }
+				)
+			);
+		} else window.Telegram.WebApp.initDataUnsafe.user = Promise.resolve(window.Telegram.WebApp.initDataUnsafe.user);
+
 		this.telegram = window.Telegram.WebApp;
-        console.log(window.Telegram.WebApp.initDataUnsafe.user)
-	// 	this.user = window.Telegram.WebApp.initDataUnsafe.user;
-	// 	(async () => {
-	// 		console.log('tg.user', await window.Telegram.WebApp.initDataUnsafe.user);
-	// 	})();
+		this.user = window.Telegram.WebApp.initDataUnsafe.user;
+		(async () => {
+			console.log('tg.user', await window.Telegram.WebApp.initDataUnsafe.user);
+		})();
 	}
 
 	notificationFeedback(style) {
@@ -36,7 +35,7 @@ export default new class {
 	}
 
 	profile() {
-		return this.telegram.initDataUnsafe.user;
+		return this.user;
 	}
 
 	hideBackButton() {
