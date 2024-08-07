@@ -1,4 +1,4 @@
-export default new (class {
+export default new class {
 	telegram = null;
 	// user = {};
 
@@ -16,6 +16,7 @@ export default new (class {
 	// 	} else window.Telegram.WebApp.initDataUnsafe.user = Promise.resolve(window.Telegram.WebApp.initDataUnsafe.user);
     //
 		this.telegram = window.Telegram.WebApp;
+        console.log(this.telegram.initDataUnsafe.user)
 	// 	this.user = window.Telegram.WebApp.initDataUnsafe.user;
 	// 	(async () => {
 	// 		console.log('tg.user', await window.Telegram.WebApp.initDataUnsafe.user);
@@ -60,4 +61,4 @@ export default new (class {
     confirm(message, callback) {
         this.telegram.showConfirm(message, callback)
     }
-})();
+}
