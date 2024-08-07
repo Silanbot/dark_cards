@@ -191,7 +191,7 @@ export default {
         }
     },
     async mounted() {
-        let telegramProfile = await telegram.profile()
+        let telegramProfile = telegram.profile()
         this.user = await api.profile(telegramProfile.id, telegramProfile.username)
         telegram.hideBackButton()
     }
