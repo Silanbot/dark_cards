@@ -9,7 +9,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
 
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0" />
-    <script src="/js/telegram-web-app.js"></script>
+{{--    <script src="/js/telegram-web-app.js"></script>--}}
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://unpkg.com/centrifuge@5.0.0/dist/centrifuge.js"></script>
     <script>
         const telegram = window.Telegram.WebApp
