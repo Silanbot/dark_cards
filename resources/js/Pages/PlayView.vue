@@ -234,7 +234,7 @@ import modalDialog from './components/modalDialog.vue'
                     <div class="footer__button" @click="setReadyState" v-else>Не готов</div>
                 </template>
                 <template v-else>
-                    <div class="footer__button" @click="" id="do_beat">Бито</div>
+                    <div class="footer__button" @click="beats" id="do_beat">Бито</div>
                 </template>
 
                 <div class=" footer__person">
@@ -365,6 +365,9 @@ export default {
         async setReadyState() {
             await gameApi.ready((await telegram.profile()).id, this.room.id)
             this.ready = !this.ready
+        },
+        async beats() {
+            await gameApi.beats(this.room.id)
         }
     },
     async mounted() {
@@ -373,9 +376,6 @@ export default {
         const profile = await telegram.profile()
         const token = await api.generateConnectionToken(profile.id)
         this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })
-        this.centrifugo.on('connecting', () => {
-            console.log('[WS] Connecting')
-        })
         this.centrifugo.on('connected', async () => {
             console.log('Successfully connected to WSS server')
             const res = await fetch(`/api/game/join?${new URLSearchParams({ id: this.room.id, user_id: profile.id })}`)
