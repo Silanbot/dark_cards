@@ -163,6 +163,13 @@ class GameService implements GameContract
 
     public function userLeft(int $room, int $player): void
     {
+        $room = Room::query()->find($room);
+        $joinState = $room->join_state->toArray();
+        $id = array_search($player, $joinState);
+        unset($joinState[$id]);
+        $room->update([
+            'join_state' => $joinState
+        ]);
         $this->centrifugo->publish('room', [
             'event' => 'user_left_room',
             'player' => $player,

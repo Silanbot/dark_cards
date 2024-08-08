@@ -373,6 +373,9 @@ export default {
         const profile = await telegram.profile()
         const token = await api.generateConnectionToken(profile.id)
         this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })
+        this.centrifugo.on('connecting', () => {
+            console.log('[WS] Connecting')
+        })
         this.centrifugo.on('connected', async () => {
             console.log('Successfully connected to WSS server')
             const res = await fetch(`/api/game/join?${new URLSearchParams({ id: this.room.id, user_id: profile.id })}`)
