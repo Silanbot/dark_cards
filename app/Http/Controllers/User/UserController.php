@@ -18,9 +18,9 @@ final class UserController extends Controller
 
     public function profile(Request $request): Model|Builder|array
     {
-        $service = new ProfilePhotoAction();
+        $service = new ProfilePhotoAction;
         $user = $this->actor->findOrCreateUser($request->id, $request->username)->toArray();
-        $user['avatar'] =  $service->extract($request->id);
+        $user['avatar'] = $service->extract($request->id);
 
         return $user;
     }
