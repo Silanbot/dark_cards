@@ -139,6 +139,6 @@ class GameController extends Controller
 
     public function beats(Request $request): void
     {
-        $this->contract->beats($request->id);
+        $this->contract->beats($request->id, $request->player);
     }
 }
