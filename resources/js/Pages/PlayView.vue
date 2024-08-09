@@ -143,13 +143,10 @@ import modalDialog from './components/modalDialog.vue'
                             down2: m > 1,
                         }
                     })()">
-                        <div class="game__players__player__cart">
+                        <div class="game__players__player__cart" v-if="started">
                             <img src="./sources/cartes.svg" alt=""/>
                         </div>
-                        <div class="game__players__player__photo" :data-player="user.id" :class="{
-                            attacker: myTurn,
-                            opponent: !myTurn
-                        }">
+                        <div class="game__players__player__photo" :data-player="user.id">
                             <div class="win__amount">+100</div>
                             <img class="game__players__player__photo__img" src="./sources/player.png" alt=""/>
                             <div class="game__players__player__photo__text">
@@ -427,10 +424,13 @@ export default {
             switch (data.event) {
                 case 'game_started':
                     this.started = true
-                    console.log('profile', profile)
-                    console.log('keys', Object.keys(data.players)[data.attacker_player_index])
-                    this.myTurn = parseInt(Object.keys(data.players)[data.attacker_player_index]) === profile.id
-                    console.log('myTurn', this.myTurn)
+                    for (let user of this.users) {
+                        if (parseInt(Object.keys(data.players)[data.attacker_player_index]) === user.id) {
+                            document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('attacker')
+                        } else {
+                            document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('opponent')
+                        }
+                    }
                     setTrumpCard(data.deck.at(-1))
                     for (const [player, cards] of Object.entries(data.players))
                         (async () => {
