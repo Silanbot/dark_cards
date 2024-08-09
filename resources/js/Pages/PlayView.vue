@@ -459,15 +459,15 @@ export default {
                 case 'user_left_room':
                     return document.querySelector(`div[data-id="${data.player}"]`).parentNode.remove()
                 case 'discard_card':
-                    for (let user of this.users) {
-                        if (parseInt(Object.keys(data.players)[data.attacker_player_index]) === user.id) {
-                            this.myTurn = false;
-                            document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('attacker')
-                        } else {
-                            this.myTurn = true;
-                            document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('opponent')
-                        }
-                    }
+                    // for (let user of this.users) {
+                    //     if (parseInt(Object.keys(data.players)[data.attacker_player_index]) === user.id) {
+                    //         this.myTurn = false;
+                    //         document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('attacker')
+                    //     } else {
+                    //         this.myTurn = true;
+                    //         document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('opponent')
+                    //     }
+                    // }
                     const cardId = data.deck.table.at(-1)
                     if (gameCells.find(c => c.find(c => c.dataset.card == cardId))) return
                     const [playerId] = Object.entries(data.deck.players).find(h => h[1].find(c => c == cardId)) ?? []
