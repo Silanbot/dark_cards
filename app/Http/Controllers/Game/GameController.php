@@ -112,7 +112,7 @@ class GameController extends Controller
 
     public function takeFromDeck(Request $request): void
     {
-        $this->contract->takeFromDeck($request->id, $request->player);
+        $this->contract->takeFromDeck($request->id, $request->user_id);
     }
 
     public function takeFromTable(Request $request): void

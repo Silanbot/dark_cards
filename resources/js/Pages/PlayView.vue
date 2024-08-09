@@ -689,7 +689,7 @@ export default {
             gameCards.push(card)
         }
 
-        // document.getElementById('do_beat').addEventListener('click', endCards.bind(this))
+        document.getElementById('do_beat').addEventListener('click', endCards.bind(this))
         function endCards() {
             for (let card of gameCards) {
                 card.style.transform = `translate(${window.innerWidth}px, ${window.innerHeight / 2}px) rotate(${Math.random() * 360}deg)`
