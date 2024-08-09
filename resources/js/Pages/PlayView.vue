@@ -233,7 +233,7 @@ import modalDialog from './components/modalDialog.vue'
                     <div class="footer__button" @click="setReadyState" v-else>Не готов</div>
                 </template>
                 <template v-else>
-                    <div class="footer__button" v-if="myTurn || beats" @click="beats" id="do_beat">Бито</div>
+                    <div class="footer__button" v-if="myTurn || beatsState" @click="beats" id="do_beat">Бито</div>
                     <div class="footer__button" v-else>Ваш ход</div>
                 </template>
 
@@ -360,7 +360,7 @@ export default {
             ready: false,
             started: false,
             myTurn: false,
-            beats: false,
+            beatsState: false,
         }
     },
     methods: {
@@ -504,7 +504,7 @@ export default {
                     await gameApi.takeFromDeck(this.room.id, profile.id, count)
                     return endCards()
                 case 'beats_start':
-                    this.beats = true;
+                    this.beatsState = true;
                     break;
             }
         }).subscribe()
