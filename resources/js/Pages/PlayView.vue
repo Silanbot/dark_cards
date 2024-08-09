@@ -233,7 +233,7 @@ import modalDialog from './components/modalDialog.vue'
                     <div class="footer__button" @click="setReadyState" v-else>Не готов</div>
                 </template>
                 <template v-else>
-                    <div class="footer__button" v-if="!myTurn" @click="beats" id="do_beat">Бито</div>
+                    <div class="footer__button" v-if="myTurn" @click="beats" id="do_beat">Бито</div>
                     <div class="footer__button" v-else>Ваш ход</div>
                 </template>
 
@@ -426,8 +426,10 @@ export default {
                     this.started = true
                     for (let user of this.users) {
                         if (parseInt(Object.keys(data.players)[data.attacker_player_index]) === user.id) {
+                            this.myTurn = false;
                             document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('attacker')
                         } else {
+                            this.myTurn = true;
                             document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('opponent')
                         }
                     }
@@ -456,6 +458,16 @@ export default {
                 case 'user_left_room':
                     return document.querySelector(`div[data-id="${data.player}"]`).parentNode.remove()
                 case 'discard_card':
+                    for (let user of this.users) {
+                        if (parseInt(Object.keys(data.players)[data.attacker_player_index]) === user.id) {
+                            this.myTurn = false;
+                            document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('attacker')
+                        } else {
+                            this.myTurn = true;
+                            document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('opponent')
+                        }
+                    }
+                    if (data.deck.table.length === 0 && this.myTurn) return;
                     const cardId = data.deck.table.at(-1)
                     if (gameCells.find(c => c.find(c => c.dataset.card == cardId))) return
                     const [playerId] = Object.entries(data.deck.players).find(h => h[1].find(c => c == cardId)) ?? []
