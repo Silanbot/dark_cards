@@ -94,7 +94,6 @@ class GameController extends Controller
             ]),
             'attacker_player_index' => $attacker,
             'opponent_player_index' => $opponent,
-            'current_player_index' => $attacker,
         ]);
         $this->centrifugo->publish('room', [
             'deck' => $deck->getCards(),

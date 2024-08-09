@@ -32,6 +32,8 @@ class Room extends Model
         'ready_state',
         'join_state',
         'mode',
+        'attacker_player_index',
+        'opponent_player_index'
     ];
 
     public function user(): BelongsTo
