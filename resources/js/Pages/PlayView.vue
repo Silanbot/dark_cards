@@ -237,7 +237,7 @@ import modalDialog from './components/modalDialog.vue'
                     <div class="footer__button" v-else>Ваш ход</div>
                 </template>
 
-                <div class=" footer__person">
+                <div class="footer__person">
                     <div class="win__amount win__amount__self">+100</div>
                     <div class="footer__person__img">
                         <img src="./sources/person.png" alt=""/>
@@ -663,7 +663,7 @@ export default {
             const gameCell = gameCells.findIndex(c => c.length < 2 && (c.length == 0 || c[0].dataset.player != card.dataset.player));
 
             if (gameCell == -1)
-                if (!discardIsMine) return
+                if (!discardIsMine && this.myTurn) return
                 else {
                     const a = [...document.querySelectorAll('.win__amount')]
                     // const b = a[~~(Math.random() * a.length)]
