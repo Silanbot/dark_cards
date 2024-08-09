@@ -427,7 +427,10 @@ export default {
             switch (data.event) {
                 case 'game_started':
                     this.started = true
-                    this.myTurn = Object.keys(data.players)[data.attacker_player_index] == profile.id
+                    console.log('profile', profile)
+                    console.log('keys', Object.keys(data.players)[data.attacker_player_index])
+                    this.myTurn = parseInt(Object.keys(data.players)[data.attacker_player_index]) === profile.id
+                    console.log('myTurn', this.myTurn)
                     setTrumpCard(data.deck.at(-1))
                     for (const [player, cards] of Object.entries(data.players))
                         (async () => {
