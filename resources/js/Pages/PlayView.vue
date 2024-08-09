@@ -692,7 +692,7 @@ export default {
                 }
             const top = gameCells[gameCell].length != 0;
 
-            if (discardIsMine && this.myTurn) {
+            if (discardIsMine && !this.myTurn) {
                 const isCheaters = localStorage.getItem('params')?.split(',').includes('cheaters') ?? false;
                 if (!isCheaters && top && cannotBeat(card.dataset.card, gameCells[gameCell][Number(!top)].dataset.card)) {
                     addMyCard(card, false)
