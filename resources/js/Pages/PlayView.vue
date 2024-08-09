@@ -468,7 +468,6 @@ export default {
                             document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('opponent')
                         }
                     }
-                    if (data.deck.table.length === 0 && !this.myTurn) return;
                     const cardId = data.deck.table.at(-1)
                     if (gameCells.find(c => c.find(c => c.dataset.card == cardId))) return
                     const [playerId] = Object.entries(data.deck.players).find(h => h[1].find(c => c == cardId)) ?? []
