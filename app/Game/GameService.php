@@ -201,21 +201,33 @@ class GameService implements GameContract
     /**
      * Бито
      */
-    public function beats(int $room): void
+    public function beats(int $room, int $player): mixed
     {
         $room = Room::query()->find($room);
-        $room->update([
-            'deck' => [
-                'cards' => $room->deck->get('cards'),
-                'players' => $room->deck->get('players'),
-                'table' => [],
-                'trump' => last($room->deck->get('cards'))['suit'],
-            ],
-        ]);
+        $beats = $room->beats;
+        $beats[] = $player;
 
-        $this->centrifugo->publish('room', [
-            'event' => 'beats',
-            'deck' => $room->deck,
+        $room->update([
+            'beats' => $beats,
+        ]);
+        if (count($beats) >= $room->max_players) {
+            $room->update([
+                'deck' => [
+                    'cards' => $room->deck->get('cards'),
+                    'players' => $room->deck->get('players'),
+                    'table' => [],
+                    'trump' => last($room->deck->get('cards'))['suit'],
+                ],
+            ]);
+
+            return $this->centrifugo->publish('room', [
+                'event' => 'beats',
+                'deck' => $room->deck,
+            ]);
+        }
+
+        return $this->centrifugo->publish('room', [
+            'event' => 'beats_start',
         ]);
     }
 }

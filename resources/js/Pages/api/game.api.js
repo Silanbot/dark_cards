@@ -43,11 +43,11 @@ export default new (class {
 		});
 	}
 
-	async beats(room_id) {
+	async beats(room_id, user_id) {
 		await (await this.api)({
 			method: 'GET',
 			url: '/api/game/beats',
-			params: { id: room_id }
+			params: { id: room_id, player: user_id }
 		});
 	}
 

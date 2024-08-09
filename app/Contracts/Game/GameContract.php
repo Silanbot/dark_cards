@@ -39,5 +39,5 @@ interface GameContract
     /**
      * Бито
      */
-    public function beats(int $room): void;
+    public function beats(int $room, int $player): mixed;
 }

@@ -18,6 +18,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property array $join_state
  * @property array $mode
  * @property string $password
+ * @property int $attacker_player_index
+ * @property int $opponent_player_index
+ * @property array beats
  */
 class Room extends Model
 {
@@ -33,7 +36,8 @@ class Room extends Model
         'join_state',
         'mode',
         'attacker_player_index',
-        'opponent_player_index'
+        'opponent_player_index',
+        'beats'
     ];
 
     public function user(): BelongsTo
@@ -53,6 +57,7 @@ class Room extends Model
             'ready_state' => AsCollection::class,
             'join_state' => AsCollection::class,
             'mode' => AsCollection::class,
+            'beats' => AsCollection::class,
         ];
     }
 }

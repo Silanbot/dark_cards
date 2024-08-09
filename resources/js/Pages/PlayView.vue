@@ -233,7 +233,7 @@ import modalDialog from './components/modalDialog.vue'
                     <div class="footer__button" @click="setReadyState" v-else>Не готов</div>
                 </template>
                 <template v-else>
-                    <div class="footer__button" v-if="myTurn" @click="beats" id="do_beat">Бито</div>
+                    <div class="footer__button" v-if="myTurn || beats" @click="beats" id="do_beat">Бито</div>
                     <div class="footer__button" v-else>Ваш ход</div>
                 </template>
 
@@ -360,6 +360,7 @@ export default {
             ready: false,
             started: false,
             myTurn: false,
+            beats: false,
         }
     },
     methods: {
@@ -368,7 +369,7 @@ export default {
             this.ready = !this.ready
         },
         async beats() {
-            await gameApi.beats(this.room.id)
+            await gameApi.beats(this.room.id, (await telegram.profile()).id)
         }
     },
     async mounted() {
@@ -503,6 +504,9 @@ export default {
                     }
                     await gameApi.takeFromDeck(this.room.id, profile.id, count)
                     return endCards()
+                case 'beats_start':
+                    this.beats = true;
+                    break;
             }
         }).subscribe()
         this.centrifugo.connect()
