@@ -663,7 +663,7 @@ export default {
             const gameCell = gameCells.findIndex(c => c.length < 2 && (c.length == 0 || c[0].dataset.player != card.dataset.player));
 
             if (gameCell == -1)
-                if (!discardIsMine && this.myTurn) return
+                if (!discardIsMine) return
                 else {
                     const a = [...document.querySelectorAll('.win__amount')]
                     // const b = a[~~(Math.random() * a.length)]
@@ -681,7 +681,7 @@ export default {
                 }
             const top = gameCells[gameCell].length != 0;
 
-            if (discardIsMine) {
+            if (discardIsMine && this.myTurn) {
                 const isCheaters = localStorage.getItem('params')?.split(',').includes('cheaters') ?? false;
                 if (!isCheaters && top && cannotBeat(card.dataset.card, gameCells[gameCell][Number(!top)].dataset.card)) {
                     addMyCard(card, false)
