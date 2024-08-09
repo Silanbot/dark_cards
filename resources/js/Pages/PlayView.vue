@@ -535,7 +535,7 @@ export default {
             touch = false
             dragging = lastDragging = false
             if (!activeCard) return
-            if (this.myTurn) return
+            if (!this.myTurn) return
             ty > window.innerHeight*0.75 ? addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             activeCard = null
         })
