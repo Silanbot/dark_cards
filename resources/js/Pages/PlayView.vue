@@ -492,7 +492,15 @@ export default {
                 case 'beats':
                     if (!gameCards.length) return
                     const count = 1;
-                    this.myTurn = profile.id === data.attacker_player_index
+                    for (let user of this.users) {
+                        if (parseInt(Object.keys(data.players)[data.attacker_player_index]) === user.id) {
+                            this.myTurn = false;
+                            document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('attacker')
+                        } else {
+                            this.myTurn = true;
+                            document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('opponent')
+                        }
+                    }
                     await gameApi.takeFromDeck(this.room.id, profile.id, count)
                     return endCards()
             }
@@ -502,7 +510,6 @@ export default {
         // touch events, strictly speaking - cards manipulation, won't work on "non touch surface" devices (imagine DIY mobile without touch screen 😀). a some workaround needs to be done with mouse events. either separate functions or bluntly write polyfill (note that im not talking about regular implementation/version polyfill you think off. it is an already implemented touch api by browser and our mouse -> touch polyfill kinda. not sure we can call this polyfill at this point)
         document.addEventListener('touchstart', async e=>{
             const card = e.target;
-            if (this.myTurn) return
             if (!card.dataset?.card) return
             if (card.dataset.gameCell !== undefined) {
                 const otherCard = gameCells[card.dataset.gameCell].find(c => c.dataset.card != card.dataset.card)
@@ -536,7 +543,6 @@ export default {
             touch = false
             dragging = lastDragging = false
             if (!activeCard) return
-            if (!this.myTurn) return
             ty > window.innerHeight*0.75 ? addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             activeCard = null
         })
@@ -651,7 +657,6 @@ export default {
 
         function discardCard(card) {
             const discardIsMine = card.dataset.player == profile.id
-            if (this.myTurn) return
 
             if (!discardIsMine) {
                 const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
