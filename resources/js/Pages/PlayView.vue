@@ -649,6 +649,7 @@ export default {
 
         function discardCard(card) {
             const discardIsMine = card.dataset.player == profile.id
+            if (this.myTurn) return
 
             if (!discardIsMine) {
                 const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
