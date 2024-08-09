@@ -99,6 +99,8 @@ class GameController extends Controller
             'deck' => $deck->getCards(),
             'players' => $deck->getPlayers(),
             'event' => 'game_started',
+            'attacker_player_index' => $attacker,
+            'opponent_player_index' => $opponent,
         ]);
     }
 
