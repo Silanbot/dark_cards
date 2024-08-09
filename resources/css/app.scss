@@ -643,10 +643,18 @@ body {
                 padding: 0 3px;
                 z-index: 2;
                 margin: 0 auto;
-                border: 4px solid #eb3d3d;
-                background: #eb3d3d;
 
                 border-radius: 5px;
+
+                .attacker {
+                    border: 4px solid #eb3d3d;
+                    background: #eb3d3d;
+                }
+
+                .opponent {
+                    border: 4px solid green;
+                    background: green;
+                }
 
                 .game__players__player__photo__img {
                     width: 60px;

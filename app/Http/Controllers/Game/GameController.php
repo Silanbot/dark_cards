@@ -81,6 +81,9 @@ class GameController extends Controller
         }
 
         $deck = new Deck($room->ready_state->toArray());
+        $attacker = array_rand($state->toArray());
+        $opponent = array_search($state[($attacker + 1) % $room->max_gamers], $state);
+
         $room->update([
             'ready_state' => $state->toArray(),
             'deck' => collect([
@@ -89,6 +92,9 @@ class GameController extends Controller
                 'table' => [],
                 'trump' => $deck->getTrumpCard()->getSuit(),
             ]),
+            'attacker_player_index' => $attacker,
+            'opponent_player_index' => $opponent,
+            'current_player_index' => $attacker,
         ]);
         $this->centrifugo->publish('room', [
             'deck' => $deck->getCards(),

@@ -146,7 +146,10 @@ import modalDialog from './components/modalDialog.vue'
                         <div class="game__players__player__cart">
                             <img src="./sources/cartes.svg" alt=""/>
                         </div>
-                        <div class="game__players__player__photo" :data-player="user.id">
+                        <div class="game__players__player__photo" :data-player="user.id" :class="{
+                            attacker: myTurn,
+                            opponent: !myTurn
+                        }">
                             <div class="win__amount">+100</div>
                             <img class="game__players__player__photo__img" src="./sources/player.png" alt=""/>
                             <div class="game__players__player__photo__text">
@@ -228,13 +231,13 @@ import modalDialog from './components/modalDialog.vue'
         </div>
         <footer class="footer" style="z-index: 2">
             <div class="footer__inner footer__inner_play">
-                <!-- <div class="footer__button" @click="changeStep()">Ваш ход</div> -->
                 <template v-if="!started">
                     <div class="footer__button" @click="setReadyState" v-if="!ready">Готов</div>
                     <div class="footer__button" @click="setReadyState" v-else>Не готов</div>
                 </template>
                 <template v-else>
-                    <div class="footer__button" @click="beats" id="do_beat">Бито</div>
+                    <div class="footer__button" v-if="!myTurn" @click="beats" id="do_beat">Бито</div>
+                    <div class="footer__button" v-else>Ваш ход</div>
                 </template>
 
                 <div class=" footer__person">
@@ -359,6 +362,7 @@ export default {
             users: [],
             ready: false,
             started: false,
+            myTurn: false,
         }
     },
     methods: {
@@ -423,6 +427,7 @@ export default {
             switch (data.event) {
                 case 'game_started':
                     this.started = true
+                    this.myTurn = profile.id === data.attacker_player_index
                     setTrumpCard(data.deck.at(-1))
                     for (const [player, cards] of Object.entries(data.players))
                         (async () => {
@@ -459,7 +464,7 @@ export default {
                     card.dataset.card = cardId
                     card.src = document.querySelector(`img[data-cardimg="${card.dataset.card}"]`).src
                     return discardCard(card)
-                case 'revet_card':
+                case 'revert_card':
                     const cardd = gameCells.find(c => c.find(c => c.dataset.card == data.card))
 
                     const playerr = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
@@ -472,6 +477,7 @@ export default {
                 case 'beats':
                     if (!gameCards.length) return
                     const count = 1;
+                    this.myTurn = profile.id === data.attacker_player_index
                     await gameApi.takeFromDeck(this.room.id, profile.id, count)
                     return endCards()
             }
