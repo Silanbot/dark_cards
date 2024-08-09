@@ -467,7 +467,7 @@ export default {
                             document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('opponent')
                         }
                     }
-                    if (data.deck.table.length === 0 && this.myTurn) return;
+                    if (data.deck.table.length === 0 && !this.myTurn) return;
                     const cardId = data.deck.table.at(-1)
                     if (gameCells.find(c => c.find(c => c.dataset.card == cardId))) return
                     const [playerId] = Object.entries(data.deck.players).find(h => h[1].find(c => c == cardId)) ?? []
@@ -502,6 +502,7 @@ export default {
         // touch events, strictly speaking - cards manipulation, won't work on "non touch surface" devices (imagine DIY mobile without touch screen 😀). a some workaround needs to be done with mouse events. either separate functions or bluntly write polyfill (note that im not talking about regular implementation/version polyfill you think off. it is an already implemented touch api by browser and our mouse -> touch polyfill kinda. not sure we can call this polyfill at this point)
         document.addEventListener('touchstart', async e=>{
             const card = e.target;
+            if (this.myTurn) return
             if (!card.dataset?.card) return
             if (card.dataset.gameCell !== undefined) {
                 const otherCard = gameCells[card.dataset.gameCell].find(c => c.dataset.card != card.dataset.card)
