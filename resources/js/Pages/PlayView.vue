@@ -241,12 +241,12 @@ import modalDialog from './components/modalDialog.vue'
                 <div class="footer__person">
                     <div class="win__amount win__amount__self">+100</div>
                     <div class="footer__person__img">
-                        <img src="./sources/person.png" alt=""/>
+                        <img :src="user.avatar" alt=""/>
                         <div class="text">
                             <img src="./sources/level-6.png" alt=""/>
                         </div>
                     </div>
-                    <div class="footer__person__name">Никита</div>
+                    <div class="footer__person__name">{{ user.username }}</div>
                 </div>
                 <div class="footer__button chat" v-if="!step" @click="modalDialogShow = true">
                     <svg width="50" height="43" viewBox="0 0 50 43" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -362,6 +362,7 @@ export default {
             started: false,
             myTurn: false,
             beatsState: false,
+            user: [],
         }
     },
     methods: {
@@ -378,6 +379,8 @@ export default {
         telegram.showBackButton()
         const profile = await telegram.profile()
         const token = await api.generateConnectionToken(profile.id)
+        this.user = await api.profile(profile.id, profile.username)
+
         this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })
         this.centrifugo.on('connected', async () => {
             console.log('Successfully connected to WSS server')
