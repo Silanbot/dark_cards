@@ -526,6 +526,19 @@ export default {
             this.selectMode = 1
         },
         async findRoom() {
+            if (this.selectMode === 2) {
+                const bank = this.getBank()[0]
+                if (this.user.coins < bank) {
+                    telegram.alert('У вас недостаточно средств, выберите другой диапазон ставок', true)
+                    return
+                }
+            } else {
+                const bank = this.getBank()[0]
+                if (this.user.cash < bank) {
+                    telegram.alert('У вас недостаточно средств, выберите другой диапазон ставок', true)
+                    return
+                }
+            }
             const id = await gameApi.findRoomID(this.getBank(), this.selectMode, 2)
 
             this.redirect(`/play/${id}`)
