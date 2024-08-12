@@ -18,7 +18,7 @@ class GameService implements GameContract
         $this->centrifugo = $centrifugo;
     }
 
-    public function takeFromDeck(int $id, int $player): array
+    public function takeFromDeck(int $id, int $player, int $count): array
     {
         $room = Room::query()->find($id);
 
@@ -205,12 +205,13 @@ class GameService implements GameContract
     {
         $room = Room::query()->find($room);
         $beats = $room->beats;
-        $beats[] = $player;
+        if ($beats->contains($player)) {
+            return 0;
+        }
+        $beats->push($player);
+        $room->update(['beats' => $beats]);
 
-        $room->update([
-            'beats' => $beats,
-        ]);
-        if (count($beats) >= $room->max_players) {
+        if ($beats->count() >= $room->max_players) {
             $room->update([
                 'deck' => [
                     'cards' => $room->deck->get('cards'),

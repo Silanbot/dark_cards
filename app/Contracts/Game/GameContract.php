@@ -12,8 +12,9 @@ interface GameContract
      *
      * @param  int  $id  ID комнаты
      * @param  int  $player  ID игрока
+     * @param int $count Количество карт которые надо взять из колоды
      */
-    public function takeFromDeck(int $id, int $player): array;
+    public function takeFromDeck(int $id, int $player, int $count): array;
 
     /**
      * Побить карту игрока

@@ -8,6 +8,7 @@ use App\Game\Deck;
 use App\Http\Controllers\Controller;
 use App\Models\Room;
 use App\Models\User;
+use App\Services\ProfilePhotoAction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use phpcent\Client;
@@ -40,7 +41,7 @@ class GameController extends Controller
         ];
     }
 
-    public function join(Request $request): JsonResponse
+    public function join(Request $request, ProfilePhotoAction $action): JsonResponse
     {
         $player = $request->user_id;
         $room = Room::query()->find($request->id);
@@ -56,6 +57,7 @@ class GameController extends Controller
         $this->centrifugo->publish('room', [
             'event' => 'user_join_room',
             'user' => User::query()->findOrFail($player),
+            'profile_picture' => $action->extract($player)
         ]);
 
         return response()->json($alreadyJoined);
