@@ -234,8 +234,9 @@ import modalDialog from './components/modalDialog.vue'
                     <div class="footer__button" @click="setReadyState" v-else>Не готов</div>
                 </template>
                 <template v-else>
-                    <div class="footer__button" v-if="myTurn || beatsState" @click="beats" id="do_beat">Бито</div>
-                    <div class="footer__button" v-else>Ваш ход</div>
+                    <div class="footer__button" @click="() => endCards()" v-if="(!myTurn && allBeaten) || (myTurn && beatsState)">Бито</div>
+                    <div class="footer__button"                        v-else-if="myTurn">Ваш ход</div>
+                    <div class="footer__button" @click="() => takeFromTable()"      v-else>Взять</div>
                 </template>
 
                 <div class="footer__person">
@@ -363,6 +364,30 @@ export default {
             myTurn: false,
             beatsState: false,
             user: [],
+            allBeaten: false,
+
+            cardValues: {
+                2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 1: 10,
+                j: 11, q: 12, k: 13, a: 14
+            },
+            cardSuits: {
+                s: 1, c: 2, h: 3, d: 4, j: 5
+            },
+
+            mycards: [],
+
+            gameCards: [],
+            gameCells: Array.from({ length: 5 }, () => []),
+            gameCellPos: () => {
+                const [x, y] = [window.innerWidth / 2, window.innerHeight / 2];
+                return [
+                    [x * 0.6, y * 0.9],
+                    [x,       y * 0.9],
+                    [x * 1.4, y * 0.9],
+                    [x * 0.8, y * 1.14],
+                    [x * 1.2, y * 1.14]
+                ]
+            }
         }
     },
     methods: {
@@ -370,8 +395,111 @@ export default {
             await gameApi.ready((await telegram.profile()).id, this.room.id)
             this.ready = !this.ready
         },
-        async beats() {
-            await gameApi.beats(this.room.id, (await telegram.profile()).id)
+        lt(a, b) {
+            return this.cardSuits[a[1]] == this.cardSuits[b[1]]
+                ? this.cardValues[a[0]] < this.cardValues[b[0]]
+                : this.cardSuits[a[1]] < this.cardSuits[b[1]]
+        },
+        cannotBeat(a, b) {
+            return a[1] == b[1]
+                ? this.cardValues[a[0]] < this.cardValues[b[0]]
+                : a[1] != document.querySelector('.game__cart__cold__carts__second').dataset.card[1]
+        },
+        addMyCard(card, addElement = true) {
+            card.style.removeProperty('z-index')
+            card.style.width = '30vw'
+            card.style.left = '-15vw'
+            card.style.top = '-28vw'
+            card.classList.add('my-card');
+
+            if (card.dataset.gameCell !== undefined) {
+                const cardInCell = this.gameCells[card.dataset.gameCell].findIndex(c => c.dataset.card == card.dataset.card);
+                this.gameCells[card.dataset.gameCell].splice(cardInCell, 1)
+
+                if (this.gameCells[card.dataset.gameCell][0]) {
+                    const [x, y] = this.gameCellPos()[card.dataset.gameCell];
+                    this.gameCells[card.dataset.gameCell][0].style.transform = `translate(${x}px, ${y}px)`
+                    this.gameCells[card.dataset.gameCell][0].style.zIndex = 3
+                }
+
+                delete card.dataset.gameCell;
+            }
+
+            if (this.mycards.find(c => c.dataset.card == card.dataset.card)) return;
+            (() => {
+                for (let i = 0; i != this.mycards.length; ++i)
+                    if (this.lt(card.dataset.card, this.mycards[i].dataset.card))
+                        return this.mycards.splice(i, 0, card)
+                this.mycards.push(card)
+            })()
+
+            if (!addElement) return
+
+            for (const cardHand of document.querySelectorAll('img.my-card'))
+                if (this.lt(card.dataset.card, cardHand.dataset.card))
+                    return document.querySelector('#cards').insertBefore(card, cardHand)
+            document.querySelector('#cards').appendChild(card)
+        },
+        async takeFromTable(data) {
+            if (!data) {
+                for (const cell of this.gameCells)
+                    for (const card of cell) {
+                        const beforeMine = card.dataset.player == (await telegram.profile()).id
+                        card.dataset.player = (await telegram.profile()).id;
+                        this.addMyCard(card, !beforeMine)
+                    }
+                await gameApi.takeFromTable(this.room.id, (await telegram.profile()).id)
+            } else {
+                if (this.gameCells.every(c => !c.length)) return
+
+                let playerId;
+                for (const [playerIdCurrent, cards] of Object.entries(data.deck.players))
+                    for (const card of cards)
+                        if (card == this.gameCells[0][0].dataset.card) {
+                            playerId = playerIdCurrent;
+                            break;
+                        }
+
+                if (!playerId) return console.error(`opponent player ${playerId} not found to give card`);
+                if (playerId == (await telegram.profile()).id) return
+
+                const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == playerId)
+                if (!player) return console.error(`opponent player ${playerId} not found to give card`);
+
+                const playerRect = player.getBoundingClientRect()
+                for (const cell of this.gameCells)
+                    for (const card of cell)
+                        (async () => {
+                            const cardInCell = this.gameCells[card.dataset.gameCell].findIndex(c => c.dataset.card == card.dataset.card);
+                            this.gameCells[card.dataset.gameCell].splice(cardInCell, 1)
+
+                            if (this.gameCells[card.dataset.gameCell][0]) {
+                                const [x, y] = this.gameCellPos()[card.dataset.gameCell];
+                                this.gameCells[card.dataset.gameCell][0].style.transform = `translate(${x}px, ${y}px)`
+                                this.gameCells[card.dataset.gameCell][0].style.zIndex = 3
+                            }
+
+                            delete card.dataset.gameCell;
+
+                            card.style.transform = `translate(${playerRect.x + playerRect.width / 2}px, ${playerRect.y + playerRect.height / 2}px)`
+                            card.style.width = '10vw'
+                            player.style.zIndex = 6
+                            await new Promise(r => setTimeout(r, 300))
+                            document.querySelector('#cards').removeChild(card)
+                            player.style.zIndex = 1
+                        })()
+            }
+        },
+        async endCards(global) {
+            if (!global) await gameApi.beats(this.room.id, (await telegram.profile()).id)
+            for (let card of this.gameCards) {
+                card.style.transform = `translate(${window.innerWidth}px, ${window.innerHeight / 2}px) rotate(${Math.random() * 360}deg)`
+                setTimeout(() => {
+                    card.src = document.querySelector('img[data-cardimg="b"]').src
+                }, 200)
+            }
+            this.gameCells = Array.from({ length: 5 }, () => [])
+            this.gameCards = []
         }
     },
     async mounted() {
@@ -392,29 +520,7 @@ export default {
             for (const user of await res.json())
                 this.users.push(user);
         })
-
         const sub = this.centrifugo.newSubscription(`room`)
-
-        const cardValues = {
-            2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 1: 10,
-            j: 11, q: 12, k: 13, a: 14
-        }
-        const cardSuits = {
-            s: 1, c: 2, h: 3, d: 4, j: 5
-        }
-
-        let gameCards = []
-        let gameCells = Array.from({ length: 5 }, () => [])
-        const gameCellPos = () => {
-            const [x, y] = [window.innerWidth / 2, window.innerHeight / 2];
-            return [
-                [x * 0.6, y * 0.9],
-                [x,       y * 0.9],
-                [x * 1.4, y * 0.9],
-                [x * 0.8, y * 1.14],
-                [x * 1.2, y * 1.14]
-            ]
-        }
 
         let touch = false
         let dragging = false
@@ -422,31 +528,38 @@ export default {
         let tx, ty
 
         let activeCard = null
-        let mycards = []
 
-        let cardCnt = document.querySelector('#cards')
         let countElem = document.querySelector('.game__cart__cold__count')
         let count = parseInt(countElem.innerHTML)
+
+        const updateAttacker = data => {
+            const attackerId = Object.keys(data.players)[data.attacker_player_index]
+
+            this.myTurn = profile.id == attackerId;
+
+            for (let { id: userId } of this.users) {
+                const userElem = document.querySelectorAll(`div.game__players__player__photo[data-player="${userId}"]`)[0]
+                if (userId == attackerId) {
+                    userElem.classList.add('attacker')
+                    userElem.classList.remove('opponent')
+                } else {
+                    userElem.classList.add('opponent')
+                    userElem.classList.remove('attacker')
+                }
+            }
+        }
 
         sub.on('publication', async ({ data }) => {
             console.log(data.event, data)
             switch (data.event) {
                 case 'game_started':
                     this.started = true
-                    for (let user of this.users) {
-                        if (parseInt(Object.keys(data.players)[data.attacker_player_index]) === user.id) {
-                            this.myTurn = false;
-                            document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('attacker')
-                        } else {
-                            this.myTurn = true;
-                            document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('opponent')
-                        }
-                    }
+                    updateAttacker(data)
                     setTrumpCard(data.deck.at(-1))
                     for (const [player, cards] of Object.entries(data.players))
                         (async () => {
                             for (const code of cards) {
-                                giveCard(player, code)
+                                giveCard.bind(this)(player, code)
                                 await new Promise(r => setTimeout(r, 100))
                             }
                         })();
@@ -456,28 +569,12 @@ export default {
                     if (this.users.findIndex(u => u.id == data.user.id) !== -1) return
                     return this.users.push(data.user)
                 case 'player_take_table':
-                    for (const cell of gameCells)
-                        for (const card of cell)
-                            if (card.dataset.player == profile.id) addMyCard(card, false)
-                            else {
-                                card.dataset.player = profile.id;
-                                addMyCard(card, true)
-                            }
-                    return
+                    return this.takeFromTable(data)
                 case 'user_left_room':
                     return document.querySelector(`div[data-player="${data.player}"]`).parentNode.remove()
                 case 'discard_card':
-                    // for (let user of this.users) {
-                    //     if (parseInt(Object.keys(data.players)[data.attacker_player_index]) === user.id) {
-                    //         this.myTurn = false;
-                    //         document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('attacker')
-                    //     } else {
-                    //         this.myTurn = true;
-                    //         document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('opponent')
-                    //     }
-                    // }
                     const cardId = data.deck.table.at(-1)
-                    if (gameCells.find(c => c.find(c => c.dataset.card == cardId))) return
+                    if (this.gameCells.find(c => c.find(c => c.dataset.card == cardId))) return
                     const [playerId] = Object.entries(data.deck.players).find(h => h[1].find(c => c == cardId)) ?? []
                     if (playerId === undefined) return console.error('user thrown unowned card')
                     if (playerId == profile.id) return
@@ -486,9 +583,9 @@ export default {
                     card.dataset.player = playerId
                     card.dataset.card = cardId
                     card.src = document.querySelector(`img[data-cardimg="${card.dataset.card}"]`).src
-                    return discardCard(card)
+                    return discardCard.bind(this)(card)
                 case 'revert_card':
-                    const cardd = gameCells.find(c => c.find(c => c.dataset.card == data.card))
+                    const cardd = this.gameCells.find(c => c.find(c => c.dataset.card == data.card))
 
                     const playerr = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
                     if (!playerr) return console.error(`opponent player ${cardd.dataset.player} not found to give card`);
@@ -496,21 +593,12 @@ export default {
                     const playerRectr = playerr.getBoundingClientRect()
                     cardd.style.transform = `translate(${playerRectr.x + playerRectr.width / 2}px, ${playerRectr.y + playerRectr.height / 2}px)`
                     cardd.style.width = '10vw'
-                    return cardCnt.removeChild(cardd)
+                    return document.querySelector('#cards').removeChild(cardd)
                 case 'beats':
-                    if (!gameCards.length) return
-                    const count = 1;
-                    for (let user of this.users) {
-                        if (parseInt(Object.keys(data.players)[data.attacker_player_index]) === user.id) {
-                            this.myTurn = false;
-                            document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('attacker')
-                        } else {
-                            this.myTurn = true;
-                            document.querySelectorAll(`div.game__players__player__photo[data-player="${user.id}"]`)[0].classList.add('opponent')
-                        }
-                    }
-                    await gameApi.takeFromDeck(this.room.id, profile.id, count)
-                    return endCards()
+                    if (!this.gameCards.length) return
+                    updateAttacker(data)
+                    await gameApi.takeFromDeck(this.room.id, profile.id, 1)
+                    return this.endCards(true)
                 case 'beats_start':
                     this.beatsState = true;
                     break;
@@ -523,11 +611,11 @@ export default {
             const card = e.target;
             if (!card.dataset?.card) return
             if (card.dataset.gameCell !== undefined) {
-                const otherCard = gameCells[card.dataset.gameCell].find(c => c.dataset.card != card.dataset.card)
+                const otherCard = this.gameCells[card.dataset.gameCell].find(c => c.dataset.card != card.dataset.card)
                 const top = otherCard?.style.zIndex == 3;
 
                 const isCheaters = localStorage.getItem('params')?.split(',').includes('cheaters') ?? false;
-                if (!isCheaters || !top || !cannotBeat(card.dataset.card, otherCard.dataset.card)) return
+                if (!isCheaters || !top || !this.cannotBeat(card.dataset.card, otherCard.dataset.card)) return
 
                 const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
                 if (!player) return console.error(`opponent player ${card.dataset.player} not found to give card`);
@@ -537,7 +625,7 @@ export default {
                 card.style.width = '10vw'
                 player.style.zIndex = 6
                 await new Promise(r => setTimeout(r, 300))
-                cardCnt.removeChild(card)
+                document.querySelector('#cards').removeChild(card)
                 player.style.zIndex = 1
                 return gameApi.revert(this.room.id, card.dataset.player, card.dataset.card)
             }
@@ -554,7 +642,7 @@ export default {
             touch = false
             dragging = lastDragging = false
             if (!activeCard) return
-            ty > window.innerHeight*0.75 ? addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
+            ty > window.innerHeight*0.75 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             activeCard = null
         })
         let time = performance.now();
@@ -562,11 +650,11 @@ export default {
             const dt = t - time
             time = t
 
-            mycards.forEach((card, i) => {
-                let fromCenter = i - mycards.length / 2
+            this.mycards.forEach((card, i) => {
+                let fromCenter = i - this.mycards.length / 2
                 if (card.data === undefined) card.data = { x: 0, y: window.innerHeight / 2 }
-                card.data.tx = window.innerWidth / 2 + window.innerWidth * 0.1 + fromCenter * window.innerWidth * 0.8 / mycards.length
-                card.data.ty = window.innerHeight * 0.75 - (touch ? (card === activeCard ? 40 : i && mycards[i - 1] === activeCard ? 10 : 0) : 0)
+                card.data.tx = window.innerWidth / 2 + window.innerWidth * 0.1 + fromCenter * window.innerWidth * 0.8 / this.mycards.length
+                card.data.ty = window.innerHeight * 0.75 - (touch ? (card === activeCard ? 40 : i && this.mycards[i - 1] === activeCard ? 10 : 0) : 0)
                 card.data.x += (card.data.tx - card.data.x) * 0.01 * dt
                 card.data.y += (card.data.ty - card.data.y) * 0.01 * dt
                 card.style.transform = `translate(${card.data.x.toFixed(0)}px, ${card.data.y.toFixed(0)}px) rotate(${fromCenter * 2}deg)`
@@ -581,29 +669,14 @@ export default {
             }
 
             if (dragging) {
-                if (mycards.includes(activeCard))
-                    mycards = mycards.filter(c => c != activeCard)
+                if (this.mycards.includes(activeCard))
+                    this.mycards = this.mycards.filter(c => c != activeCard)
                 activeCard.style.transform = `translate(${tx}px, ${ty - window.innerWidth * 0.25}px)`
             }
 
-            requestAnimationFrame(updateCards)
+            requestAnimationFrame(updateCards.bind(this))
         }
-        requestAnimationFrame(updateCards)
-
-        function lt(a, b) {
-            return cardSuits[a[1]] == cardSuits[b[1]]
-                ? cardValues[a[0]] < cardValues[b[0]]
-                : cardSuits[a[1]] < cardSuits[b[1]]
-        }
-        function cannotBeat(a, b) {
-            const cardValues = {
-                2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 1: 10,
-                j: 11, q: 12, k: 13, a: 14
-            }
-            return a[1] == b[1]
-                ? cardValues[a[0]] < cardValues[b[0]]
-                : a[1] != document.querySelector('.game__cart__cold__carts__second').dataset.card[1]
-        }
+        requestAnimationFrame(updateCards.bind(this))
 
         function setTrumpCard(card) {
             const code = (card.rank[0] + card.suit[0]).toLowerCase()
@@ -616,54 +689,18 @@ export default {
             card.dataset.player = playerId
             card.dataset.card = playerId == profile.id ? code : 'b'
             card.src = document.querySelector(`img[data-cardimg="${card.dataset.card}"]`).src
-            if (playerId == profile.id) addMyCard(card);
+            if (playerId == profile.id) this.addMyCard(card);
             else {
                 const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == playerId)
                 if (!player) console.error(`opponent player ${playerId} not found to give card`);
                 else {
-                    cardCnt.appendChild(card)
+                    document.querySelector('#cards').appendChild(card)
                     const playerRect = player.getBoundingClientRect()
                     card.style.transform = `translate(${playerRect.x + playerRect.width / 2}px, ${playerRect.y + playerRect.height / 2}px)`
                     card.style.width = '10vw'
                 }
             }
             countElem.innerHTML = --count
-        }
-
-        function addMyCard(card, addElement = true) {
-            card.style.removeProperty('z-index')
-            card.style.width = '30vw'
-            card.style.left = '-15vw'
-            card.style.top = '-28vw'
-            card.classList.add('my-card');
-
-            if (card.dataset.gameCell !== undefined) {
-                const cardInCell = gameCells[card.dataset.gameCell].findIndex(c => c.dataset.card == card.dataset.card);
-                gameCells[card.dataset.gameCell].splice(cardInCell, 1)
-
-                if (gameCells[card.dataset.gameCell][0]) {
-                    const [x, y] = gameCellPos()[card.dataset.gameCell];
-                    gameCells[card.dataset.gameCell][0].style.transform = `translate(${x}px, ${y}px)`
-                    gameCells[card.dataset.gameCell][0].style.zIndex = 3
-                }
-
-                delete card.dataset.gameCell;
-            }
-
-            if (mycards.find(c => c.dataset.card == card.dataset.card)) return;
-            (() => {
-                for (let i = 0; i != mycards.length; ++i)
-                    if (lt(card.dataset.card, mycards[i].dataset.card))
-                        return mycards.splice(i, 0, card)
-                mycards.push(card)
-            })()
-
-            if (!addElement) return
-
-            for (const cardHand of document.querySelectorAll('img.my-card'))
-                if (lt(card.dataset.card, cardHand.dataset.card))
-                    return cardCnt.insertBefore(card, cardHand)
-            cardCnt.appendChild(card)
         }
 
         function discardCard(card) {
@@ -676,69 +713,40 @@ export default {
                 const playerRect = player.getBoundingClientRect()
                 card.style.transform = `translate(${playerRect.x + playerRect.width / 2}px, ${playerRect.y + playerRect.height / 2}px)`
                 card.style.width = '10vw'
-                cardCnt.appendChild(card)
+                document.querySelector('#cards').appendChild(card)
             }
 
-            const gameCell = gameCells.findIndex(c => c.length < 2 && (c.length == 0 || c[0].dataset.player != card.dataset.player));
+            const gameCell = this.gameCells.findIndex(c => c.length < 2 && (c.length == 0 || c[0].dataset.player != card.dataset.player));
 
-            if (gameCell == -1)
-                if (!discardIsMine) return
-                else {
-                    const a = [...document.querySelectorAll('.win__amount')]
-                    // const b = a[~~(Math.random() * a.length)]
-                    const b = a.find(e => !e.parentElement.dataset.player)
-                    b.classList.add('visible')
-                    setTimeout(() => b.classList.remove('visible'), 3000)
-                    if (!b.parentElement.dataset.player) setTimeout(() => window.Telegram.WebApp.showAlert(`Ты выиграл: ${100}!`), 3000)
-
-                    for (const cell of gameCells)
-                        for (const card of cell) {
-                            card.dataset.player = profile.id;
-                            addMyCard(card, card.dataset.player != profile.id)
-                        }
-                    return addMyCard(card, false)
-                }
-            const top = gameCells[gameCell].length != 0;
+            if (gameCell == -1 && !discardIsMine) return
+            const top = this.gameCells[gameCell].length != 0;
 
             if (discardIsMine) {
                 const isCheaters = localStorage.getItem('params')?.split(',').includes('cheaters') ?? false;
-                if (!isCheaters && top && cannotBeat(card.dataset.card, gameCells[gameCell][Number(!top)].dataset.card)) {
-                    addMyCard(card, false)
-                    // alert(`cannot beat "${gameCells[gameCell][Number(!top)].dataset.card}" with "${card.dataset.card}"`)
-                    return
-                }
+                if (!isCheaters && top && this.cannotBeat(card.dataset.card, this.gameCells[gameCell][Number(!top)].dataset.card)) return this.addMyCard(card, false)
 
-                if (top) gameApi.fight(this.room.id, gameCells[gameCell][Number(!top)].dataset.card, card.dataset.card)
+                if (top) gameApi.fight(this.room.id, this.gameCells[gameCell][Number(!top)].dataset.card, card.dataset.card)
                 gameApi.discard(card.dataset.card, this.room.id)
             }
-            gameCells[gameCell][Number(top)] = card;
-            const [x, y] = gameCellPos()[gameCell];
+            this.gameCells[gameCell][Number(top)] = card;
+
+            const busy = this.gameCells.filter(c => c.length)
+            this.allBeaten = busy.length && busy.every(c => c.length == 2)
 
             if (discardIsMine) {
                 card.style.removeProperty('left')
                 card.style.removeProperty('top')
                 card.classList.remove('my-card')
-                mycards = mycards.filter(c => c.dataset.card != card.dataset.card)
+                this.mycards = this.mycards.filter(c => c.dataset.card != card.dataset.card)
             }
             card.style.width = '13vw'
             card.dataset.gameCell = gameCell
 
+            const [x, y] = this.gameCellPos()[gameCell];
             card.style.transform = `translate(${x + (top ? 25 : 0)}px, ${y + (top ? 5 : 0)}px)` + (top ? ` rotate(10deg)` : '')
             card.style.zIndex = top?5:3
 
-            gameCards.push(card)
-        }
-
-        document.getElementById('do_beat').addEventListener('click', endCards.bind(this))
-        function endCards() {
-            for (let card of gameCards) {
-                card.style.transform = `translate(${window.innerWidth}px, ${window.innerHeight / 2}px) rotate(${Math.random() * 360}deg)`
-                setTimeout(() => {
-                    card.src = document.querySelector('img[data-cardimg="b"]').src
-                }, 200)
-            }
-            gameCells = Array.from({ length: 5 }, () => [])
-            gameCards = []
+            this.gameCards.push(card)
         }
     }
 }
