@@ -51,6 +51,14 @@ export default new (class {
 		});
 	}
 
+    async takeFromTable(id, player) {
+        await (await this.api)({
+            method: 'GET',
+            url: '/api/game/take-from-table',
+            params: { id, player }
+        })
+    }
+
 	async beats(room_id, user_id) {
 		await (await this.api)({
 			method: 'GET',
