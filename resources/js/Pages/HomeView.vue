@@ -503,6 +503,19 @@ export default {
     },
     methods: {
         async createGame() {
+            if (this.selectMode === 2) {
+                const bank = this.getBank()[0]
+                if (this.user.coins < bank) {
+                    telegram.alert('У вас недостаточно средств, выберите другой диапазон ставок', true)
+                    return
+                }
+            } else {
+                const bank = this.getBank()[0]
+                if (this.user.cash < bank) {
+                    telegram.alert('У вас недостаточно средств, выберите другой диапазон ставок', true)
+                    return
+                }
+            }
             const room = await gameApi.createGame(this.getBank()[0], this.selectMode, (await telegram.profile()).id)
 
             if (Object.keys(room).includes('id')) {
@@ -540,6 +553,10 @@ export default {
                 }
             }
             const id = await gameApi.findRoomID(this.getBank(), this.selectMode, 2)
+            if (id === undefined) {
+                telegram.alert('В данный момент нет свободных комнат', true)
+                return
+            }
 
             this.redirect(`/play/${id}`)
         },
