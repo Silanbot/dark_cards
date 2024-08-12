@@ -202,7 +202,7 @@ class GameService implements GameContract
     public function beats(int $room, int $player): mixed
     {
         $room = Room::query()->find($room);
-        $beats = $room->get('beats');
+        $beats = $room->beats;
         if (!is_null($beats)) {
             if (!in_array($player, $beats->toArray())) {
                 $beats[] = $player;
