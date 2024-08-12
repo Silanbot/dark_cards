@@ -123,15 +123,13 @@ class GameService implements GameContract
     {
         $room = Room::query()->find($room);
         $table = $room->deck->get('table');
-        $playerCards = $table;
-
-        $room->deck->get('player')[$player][] = $playerCards;
-        unset($room->deck->get('table')[$player]);
+        $players = $room->deck->get('players');
+        $players[$player] = array_merge($players[$player], $table);
 
         $room->update([
             'deck' => [
                 'cards' => $room->deck->get('cards'),
-                'players' => $room->deck->get('players'),
+                'players' => $players,
                 'table' => [],
                 'trump' => last($room->deck->get('cards'))['suit'],
             ],
