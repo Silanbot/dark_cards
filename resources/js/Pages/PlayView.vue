@@ -465,7 +465,7 @@ export default {
                             }
                     return
                 case 'user_left_room':
-                    return document.querySelector(`div[data-id="${data.player}"]`).parentNode.remove()
+                    return document.querySelector(`div[data-player="${data.player}"]`).parentNode.remove()
                 case 'discard_card':
                     // for (let user of this.users) {
                     //     if (parseInt(Object.keys(data.players)[data.attacker_player_index]) === user.id) {
