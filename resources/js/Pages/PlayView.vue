@@ -125,7 +125,8 @@ import modalDialog from './components/modalDialog.vue'
             </div>
             <div class="inter__monet inter__monet_right">
                 <span>{{ room.bank }}</span>
-                <img src="./sources/coin2.svg" alt=""/>
+                <img src="./sources/coin2.svg" alt="" v-if="room.game_type == 2"/>
+                <img src="./sources/coin1.svg" alt="" v-else />
             </div>
         </div>
         <div class="inter__inner el-2 blured">
