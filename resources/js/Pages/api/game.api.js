@@ -11,6 +11,14 @@ export default new (class {
 		});
 	}
 
+    async leave(user_id, room) {
+        await (await this.api)({
+            method: 'GET',
+            url: '/api/game/leave',
+            params: {id: room, user_id: user_id}
+        })
+    }
+
 	async fight(room_id, card, fight_card) {
 		await (await this.api)({
 			method: 'GET',

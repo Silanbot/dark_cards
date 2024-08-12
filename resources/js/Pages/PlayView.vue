@@ -375,11 +375,15 @@ export default {
         }
     },
     async mounted() {
-        window.Telegram.WebApp.BackButton.onClick(() => telegram.confirm('Ты действительно хочешь выйти из комнаты?', () => location.replace('/home')))
         telegram.showBackButton()
         const profile = await telegram.profile()
         const token = await api.generateConnectionToken(profile.id)
         this.user = await api.profile(profile.id, profile.username)
+
+        window.Telegram.WebApp.BackButton.onClick(() => telegram.confirm('Ты действительно хочешь выйти из комнаты?', async () => {
+            await gameApi.leave(this.user.id, this.room.id)
+            location.replace('/home')
+        }))
 
         this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })
         this.centrifugo.on('connected', async () => {
