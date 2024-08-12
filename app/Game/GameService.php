@@ -203,16 +203,13 @@ class GameService implements GameContract
     {
         $room = Room::query()->find($room);
         $beats = $room->beats;
-        if (!is_null($beats)) {
-            if (!in_array($player, $beats->toArray())) {
-                $beats[] = $player;
-            } else {
-                return 0;
-            }
+        if ($beats->contains($player)) {
+            return 0;
         }
+        $beats->push($player);
         $room->update(['beats' => $beats]);
 
-        if (count($beats) >= $room->max_players) {
+        if ($beats->count() >= $room->max_players) {
             $room->update([
                 'deck' => [
                     'cards' => $room->deck->get('cards'),
@@ -220,6 +217,7 @@ class GameService implements GameContract
                     'table' => [],
                     'trump' => last($room->deck->get('cards'))['suit'],
                 ],
+                'beats' => [],
             ]);
 
             return $this->centrifugo->publish('room', [
