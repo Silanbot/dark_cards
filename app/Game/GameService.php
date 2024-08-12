@@ -204,7 +204,7 @@ class GameService implements GameContract
         $room = Room::query()->find($room);
         $beats = $room->get('beats');
         if (!is_null($beats)) {
-            if (!in_array($player, $beats)) {
+            if (!in_array($player, $beats->toArray())) {
                 $beats[] = $player;
             } else {
                 return 0;
