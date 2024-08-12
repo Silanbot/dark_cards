@@ -203,7 +203,7 @@ class GameService implements GameContract
     {
         $room = Room::query()->find($room);
         $beats = $room->beats;
-        if ($beats->contains($player)) {
+        if (!is_null($beats) && $beats->contains($player)) {
             return 0;
         }
         $beats->push($player);
