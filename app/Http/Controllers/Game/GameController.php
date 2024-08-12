@@ -37,7 +37,7 @@ class GameController extends Controller
             ->first();
 
         return [
-            'room_id' => $room->id,
+            'room_id' => $room?->id,
         ];
     }
 

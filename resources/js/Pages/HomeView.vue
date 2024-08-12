@@ -553,7 +553,7 @@ export default {
                 }
             }
             const id = await gameApi.findRoomID(this.getBank(), this.selectMode, 2)
-            if (id === undefined) {
+            if (id === undefined || id === null) {
                 telegram.alert('В данный момент нет свободных комнат', true)
                 return
             }
