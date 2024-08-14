@@ -718,7 +718,23 @@ export default {
 
             const gameCell = this.gameCells.findIndex(c => c.length < 2 && (c.length == 0 || c[0].dataset.player != card.dataset.player));
 
-            if (gameCell == -1 && !discardIsMine) return
+            if (gameCell == -1)
+                if (!discardIsMine) return
+                else {
+                    const a = [...document.querySelectorAll('.win__amount')]
+                    // const b = a[~~(Math.random() * a.length)]
+                    const b = a.find(e => !e.parentElement.dataset.player)
+                    b.classList.add('visible')
+                    setTimeout(() => b.classList.remove('visible'), 3000)
+                    if (!b.parentElement.dataset.player) setTimeout(() => window.Telegram.WebApp.showAlert(`Ты выиграл: ${100}!`), 3000)
+
+                    for (const cell of gameCells)
+                        for (const card of cell) {
+                            card.dataset.player = profile.id;
+                            this.addMyCard(card, card.dataset.player != profile.id)
+                        }
+                    return this.addMyCard(card, false)
+                }
             const top = this.gameCells[gameCell].length != 0;
 
             if (discardIsMine) {
