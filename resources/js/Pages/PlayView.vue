@@ -244,7 +244,7 @@ import modalDialog from './components/modalDialog.vue'
                     <div class="footer__person__img">
                         <img :src="user.avatar" alt=""/>
                         <div class="text">
-                            <img src="./sources/level-6.png" alt=""/>
+<!--                            <img src="./sources/level-6.png" alt=""/>-->
                         </div>
                     </div>
                     <div class="footer__person__name">{{ user.username }}</div>

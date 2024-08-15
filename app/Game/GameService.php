@@ -119,8 +119,12 @@ class GameService implements GameContract
             $table = $room->deck->get('table');
             $players = $room->deck->get('players');
             $c = array_search($fightCard, $players[$user]);
+            info("card index - $c");
             $table[] = $fightCard;
+            info("players start - $players");
+            info("table - $table");
             unset($players[$user][$c]);
+            info("players - $players");
 
             $room->update([
                 'deck' => [
@@ -136,6 +140,8 @@ class GameService implements GameContract
             return (bool) $this->centrifugo->publish('room', [
                 'event' => 'game_beat',
                 'status' => true,
+                'attacker_player_index' => $room->opponent_player_index,
+                'opponent_player_index' => $room->attacker_player_index,
             ]);
         }
 
