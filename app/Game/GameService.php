@@ -7,6 +7,7 @@ namespace App\Game;
 use App\Contracts\Game\GameContract;
 use App\Models\Room;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use phpcent\Client;
 
 class GameService implements GameContract
@@ -101,8 +102,9 @@ class GameService implements GameContract
         return $winners;
     }
 
-    public function beat(string $fightCard, string $card, Model $room): bool
+    public function beat(string $fightCard, string $card, int $room): bool
     {
+        $room = Room::query()->find($room);
         $fightCard = Card::build($fightCard);
         $card = Card::build($card);
         if ($fightCard->isHigherThan($card, $room->deck->get('trump'), '6') && blank($room->deck->get('deck')) && blank($room->deck->get('players')[auth()->id()])) {

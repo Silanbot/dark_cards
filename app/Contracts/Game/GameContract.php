@@ -3,6 +3,7 @@
 namespace App\Contracts\Game;
 
 use App\Game\Card;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 interface GameContract
@@ -21,7 +22,7 @@ interface GameContract
      *
      * @return bool Можно ли побить карту
      */
-    public function beat(string $fightCard, string $card, Model $room): bool;
+    public function beat(string $fightCard, string $card, int $room): bool;
 
     /**
      * Взять карты со стола
