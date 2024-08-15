@@ -121,10 +121,10 @@ class GameService implements GameContract
             $c = array_search($fightCard, $players[$user]);
             info("card index - $c");
             $table[] = $fightCard;
-            info("players start - $players");
-            info("table - $table");
+            info("players start - " . json_encode($players));
+            info("table - " . json_encode($table));
             unset($players[$user][$c]);
-            info("players - $players");
+            info("players - " . json_encode($players));
 
             $room->update([
                 'deck' => [
