@@ -39,6 +39,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     Route::get('/join-by-password', ConnectController::class);
-
-    require 'game.php';
 });
+
+require 'game.php';
