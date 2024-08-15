@@ -115,9 +115,33 @@ class GameService implements GameContract
             ]);
         }
 
+        if ($fightCard->isHigherThan($card, $room->deck->get('trump'), '6')) {
+            $table = $room->deck->get('table');
+            $players = $room->deck->get('players');
+            $c = array_search($fightCard, $players[$user]);
+            $table[] = $fightCard;
+            unset($players[$user][$c]);
+
+            $room->update([
+                'deck' => [
+                    'cards' => $room->deck->get('cards'),
+                    'players' => $players,
+                    'table' => $table,
+                    'trump' => last($room->deck->get('cards'))['suit'],
+                ],
+                'attacker_player_index' => $room->opponent_player_index,
+                'opponent_player_index' => $room->attacker_player_index,
+            ]);
+
+            return (bool) $this->centrifugo->publish('room', [
+                'event' => 'game_beat',
+                'status' => true,
+            ]);
+        }
+
         return (bool) $this->centrifugo->publish('room', [
             'event' => 'game_beat',
-            'status' => $fightCard->isHigherThan($card, $room->deck->get('trump'), '6'),
+            'status' => false,
         ]);
     }
 
