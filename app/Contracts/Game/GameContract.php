@@ -22,7 +22,7 @@ interface GameContract
      *
      * @return bool Можно ли побить карту
      */
-    public function beat(string $fightCard, string $card, int $room): bool;
+    public function beat(string $fightCard, string $card, int $room, int $user): bool;
 
     /**
      * Взять карты со стола

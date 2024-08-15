@@ -102,15 +102,15 @@ class GameService implements GameContract
         return $winners;
     }
 
-    public function beat(string $fightCard, string $card, int $room): bool
+    public function beat(string $fightCard, string $card, int $room, int $user): bool
     {
         $room = Room::query()->find($room);
         $fightCard = Card::build($fightCard);
         $card = Card::build($card);
-        if ($fightCard->isHigherThan($card, $room->deck->get('trump'), '6') && blank($room->deck->get('deck')) && blank($room->deck->get('players')[auth()->id()])) {
+        if ($fightCard->isHigherThan($card, $room->deck->get('trump'), '6') && blank($room->deck->get('deck')) && blank($room->deck->get('players')[$user])) {
             return (bool) $this->centrifugo->publish('room', [
                 'event' => 'user_win',
-                'user_id' => auth()->id(),
+                'user_id' => $user,
                 'winners' => $this->calculateWinnerAmount($room),
             ]);
         }

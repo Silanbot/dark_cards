@@ -19,11 +19,11 @@ export default new (class {
         })
     }
 
-	async fight(room_id, card, fight_card) {
+	async fight(room_id, card, fight_card, user_id) {
 		await (await this.api)({
 			method: 'GET',
 			url: `/api/game/fight`,
-			params: { room_id, card, fight_card }
+			params: { room_id, card, fight_card, user_id }
 		});
 	}
 
