@@ -108,7 +108,8 @@ class GameService implements GameContract
         $room = Room::query()->find($room);
         $fightCard = Card::build($fightCard);
         $card = Card::build($card);
-        if ($fightCard->isHigherThan($card, $room->deck->get('trump'), '6') && blank($room->deck->get('deck')) && blank($room->deck->get('players')[$user])) {
+        $trump = $room->deck->get('trump');
+        if ($fightCard->isHigherThan($card, $trump, '6') && blank($room->deck->get('deck')) && blank($room->deck->get('players')[$user])) {
             return (bool) $this->centrifugo->publish('room', [
                 'event' => 'user_win',
                 'user_id' => $user,

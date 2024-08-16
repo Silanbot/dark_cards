@@ -52,10 +52,10 @@ final readonly class Card implements CardContract
     {
         $rank = $card[0] === '1' ? '10' : $card[0];
         switch ($card[1]) {
-            case 's': return new self('Spades', $rank);
-            case 'd': return new self('Diamonds', $rank);
-            case 'h': return new self('Hearts', $rank);
-            case 'c': return new self('Clubs', $rank);
+            case 's': return new self('Spades', strtoupper($rank));
+            case 'd': return new self('Diamonds', strtoupper($rank));
+            case 'h': return new self('Hearts', strtoupper($rank));
+            case 'c': return new self('Clubs', strtoupper($rank));
         }
     }
 }
