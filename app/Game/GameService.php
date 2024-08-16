@@ -8,6 +8,7 @@ use App\Contracts\Game\GameContract;
 use App\Models\Room;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use phpcent\Client;
 
 class GameService implements GameContract
@@ -119,12 +120,12 @@ class GameService implements GameContract
             $table = $room->deck->get('table');
             $players = $room->deck->get('players');
             $c = array_search($fightCard, $players[$user]);
-            info("card index - $c");
+            Log::info("card index - $c");
             $table[] = $fightCard;
-            info("players start - " . json_encode($players));
-            info("table - " . json_encode($table));
+            Log::info("players start - " . json_encode($players));
+            Log::info("table - " . json_encode($table));
             unset($players[$user][$c]);
-            info("players - " . json_encode($players));
+            Log::info("players - " . json_encode($players));
 
             $room->update([
                 'deck' => [
