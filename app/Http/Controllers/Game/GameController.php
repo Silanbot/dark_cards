@@ -135,7 +135,7 @@ class GameController extends Controller
 
     public function discardCard(Request $request): void
     {
-        $this->contract->discardCard(Card::build($request->card), $request->room_id);
+        $this->contract->discardCard(Card::build($request->card), $request->room_id, $request->user_id);
     }
 
     public function beats(Request $request): void

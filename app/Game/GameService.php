@@ -120,9 +120,9 @@ class GameService implements GameContract
         if ($fightCard->isHigherThan($card, $room->deck->get('trump'), '6')) {
             $table = $room->deck->get('table');
             $players = $room->deck->get('players');
-            $c = array_search($fightCard, $players[$user]);
+            $c = array_search(strtolower($fightCard->toString()), $players[$user]);
             Log::info("card index - $c");
-            $table[] = $fightCard;
+            $table[] = $fightCard->toString();
             Log::info("players start - " . json_encode($players));
             Log::info("table - " . json_encode($table));
             unset($players[$user][$c]);
@@ -175,11 +175,25 @@ class GameService implements GameContract
         ]);
     }
 
-    public function discardCard(Card $card, int $room): void
+    public function discardCard(Card $card, int $room, int $player): void
     {
         $room = Room::query()->find($room);
         $table = $room->deck->get('table');
         $table[] = $card->toString();
+        $players = $room->deck->get('players');
+        $index = array_search(strtolower($card->toString()), $players[$player]);
+        unset($players[$player][$index]);
+
+        $room->update([
+            'deck' => [
+                'cards' => $room->deck->get('cards'),
+                'players' => $players,
+                'table' => $table,
+                'trump' => last($room->deck->get('cards'))['suit'],
+            ],
+            'attacker_player_index' => $room->opponent_player_index,
+            'opponent_player_index' => $room->attacker_player_index,
+        ]);
         $room->update([
             'deck' => [
                 'cards' => $room->deck->get('cards'),
@@ -188,15 +202,14 @@ class GameService implements GameContract
                 'trump' => last($room->deck->get('cards'))['suit'],
             ],
             'attacker_player_index' => $room->opponent_player_index,
-//            'opponent_player_index' => $room->attacker_player_index,
-//            'current_player_index' => $room->attacker_player_index
+            'opponent_player_index' => $room->attacker_player_index,
         ]);
 
         $this->centrifugo->publish('room', [
             'event' => 'discard_card',
             'deck' => $room->deck,
-//            'attacker_player_index' => $room->attacker_player_index,
-//            'opponent_player_index' => $room->opponent_player_index,
+            'attacker_player_index' => $room->opponent_player_index,
+            'opponent_player_index' => $room->attacker_player_index,
         ]);
     }
 
