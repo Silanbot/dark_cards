@@ -187,18 +187,8 @@ class GameService implements GameContract
         $room->update([
             'deck' => [
                 'cards' => $room->deck->get('cards'),
-                'players' => $players,
                 'table' => $table,
-                'trump' => last($room->deck->get('cards'))['suit'],
-            ],
-            'attacker_player_index' => $room->opponent_player_index,
-            'opponent_player_index' => $room->attacker_player_index,
-        ]);
-        $room->update([
-            'deck' => [
-                'cards' => $room->deck->get('cards'),
-                'table' => $table,
-                'players' => $room->deck->get('players'),
+                'players' => (array) $players,
                 'trump' => last($room->deck->get('cards'))['suit'],
             ],
             'attacker_player_index' => $room->opponent_player_index,
