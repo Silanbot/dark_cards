@@ -121,12 +121,9 @@ class GameService implements GameContract
             $table = $room->deck->get('table');
             $players = $room->deck->get('players');
             $c = array_search(strtolower($fightCard->toString()), $players[$user]);
-            Log::info("card index - $c");
             $table[] = $fightCard->toString();
-            Log::info("players start - " . json_encode($players));
-            Log::info("table - " . json_encode($table));
             unset($players[$user][$c]);
-            Log::info("players - " . json_encode($players));
+            $players[$user] = array_values($players[$user]);
 
             $room->update([
                 'deck' => [
@@ -183,12 +180,12 @@ class GameService implements GameContract
         $players = $room->deck->get('players');
         $index = array_search(strtolower($card->toString()), $players[$player]);
         unset($players[$player][$index]);
-
+        $players[$player] = array_values($players[$player]);
         $room->update([
             'deck' => [
                 'cards' => $room->deck->get('cards'),
                 'table' => $table,
-                'players' => (array) $players,
+                'players' => $players,
                 'trump' => last($room->deck->get('cards'))['suit'],
             ],
             'attacker_player_index' => $room->opponent_player_index,
