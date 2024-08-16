@@ -726,7 +726,7 @@ export default {
                 if (!isCheaters && top && this.cannotBeat(card.dataset.card, this.gameCells[gameCell][Number(!top)].dataset.card)) return this.addMyCard(card, false)
 
                 if (top) gameApi.fight(this.room.id, this.gameCells[gameCell][Number(!top)].dataset.card, card.dataset.card, this.user.id)
-                gameApi.discard(card.dataset.card, this.room.id)
+                gameApi.discard(card.dataset.card, this.room.id, this.user.id)
             }
             this.gameCells[gameCell][Number(top)] = card;
 
