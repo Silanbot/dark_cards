@@ -541,12 +541,14 @@ export default {
         async findRoom() {
             if (this.selectMode === 2) {
                 const bank = this.getBank()[0]
+                console.log('coins', bank, this.user.coins)
                 if (this.user.coins < bank) {
                     telegram.alert('У вас недостаточно средств, выберите другой диапазон ставок', true)
                     return
                 }
             } else {
                 const bank = this.getBank()[0]
+                console.log('cash', bank, this.user.cash)
                 if (this.user.cash < bank) {
                     telegram.alert('У вас недостаточно средств, выберите другой диапазон ставок', true)
                     return
@@ -568,13 +570,11 @@ export default {
 
             const match = str.match(/^(\d+(?:\.\d+)?)([мк]?)$/);
             if (match) {
-                const num = parseInt(match[1]);
+                const num = parseFloat(match[1]);
                 const unit = match[2];
                 if (unit in conversionMap) {
-                    console.log(this.user, num * (unit === 'м' ? 1000000 : 1000))
                     return num * (unit === 'м' ? 1000000 : 1000);
                 } else {
-                    console.log(this.user, num)
                     return num;
                 }
             } else {
