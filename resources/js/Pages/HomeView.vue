@@ -533,10 +533,12 @@ export default {
         changeCoins() {
             telegram.switchSelectFeedback()
             this.selectMode = 2
+            localStorage.setItem('selectMode', '2')
         },
         changeCash() {
             telegram.switchSelectFeedback()
             this.selectMode = 1
+            localStorage.setItem('selectMode', '1')
         },
         async findRoom() {
             if (this.selectMode === 2) {
