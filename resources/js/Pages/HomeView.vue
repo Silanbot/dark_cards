@@ -571,8 +571,10 @@ export default {
                 const num = parseFloat(match[1]);
                 const unit = match[2];
                 if (unit in conversionMap) {
+                    console.log(this.user, num * (unit === 'м' ? 1000000 : 1000))
                     return num * (unit === 'м' ? 1000000 : 1000);
                 } else {
+                    console.log(this.user, num)
                     return num;
                 }
             } else {
