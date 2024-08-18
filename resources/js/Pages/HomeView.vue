@@ -568,7 +568,7 @@ export default {
 
             const match = str.match(/^(\d+(?:\.\d+)?)([мк]?)$/);
             if (match) {
-                const num = parseFloat(match[1]);
+                const num = parseInt(match[1]);
                 const unit = match[2];
                 if (unit in conversionMap) {
                     console.log(this.user, num * (unit === 'м' ? 1000000 : 1000))
@@ -584,7 +584,7 @@ export default {
         getBank() {
             const values = this.selectMode ? this.cash : this.coins;
             const [min, max] = values.split(' - ').map(this.convertStringToNumber);
-
+            console.log([min, max])
             return [min, max];
         },
         redirect(route) {
