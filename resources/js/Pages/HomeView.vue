@@ -541,14 +541,14 @@ export default {
             localStorage.setItem('selectMode', '1')
         },
         async findRoom() {
-            if (this.selectMode === 2) {
+            if (this.selectMode === 2) { // coins
                 const bank = this.getBank()[0]
                 console.log('coins', bank, this.user.coins)
                 if (this.user.coins < bank) {
                     telegram.alert('У вас недостаточно средств, выберите другой диапазон ставок', true)
                     return
                 }
-            } else {
+            } else { // cash
                 const bank = this.getBank()[0]
                 console.log('cash', bank, this.user.cash)
                 if (this.user.cash < bank) {
@@ -588,7 +588,7 @@ export default {
             }
         },
         getBank() {
-            const values = this.selectMode ? this.cash : this.coins;
+            const values = localStorage.getItem('selectMode')  === '1' ? this.cash : this.coins;
             const [min, max] = values.split(' - ').map(this.convertStringToNumber);
             console.log([min, max])
             return [min, max];
