@@ -541,7 +541,7 @@ export default {
             localStorage.setItem('selectMode', '1')
         },
         async findRoom() {
-            if (this.selectMode === 2) { // coins
+            if (localStorage.getItem('selectMode') === '2') { // coins
                 const bank = this.getBank()[0]
                 console.log('coins', bank, this.user.coins)
                 if (this.user.coins < bank) {
