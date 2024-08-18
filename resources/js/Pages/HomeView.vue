@@ -569,12 +569,16 @@ export default {
             };
 
             const match = str.match(/^(\d+(?:\.\d+)?)([мк]?)$/);
+            console.log('convert', str, match)
             if (match) {
                 const num = parseFloat(match[1]);
                 const unit = match[2];
+                console.log('unit', unit)
                 if (unit in conversionMap) {
+                    console.log('in conversion map', unit)
                     return num * (unit === 'м' ? 1000000 : 1000);
                 } else {
+                    console.log('not in conversionMap', num)
                     return num;
                 }
             } else {
