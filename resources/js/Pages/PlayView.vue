@@ -399,6 +399,22 @@ export default {
                 ? this.cardValues[a[0]] < this.cardValues[b[0]]
                 : a[1] != document.querySelector('.game__cart__cold__carts__second').dataset.card[1]
         },
+        updateAttacker(data) {
+            const attackerId = Object.keys(data.players)[data.attacker_player_index]
+
+            this.myTurn = profile.id == attackerId;
+
+            for (let { id: userId } of this.users) {
+                const userElem = document.querySelectorAll(`div.game__players__player__photo[data-player="${userId}"]`)[0]
+                if (userId == attackerId) {
+                    userElem.classList.add('attacker')
+                    userElem.classList.remove('opponent')
+                } else {
+                    userElem.classList.add('opponent')
+                    userElem.classList.remove('attacker')
+                }
+            }
+        },
         addMyCard(card, addElement = true) {
             card.style.removeProperty('z-index')
             card.style.width = '30vw'
@@ -519,29 +535,12 @@ export default {
         let countElem = document.querySelector('.game__cart__cold__count')
         let count = parseInt(countElem.innerHTML)
 
-        const updateAttacker = data => {
-            const attackerId = Object.keys(data.players)[data.attacker_player_index]
-
-            this.myTurn = profile.id == attackerId;
-
-            for (let { id: userId } of this.users) {
-                const userElem = document.querySelectorAll(`div.game__players__player__photo[data-player="${userId}"]`)[0]
-                if (userId == attackerId) {
-                    userElem.classList.add('attacker')
-                    userElem.classList.remove('opponent')
-                } else {
-                    userElem.classList.add('opponent')
-                    userElem.classList.remove('attacker')
-                }
-            }
-        }
-
         sub.on('publication', async ({ data }) => {
             console.log(data.event, data)
             switch (data.event) {
                 case 'game_started':
                     this.started = true
-                    updateAttacker(data)
+                    this.updateAttacker(data)
                     setTrumpCard(data.deck.at(-1))
                     for (const [player, cards] of Object.entries(data.players))
                         (async () => {
@@ -580,6 +579,7 @@ export default {
                     return document.querySelector('#cards').removeChild(cardd)
                 case 'beats':
                     if (!this.gameCells.flat().length) return
+                    this.updateAttacker(data);
                     this.beatsStarted = false;
                     return this.endCards(data)
                 case 'beats_start':
