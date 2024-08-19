@@ -231,7 +231,7 @@ import modalDialog from './components/modalDialog.vue'
                     <div class="footer__button" @click="setReadyState" v-else>Не готов</div>
                 </template>
                 <template v-else>
-                    <div class="footer__button" @click="startFinishBeat"       v-if="allBeaten && (!myTurn || beatsStarted)">Бито</div>
+                    <div class="footer__button" @click="startFinishBeat"       v-if="gameCells.filter(c => c.length).length && gameCells.filter(c => c.length).every(c => c.length == 2) && (!myTurn || beatsStarted)">Бито</div>
                     <div class="footer__button"                                v-else-if="myTurn">Ваш ход</div>
                     <div class="footer__button" @click="() => takeFromTable()" v-else :style="{ visibility: gameCells.every(c => !c.length) ? 'hidden' : undefined }">Взять</div>
                 </template>
@@ -580,6 +580,7 @@ export default {
                     return document.querySelector('#cards').removeChild(cardd)
                 case 'beats':
                     if (!this.gameCells.flat().length) return
+                    this.beatsStarted = false;
                     return this.endCards(data)
                 case 'beats_start':
                     this.beatsStarted = true;
@@ -729,9 +730,6 @@ export default {
                 gameApi.discard(card.dataset.card, this.room.id, this.user.id)
             }
             this.gameCells[gameCell][Number(top)] = card;
-
-            const busy = this.gameCells.filter(c => c.length)
-            this.allBeaten = busy.length && busy.every(c => c.length == 2)
 
             if (discardIsMine) {
                 card.style.removeProperty('left')
