@@ -688,7 +688,6 @@ export default {
 
         function discardCard(card) {
             const discardIsMine = card.dataset.player == profile.id
-
             if (!discardIsMine) {
                 const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
                 if (!player) return console.error(`opponent player ${card.dataset.player} not found to give card`);
@@ -700,7 +699,6 @@ export default {
             }
 
             const gameCell = this.gameCells.findIndex(c => c.length < 2 && (c.length == 0 || c[0].dataset.player != card.dataset.player));
-
             if (gameCell == -1)
                 if (!discardIsMine) return
                 else {
@@ -720,8 +718,8 @@ export default {
                     }
                     return this.addMyCard(card, false)
                 }
-            const top = this.gameCells[gameCell].length != 0;
 
+            const top = this.gameCells[gameCell].length != 0;
             if (discardIsMine) {
                 const isCheaters = localStorage.getItem('params')?.split(',').includes('cheaters') ?? false;
                 if (!isCheaters && top && this.cannotBeat(card.dataset.card, this.gameCells[gameCell][Number(!top)].dataset.card)) return this.addMyCard(card, false)
