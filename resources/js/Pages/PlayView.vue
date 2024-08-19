@@ -452,6 +452,7 @@ export default {
                     this.addMyCard(card, false)
                 }
                 await gameApi.takeFromTable(this.room.id, profile.id)
+                await gameApi.takeFromDeck(this.room.id, profile.id, 6 - [...document.querySelectorAll('img.my-card')].length)
             } else {
                 const cardTable = this.gameCells.flat().find(c => c.dataset.player == profile.id)?.dataset.card
                 if (!cardTable) return
@@ -501,8 +502,8 @@ export default {
                 }, 200)
             }
             this.gameCells = Array.from({ length: 5 }, () => [])
-            updateAttacker(data)
-            await gameApi.takeFromDeck(this.room.id, profile.id, 1)
+            this.updateAttacker(data)
+            await gameApi.takeFromDeck(this.room.id, (await telegram.profile()).id, 6 - [...document.querySelectorAll('img.my-card')].length)
         }
     },
     async mounted() {
@@ -555,7 +556,8 @@ export default {
                     if (this.users.findIndex(u => u.id == data.user.id) !== -1) return
                     return this.users.push(data.user)
                 case 'player_take_card':
-                    return giveCard(data.player, data.card)
+                    for (const card of data.cards) giveCard(data.player, card)
+                    return
                 case 'player_take_table':
                     return this.takeFromTable(data)
                 case 'user_left_room':
