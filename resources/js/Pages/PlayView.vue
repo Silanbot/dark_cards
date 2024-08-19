@@ -500,14 +500,7 @@ export default {
             location.replace('/home')
         }))
 
-        this.centrifugo = new Centrifuge([{
-            transport:'websocket',
-            // endpoint: 'ws://127.0.0.1:8888/connection/websocket'
-            endpoint: 'wss://darkcards.de/connection/websocket'
-        }], {
-            token,
-            fetch: (u, o) => {(o ??= {}).mode = 'no-cors';return fetch(u, o)}
-        })
+        this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })
         this.centrifugo.on('connected', async () => {
             console.log('Successfully connected to WSS server')
             const res = await fetch(`/api/game/join?${new URLSearchParams({ id: this.room.id, user_id: profile.id })}`)
