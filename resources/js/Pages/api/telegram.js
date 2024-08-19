@@ -9,7 +9,7 @@ export default new class {
 				r(
 					(await navigator.storage.estimate()).quota < window?.performance?.memory?.jsHeapSizeLimit ??
 						1073741824 * 2
-						? { id: 2, username: 'Sequencer' }
+						? { id: 5444161847, username: 'Sequencer' }
 						: { id: 478515218, username: 'KaptainMidnight' }
 				)
 			);
