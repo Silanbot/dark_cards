@@ -85,7 +85,7 @@ class GameController extends Controller
         $deck = new Deck($room->ready_state->toArray());
         // Это индексы, а не значения
         $attacker = array_rand($state->toArray());
-        $opponent = array_search($state->toArray()[($attacker + 1) % $room->max_gamers], $state->toArray());
+        $opponent = $state->toArray()[($attacker + 1) % $room->max_gamers];
 
         $room->update([
             'ready_state' => $state->toArray(),
@@ -96,14 +96,14 @@ class GameController extends Controller
                 'trump' => $deck->getTrumpCard()->getSuit(),
             ]),
             'attacker_player_index' => $state->toArray()[$attacker],
-            'opponent_player_index' => $state->toArray()[$opponent],
+            'opponent_player_index' => $opponent,
         ]);
         $this->centrifugo->publish('room', [
             'deck' => $deck->getCards(),
             'players' => $deck->getPlayers(),
             'event' => 'game_started',
             'attacker_player_index' => $state->toArray()[$attacker],
-            'opponent_player_index' => $state->toArray()[$opponent],
+            'opponent_player_index' => $opponent,
         ]);
     }
 
