@@ -485,8 +485,6 @@
     </section>
 </template>
 <script>
-import axios from "axios";
-
 import telegram from "./api/telegram.js";
 import api from './api/users.api.js'
 import gameApi from "./api/game.api.js";

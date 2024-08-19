@@ -516,8 +516,8 @@ export default {
 
         this.centrifugo = new Centrifuge([{
             transport:'websocket',
-            endpoint: 'ws://127.0.0.1:8888/connection/websocket'
-            // endpoint: 'wss://darkcards.de/connection/websocket'
+            // endpoint: 'ws://127.0.0.1:8888/connection/websocket'
+            endpoint: 'wss://darkcards.de/connection/websocket'
         }], {
             token,
             fetch: (u, o) => {(o ??= {}).mode = 'no-cors';return fetch(u, o)}
