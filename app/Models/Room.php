@@ -37,7 +37,7 @@ class Room extends Model
         'mode',
         'attacker_player_index',
         'opponent_player_index',
-        'beats'
+        'beats',
     ];
 
     public function user(): BelongsTo

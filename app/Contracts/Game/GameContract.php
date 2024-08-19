@@ -3,8 +3,6 @@
 namespace App\Contracts\Game;
 
 use App\Game\Card;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 
 interface GameContract
 {
@@ -13,7 +11,7 @@ interface GameContract
      *
      * @param  int  $id  ID комнаты
      * @param  int  $player  ID игрока
-     * @param int $count Количество карт которые надо взять из колоды
+     * @param  int  $count  Количество карт которые надо взять из колоды
      */
     public function takeFromDeck(int $id, int $player, int $count): array;
 

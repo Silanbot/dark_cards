@@ -7,8 +7,6 @@ namespace App\Game;
 use App\Contracts\Game\GameContract;
 use App\Models\Room;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use phpcent\Client;
 
 class GameService implements GameContract
@@ -22,13 +20,20 @@ class GameService implements GameContract
 
     private function formatCard(array $card): string
     {
-        return strtolower($card['rank'].$card['suit'][0]);
+        return strtolower($card['rank'] === '10' ? '1' : $card['rank'].$card['suit'][0]);
     }
 
     public function takeFromDeck(int $id, int $player, int $count): array
     {
         $room = Room::query()->find($id);
         $cards = $room->deck->get('cards');
+        if ($count <= 0) {
+            $this->centrifugo->publish('room', [
+                'cards' => [],
+                'event' => 'player_take_card',
+                'player' => $player,
+            ]);
+        }
         if (count($cards) < $count) {
             $count = count($cards);
         }
@@ -216,7 +221,7 @@ class GameService implements GameContract
         $id = array_search($player, $joinState);
         unset($joinState[$id]);
         $room->update([
-            'join_state' => $joinState
+            'join_state' => $joinState,
         ]);
         $this->centrifugo->publish('room', [
             'event' => 'user_left_room',
