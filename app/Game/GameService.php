@@ -20,26 +20,35 @@ class GameService implements GameContract
         $this->centrifugo = $centrifugo;
     }
 
+    private function formatCard(array $card): string
+    {
+        return strtolower($card['rank'].$card['suit'][0]);
+    }
+
     public function takeFromDeck(int $id, int $player, int $count): array
     {
         $room = Room::query()->find($id);
+        $cards = $room->deck->get('cards');
+        if (count($cards) < $count) {
+            $count = count($cards);
+        }
+        $playerTakeCards = array_slice($cards, 0, $count, true);
 
-        $card = $room->deck->get('cards')[0];
         $playerCards = $room->deck->get('players')[$player];
-        $playerCards[] = strtolower($card['rank'].$card['suit'][0]);
+        foreach ($playerTakeCards as $key => $card) {
+            $playerCards[] = $this->formatCard($card);
+            unset($cards[$key]);
+        }
         $players = $room->deck->get('players');
         $players[$player] = $playerCards;
-        $card = strtolower($card['rank'].$card['suit'][0]);
         $this->centrifugo->publish('room', [
-            'card' => $card,
+            'cards' => array_map(fn ($card) => $this->formatCard($card), $playerTakeCards),
             'event' => 'player_take_card',
             'player' => $player,
         ]);
-
-        unset($room->deck->get('cards')[0]);
         $room->update([
             'deck' => collect([
-                'cards' => $room->deck->get('cards'),
+                'cards' => array_values($cards),
                 'players' => $players,
                 'table' => [],
                 'trump' => last($room->deck->get('cards'))['suit'],
