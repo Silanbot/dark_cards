@@ -399,20 +399,15 @@ export default {
                 ? this.cardValues[a[0]] < this.cardValues[b[0]]
                 : a[1] != document.querySelector('.game__cart__cold__carts__second').dataset.card[1]
         },
-        updateAttacker(data) {
-            const attackerId = Object.keys(data.players)[data.attacker_player_index]
-
-            this.myTurn = profile.id == attackerId;
+        async updateAttacker(data) {
+            this.myTurn = (await telegram.profile()).id == data.attacker_player_index;
 
             for (let { id: userId } of this.users) {
                 const userElem = document.querySelectorAll(`div.game__players__player__photo[data-player="${userId}"]`)[0]
-                if (userId == attackerId) {
-                    userElem.classList.add('attacker')
-                    userElem.classList.remove('opponent')
-                } else {
-                    userElem.classList.add('opponent')
-                    userElem.classList.remove('attacker')
-                }
+                userElem.classList.remove('opponent')
+                userElem.classList.remove('attacker')
+                if      (userId == data.attacker_player_index) userElem.classList.add('attacker')
+                else if (userId == data.opponent_player_index) userElem.classList.add('opponent')
             }
         },
         addMyCard(card, addElement = true) {
