@@ -224,10 +224,7 @@ import modalDialog from './components/modalDialog.vue'
                   </div>
               </div> -->
         </div>
-        <div id="mycards">
-
-        </div>
-        <footer class="footer" style="z-index: 2">
+        <footer class="footer" style="z-index: 100">
             <div class="footer__inner footer__inner_play">
                 <template v-if="!started">
                     <div class="footer__button" @click="setReadyState" v-if="!ready">Готов</div>
@@ -374,8 +371,6 @@ export default {
                 s: 1, c: 2, h: 3, d: 4, j: 5
             },
 
-            mycards: [],
-
             gameCells: Array.from({ length: 5 }, () => []),
             gameCellPos: () => {
                 const [x, y] = [window.innerWidth / 2, window.innerHeight / 2];
@@ -424,32 +419,24 @@ export default {
                 delete card.dataset.gameCell;
             }
 
-            if (this.mycards.find(c => c.dataset.card == card.dataset.card)) return;
-            (() => {
-                for (let i = 0; i != this.mycards.length; ++i)
-                    if (this.lt(card.dataset.card, this.mycards[i].dataset.card))
-                        return this.mycards.splice(i, 0, card)
-                this.mycards.push(card)
-            })()
-
             if (!addElement) return
-
             for (const cardHand of document.querySelectorAll('img.my-card'))
                 if (this.lt(card.dataset.card, cardHand.dataset.card))
                     return document.querySelector('#cards').insertBefore(card, cardHand)
             document.querySelector('#cards').appendChild(card)
         },
         async takeFromTable(data) {
+            const profile = await telegram.profile()
             if (!data) {
-                for (const cell of this.gameCells)
-                    for (const card of cell) {
-                        const beforeMine = card.dataset.player == (await telegram.profile()).id
-                        card.dataset.player = (await telegram.profile()).id;
-                        this.addMyCard(card, !beforeMine)
-                    }
-                await gameApi.takeFromTable(this.room.id, (await telegram.profile()).id)
+                for (const card of this.gameCells.flat()) {
+                    // const beforeMine = card.dataset.player == profile.id
+                    // card.dataset.player = profile.id;
+                    // this.addMyCard(card, !beforeMine)
+                    card.dataset.player = profile.id;
+                    this.addMyCard(card, false)
+                }
+                await gameApi.takeFromTable(this.room.id, profile.id)
             } else {
-                const profile = await telegram.profile()
                 const cardTable = this.gameCells.flat().find(c => c.dataset.player == profile.id)?.dataset.card
                 if (!cardTable) return
 
@@ -465,27 +452,26 @@ export default {
                 if (!player) return console.error(`opponent player ${playerId} not found to give card`);
 
                 const playerRect = player.getBoundingClientRect()
-                for (const cell of this.gameCells)
-                    for (const card of cell)
-                        (async () => {
-                            const cardInCell = this.gameCells[card.dataset.gameCell].findIndex(c => c.dataset.card == card.dataset.card);
-                            this.gameCells[card.dataset.gameCell].splice(cardInCell, 1)
+                for (const card of this.gameCells.flat())
+                    (async () => {
+                        const cardInCell = this.gameCells[card.dataset.gameCell].findIndex(c => c.dataset.card == card.dataset.card);
+                        this.gameCells[card.dataset.gameCell].splice(cardInCell, 1)
 
-                            if (this.gameCells[card.dataset.gameCell][0]) {
-                                const [x, y] = this.gameCellPos()[card.dataset.gameCell];
-                                this.gameCells[card.dataset.gameCell][0].style.transform = `translate(${x}px, ${y}px)`
-                                this.gameCells[card.dataset.gameCell][0].style.zIndex = 3
-                            }
+                        if (this.gameCells[card.dataset.gameCell][0]) {
+                            const [x, y] = this.gameCellPos()[card.dataset.gameCell];
+                            this.gameCells[card.dataset.gameCell][0].style.transform = `translate(${x}px, ${y}px)`
+                            this.gameCells[card.dataset.gameCell][0].style.zIndex = 3
+                        }
 
-                            delete card.dataset.gameCell;
+                        delete card.dataset.gameCell;
 
-                            card.style.transform = `translate(${playerRect.x + playerRect.width / 2}px, ${playerRect.y + playerRect.height / 2}px)`
-                            card.style.width = '10vw'
-                            player.style.zIndex = 6
-                            await new Promise(r => setTimeout(r, 300))
-                            document.querySelector('#cards').removeChild(card)
-                            player.style.zIndex = 1
-                        })()
+                        card.style.transform = `translate(${playerRect.x + playerRect.width / 2}px, ${playerRect.y + playerRect.height / 2}px)`
+                        card.style.width = '10vw'
+                        player.style.zIndex = 6
+                        await new Promise(r => setTimeout(r, 300))
+                        document.querySelector('#cards').removeChild(card)
+                        player.style.zIndex = 1
+                    })()
             }
         },
         async startFinishBeat() {
@@ -500,7 +486,7 @@ export default {
             }
             this.gameCells = Array.from({ length: 5 }, () => [])
             updateAttacker(data)
-            await gameApi.takeFromDeck(this.room.id, profile.id, 6 - this.mycards.length)
+            await gameApi.takeFromDeck(this.room.id, profile.id, 1)
         }
     },
     async mounted() {
@@ -653,13 +639,16 @@ export default {
             const dt = t - time
             time = t
 
-            this.mycards.forEach((card, i) => {
-                let fromCenter = i - this.mycards.length / 2
+            const myCards = [...document.querySelectorAll('img.my-card')]
+            myCards.sort((a, b) => this.lt(a.dataset.card, b.dataset.card) ? -1 : 1)
+            myCards.forEach((card, i) => {
+                let fromCenter = i - myCards.length / 2
                 if (card.data === undefined) card.data = { x: 0, y: window.innerHeight / 2 }
-                card.data.tx = window.innerWidth / 2 + window.innerWidth * 0.1 + fromCenter * window.innerWidth * 0.8 / this.mycards.length
-                card.data.ty = window.innerHeight * 0.75 - (touch ? (card === activeCard ? 40 : i && this.mycards[i - 1] === activeCard ? 10 : 0) : 0)
+                card.data.tx = window.innerWidth / 2 + window.innerWidth * 0.1 + fromCenter * window.innerWidth * 0.8 / myCards.length
+                card.data.ty = window.innerHeight * 0.75 - (touch ? (card === activeCard ? 40 : i && myCards[i - 1] === activeCard ? 10 : 0) : 0)
                 card.data.x += (card.data.tx - card.data.x) * 0.01 * dt
                 card.data.y += (card.data.ty - card.data.y) * 0.01 * dt
+                card.style.zIndex = 10 + i
                 card.style.transform = `translate(${card.data.x.toFixed(0)}px, ${card.data.y.toFixed(0)}px) rotate(${fromCenter * 2}deg)`
             })
 
@@ -671,11 +660,8 @@ export default {
                 }
             }
 
-            if (dragging) {
-                if (this.mycards.includes(activeCard))
-                    this.mycards = this.mycards.filter(c => c != activeCard)
+            if (dragging)
                 activeCard.style.transform = `translate(${tx}px, ${ty - window.innerWidth * 0.25}px)`
-            }
 
             requestAnimationFrame(updateCards.bind(this))
         }
@@ -731,11 +717,13 @@ export default {
                     setTimeout(() => b.classList.remove('visible'), 3000)
                     if (!b.parentElement.dataset.player) setTimeout(() => window.Telegram.WebApp.showAlert(`Ты выиграл: ${100}!`), 3000)
 
-                    for (const cell of gameCells)
-                        for (const card of cell) {
-                            card.dataset.player = profile.id;
-                            this.addMyCard(card, card.dataset.player != profile.id)
-                        }
+                    for (const card of this.gameCells.flat()) {
+                        // const beforeMine = card.dataset.player == profile.id
+                        // card.dataset.player = profile.id;
+                        // this.addMyCard(card, !beforeMine)
+                        card.dataset.player = profile.id;
+                        this.addMyCard(card, false)
+                    }
                     return this.addMyCard(card, false)
                 }
             const top = this.gameCells[gameCell].length != 0;
@@ -756,7 +744,6 @@ export default {
                 card.style.removeProperty('left')
                 card.style.removeProperty('top')
                 card.classList.remove('my-card')
-                this.mycards = this.mycards.filter(c => c.dataset.card != card.dataset.card)
             }
             card.style.width = '13vw'
             card.dataset.gameCell = gameCell
