@@ -234,9 +234,9 @@ import modalDialog from './components/modalDialog.vue'
                     <div class="footer__button" @click="setReadyState" v-else>Не готов</div>
                 </template>
                 <template v-else>
-                    <div class="footer__button" @click="() => endCards()" v-if="(!myTurn && allBeaten) || (myTurn && beatsState)">Бито</div>
-                    <div class="footer__button"                        v-else-if="myTurn">Ваш ход</div>
-                    <div class="footer__button" @click="() => takeFromTable()"      v-else>Взять</div>
+                    <div class="footer__button" @click="startFinishBeat"       v-if="allBeaten && (!myTurn || beatsStarted)">Бито</div>
+                    <div class="footer__button"                                v-else-if="myTurn">Ваш ход</div>
+                    <div class="footer__button" @click="() => takeFromTable()" v-else :style="{ visibility: gameCells.every(c => !c.length) ? 'hidden' : undefined }">Взять</div>
                 </template>
 
                 <div class="footer__person">
@@ -362,7 +362,7 @@ export default {
             ready: false,
             started: false,
             myTurn: false,
-            beatsState: false,
+            beatsStarted: false,
             user: [],
             allBeaten: false,
 
@@ -449,19 +449,18 @@ export default {
                     }
                 await gameApi.takeFromTable(this.room.id, (await telegram.profile()).id)
             } else {
-                if (this.gameCells.every(c => !c.length)) return
+                const profile = await telegram.profile()
+                const cardTable = this.gameCells.flat().find(c => c.dataset.player == profile.id)?.dataset.card
+                if (!cardTable) return
 
                 let playerId;
                 for (const [playerIdCurrent, cards] of Object.entries(data.deck.players))
-                    for (const card of cards)
-                        if (card == this.gameCells[0][0].dataset.card) {
-                            playerId = playerIdCurrent;
-                            break;
-                        }
-
-                if (!playerId) return console.error(`opponent player ${playerId} not found to give card`);
-                if (playerId == (await telegram.profile()).id) return
-
+                    if (playerIdCurrent != profile.id)
+                        for (const card of cards)
+                            if (card == cardTable) {
+                                playerId = playerIdCurrent;
+                                break;
+                            }
                 const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == playerId)
                 if (!player) return console.error(`opponent player ${playerId} not found to give card`);
 
@@ -489,15 +488,19 @@ export default {
                         })()
             }
         },
-        async endCards(global) {
-            if (!global) await gameApi.beats(this.room.id, (await telegram.profile()).id)
-            for (let card of this.gameCells.flat()) {
+        async startFinishBeat() {
+            await gameApi.beats(this.room.id, (await telegram.profile()).id)
+        },
+        async endCards(data) {
+            for (const card of this.gameCells.flat()) {
                 card.style.transform = `translate(${window.innerWidth}px, ${window.innerHeight / 2}px) rotate(${Math.random() * 360}deg)`
                 setTimeout(() => {
                     card.src = document.querySelector('img[data-cardimg="b"]').src
                 }, 200)
             }
             this.gameCells = Array.from({ length: 5 }, () => [])
+            updateAttacker(data)
+            await gameApi.takeFromDeck(this.room.id, profile.id, 6 - this.mycards.length)
         }
     },
     async mounted() {
@@ -511,7 +514,14 @@ export default {
             location.replace('/home')
         }))
 
-        this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })
+        this.centrifugo = new Centrifuge([{
+            transport:'websocket',
+            endpoint: 'ws://127.0.0.1:8888/connection/websocket'
+            // endpoint: 'wss://darkcards.de/connection/websocket'
+        }], {
+            token,
+            fetch: (u, o) => {(o ??= {}).mode = 'no-cors';return fetch(u, o)}
+        })
         this.centrifugo.on('connected', async () => {
             console.log('Successfully connected to WSS server')
             const res = await fetch(`/api/game/join?${new URLSearchParams({ id: this.room.id, user_id: profile.id })}`)
@@ -566,24 +576,21 @@ export default {
                     if (data.user.id == profile.id) return
                     if (this.users.findIndex(u => u.id == data.user.id) !== -1) return
                     return this.users.push(data.user)
+                case 'player_take_card':
+                    return giveCard(data.player, data.card)
                 case 'player_take_table':
                     return this.takeFromTable(data)
                 case 'user_left_room':
                     return document.querySelector(`div[data-player="${data.player}"]`).parentNode.remove()
                 case 'discard_card':
-                    const cardId = data.deck.table.at(-1)
-                    if (this.gameCells.find(c => c.find(c => c.dataset.card == cardId))) return
-                    const [playerId] = Object.entries(data.deck.players).find(h => h[1].find(c => c == cardId)) ?? []
-                    if (playerId === undefined) return console.error('user thrown unowned card')
-                    if (playerId == profile.id) return
-
                     const card = document.createElement('img')
-                    card.dataset.player = playerId
-                    card.dataset.card = cardId
+                    card.dataset.player = Object.keys(data.deck.players).find(id => id != profile.id)
+                    card.dataset.card = data.deck.table.at(-1)
                     card.src = document.querySelector(`img[data-cardimg="${card.dataset.card}"]`).src
+                    if (this.gameCells.flat().some(c => c.dataset.card == card.dataset.card)) return
                     return discardCard.bind(this)(card)
                 case 'revert_card':
-                    const cardd = this.gameCells.find(c => c.find(c => c.dataset.card == data.card))
+                    const cardd = this.gameCells.flat().find(c => c.dataset.card == data.card)
 
                     const playerr = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
                     if (!playerr) return console.error(`opponent player ${cardd.dataset.player} not found to give card`);
@@ -594,11 +601,9 @@ export default {
                     return document.querySelector('#cards').removeChild(cardd)
                 case 'beats':
                     if (!this.gameCells.flat().length) return
-                    updateAttacker(data)
-                    await gameApi.takeFromDeck(this.room.id, profile.id, 1)
-                    return this.endCards(true)
+                    return this.endCards(data)
                 case 'beats_start':
-                    this.beatsState = true;
+                    this.beatsStarted = true;
                     break;
             }
         }).subscribe()
