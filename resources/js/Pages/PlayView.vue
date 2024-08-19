@@ -376,7 +376,6 @@ export default {
 
             mycards: [],
 
-            gameCards: [],
             gameCells: Array.from({ length: 5 }, () => []),
             gameCellPos: () => {
                 const [x, y] = [window.innerWidth / 2, window.innerHeight / 2];
@@ -492,14 +491,13 @@ export default {
         },
         async endCards(global) {
             if (!global) await gameApi.beats(this.room.id, (await telegram.profile()).id)
-            for (let card of this.gameCards) {
+            for (let card of this.gameCells.flat()) {
                 card.style.transform = `translate(${window.innerWidth}px, ${window.innerHeight / 2}px) rotate(${Math.random() * 360}deg)`
                 setTimeout(() => {
                     card.src = document.querySelector('img[data-cardimg="b"]').src
                 }, 200)
             }
             this.gameCells = Array.from({ length: 5 }, () => [])
-            this.gameCards = []
         }
     },
     async mounted() {
@@ -595,7 +593,7 @@ export default {
                     cardd.style.width = '10vw'
                     return document.querySelector('#cards').removeChild(cardd)
                 case 'beats':
-                    if (!this.gameCards.length) return
+                    if (!this.gameCells.flat().length) return
                     updateAttacker(data)
                     await gameApi.takeFromDeck(this.room.id, profile.id, 1)
                     return this.endCards(true)
@@ -761,8 +759,6 @@ export default {
             const [x, y] = this.gameCellPos()[gameCell];
             card.style.transform = `translate(${x + (top ? 25 : 0)}px, ${y + (top ? 5 : 0)}px)` + (top ? ` rotate(10deg)` : '')
             card.style.zIndex = top?5:3
-
-            this.gameCards.push(card)
         }
     }
 }
