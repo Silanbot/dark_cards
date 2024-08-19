@@ -24,8 +24,8 @@ return new class extends Migration
             $table->jsonb('winners')->nullable();
             $table->string('password', length: 6)->nullable();
             $table->jsonb('beats')->default('[]');
-            $table->integer('opponent_player_index')->nullable();
-            $table->integer('attacker_player_index')->nullable();
+            $table->unsignedBigInteger('opponent_player_index')->nullable();
+            $table->unsignedBigInteger('attacker_player_index')->nullable();
             $table->timestamps();
         });
     }
