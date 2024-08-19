@@ -33,6 +33,8 @@ class GameService implements GameContract
                 'event' => 'player_take_card',
                 'player' => $player,
             ]);
+
+            return [];
         }
         if (count($cards) < $count) {
             $count = count($cards);
