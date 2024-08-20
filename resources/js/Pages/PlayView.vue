@@ -685,7 +685,7 @@ export default {
             countElem.innerHTML = --count
         }
 
-        function discardCard(card) {
+        async function discardCard(card) {
             const discardIsMine = card.dataset.player == profile.id
             if (!discardIsMine) {
                 const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
