@@ -695,6 +695,7 @@ export default {
                 card.style.transform = `translate(${playerRect.x + playerRect.width / 2}px, ${playerRect.y + playerRect.height / 2}px)`
                 card.style.width = '10vw'
                 document.querySelector('#cards').appendChild(card)
+                await new Promise(r => setTimeout(r, 300))
             }
 
             const gameCell = this.gameCells.findIndex(c => c.length < 2 && (c.length == 0 || c[0].dataset.player != card.dataset.player));
