@@ -188,10 +188,24 @@ class GameService implements GameContract
         ]);
     }
 
-    public function discardCard(Card $card, int $room, int $player): void
+    public function discardCard(Card $card, int $room, int $player): mixed
     {
         $room = Room::query()->find($room);
         $table = $room->deck->get('table');
+        $cards = $room->deck->get('cards');
+
+        if (count($cards) === 24 && count($table) === 10) {
+            return $this->centrifugo->publish('room', [
+                'event' => 'table_full',
+            ]);
+        }
+
+        if (count($table) === 12) {
+            return $this->centrifugo->publish('room', [
+                'event' => 'beats_start',
+            ]);
+        }
+
         $table[] = $card->toString();
         $players = $room->deck->get('players');
         $index = array_search(strtolower($card->toString()), $players[$player]);
@@ -253,13 +267,14 @@ class GameService implements GameContract
     {
         $room = Room::query()->find($room);
         $beats = $room->beats;
-        if ($beats->contains($player)) {
+        if ($beats->contains($player) && $room->opponent_player_index != $player) {
             return 0;
         }
+
         $beats->push($player);
         $room->update(['beats' => $beats]);
 
-        if ($beats->count() >= $room->max_gamers) {
+        if ($beats->count() === $room->max_gamers - 1) {
             $room->update([
                 'deck' => [
                     'cards' => $room->deck->get('cards'),
