@@ -30,7 +30,7 @@ interface GameContract
     /**
      * Выбросить карту на стол
      */
-    public function discardCard(Card $card, int $room, int $player): void;
+    public function discardCard(Card $card, int $room, int $player): mixed;
 
     public function userLeft(int $room, int $player): void;
 
