@@ -222,7 +222,7 @@ class GameService implements GameContract
             'opponent_player_index' => $room->attacker_player_index,
         ]);
 
-        $this->centrifugo->publish('room', [
+        return $this->centrifugo->publish('room', [
             'event' => 'discard_card',
             'deck' => $room->deck,
             'attacker_player_index' => $room->opponent_player_index,
