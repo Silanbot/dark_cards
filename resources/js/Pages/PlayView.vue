@@ -447,8 +447,6 @@ export default {
                     this.addMyCard(card, false)
                 }
                 await gameApi.takeFromTable(this.room.id, profile.id)
-                const count = 6 - [...document.querySelectorAll('img.my-card')].length;
-                if (count > 0) await gameApi.takeFromDeck(this.room.id, profile.id, count)
             } else {
                 const cardTable = this.gameCells.flat().find(c => c.dataset.player == profile.id)?.dataset.card
                 if (!cardTable) return
@@ -486,6 +484,8 @@ export default {
                         player.style.zIndex = 1
                     })()
             }
+            const count = 6 - [...document.querySelectorAll('img.my-card')].length;
+            if (count > 0) await gameApi.takeFromDeck(this.room.id, profile.id, count)
         },
         async startFinishBeat() {
             await gameApi.beats(this.room.id, (await telegram.profile()).id)
