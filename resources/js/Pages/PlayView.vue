@@ -231,7 +231,7 @@ import modalDialog from './components/modalDialog.vue'
                     <div class="footer__button" @click="setReadyState" v-else>Не готов</div>
                 </template>
                 <template v-else>
-                    <div class="footer__button" @click="startFinishBeat"       v-if="gameCells.filter(c => c.length).length && gameCells.filter(c => c.length).every(c => c.length == 2) && (!myTurn || beatsStarted)">Бито</div>
+                    <div class="footer__button" @click="startFinishBeat"       v-if="myTurn && gameCells.filter(c => c.length).length && gameCells.filter(c => c.length).every(c => c.length == 2)">Бито</div>
                     <div class="footer__button"                                v-else-if="myTurn">Ваш ход</div>
                     <div class="footer__button" @click="() => takeFromTable()" v-else :style="{ visibility: gameCells.every(c => !c.length) ? 'hidden' : undefined }">Взять</div>
                 </template>
@@ -359,9 +359,7 @@ export default {
             ready: false,
             started: false,
             myTurn: false,
-            beatsStarted: false,
             user: [],
-            allBeaten: false,
 
             cardValues: {
                 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 1: 10,
@@ -579,11 +577,7 @@ export default {
                 case 'beats':
                     if (!this.gameCells.flat().length) return
                     this.updateAttacker(data);
-                    this.beatsStarted = false;
                     return this.endCards(data)
-                case 'beats_start':
-                    this.beatsStarted = true;
-                    break;
             }
         }).subscribe()
         this.centrifugo.connect()
