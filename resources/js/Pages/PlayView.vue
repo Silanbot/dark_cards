@@ -531,11 +531,14 @@ export default {
         let countElem = document.querySelector('.game__cart__cold__count')
         let count = parseInt(countElem.innerHTML)
 
+        let isAttackerPlayer = false;
+
         sub.on('publication', async ({ data }) => {
             console.log(data.event, data)
             switch (data.event) {
                 case 'game_started':
                     this.started = true
+                    isAttackerPlayer = profile.id == data.attacker_player_index
                     this.updateAttacker(data)
                     setTrumpCard(data.deck.at(-1))
                     for (const [player, cards] of Object.entries(data.players))
@@ -558,7 +561,8 @@ export default {
                 case 'user_left_room':
                     return document.querySelector(`div[data-player="${data.player}"]`).parentNode.remove()
                 case 'discard_card':
-                    if (profile.id != data.attacker_player_index) return
+                    isAttackerPlayer = profile.id == data.attacker_player_index
+                    if (!isAttackerPlayer) return
                     const card = document.createElement('img')
                     card.dataset.player = Object.keys(data.deck.players).find(id => id != profile.id)
                     card.dataset.card = data.deck.table.at(-1)
@@ -626,7 +630,7 @@ export default {
             touch = false
             dragging = lastDragging = false
             if (!activeCard) return
-            ty > window.innerHeight*0.75 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
+            ty > window.innerHeight*0.75 && !isAttackerPlayer ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             activeCard = null
         })
         let time = performance.now();
