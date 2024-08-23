@@ -558,6 +558,7 @@ export default {
                 case 'user_left_room':
                     return document.querySelector(`div[data-player="${data.player}"]`).parentNode.remove()
                 case 'discard_card':
+                    if (profile.id != data.attacker_player_index) return
                     const card = document.createElement('img')
                     card.dataset.player = Object.keys(data.deck.players).find(id => id != profile.id)
                     card.dataset.card = data.deck.table.at(-1)
@@ -578,6 +579,13 @@ export default {
                     if (!this.gameCells.flat().length) return
                     this.updateAttacker(data);
                     return this.endCards(data)
+                case 'user_win':
+                    const a = [...document.querySelectorAll('.win__amount')]
+                    // const b = a[~~(Math.random() * a.length)]
+                    const b = a.find(e => !e.parentElement.dataset.player)
+                    b.classList.add('visible')
+                    setTimeout(() => b.classList.remove('visible'), 3000)
+                    if (!b.parentElement.dataset.player) setTimeout(() => window.Telegram.WebApp.showAlert(`Ты выиграл: ${100}!`), 3000)
             }
         }).subscribe()
         this.centrifugo.connect()
@@ -708,9 +716,9 @@ export default {
                         // card.dataset.player = profile.id;
                         // this.addMyCard(card, !beforeMine)
                         card.dataset.player = profile.id;
-                        this.addMyCard(card, false)
+                        // this.addMyCard(card, false)
                     }
-                    return this.addMyCard(card, false)
+                    // return this.addMyCard(card, false)
                 }
 
             const top = this.gameCells[gameCell].length != 0;
