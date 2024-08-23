@@ -67,49 +67,50 @@ class GameService implements GameContract
         return $players[$player];
     }
 
-    public function calculateWinnerAmount(Model $model): array
+    public function calculateWinnerAmount(int $model, int $user): array
     {
+        $model = Room::query()->find($model);
         $maxGamers = $model->max_gamers;
         $winners = $model->winners;
 
         if ($maxGamers == 2) {
-            $winners[auth()->id()] = $model->bank * 0.92;
+            $winners[$user] = $model->bank * 0.92;
         }
 
         if ($maxGamers == 3 && blank($winners)) {
-            $winners[auth()->id()] = $model->bank * 0.6;
+            $winners[$user] = $model->bank * 0.6;
         } elseif ($maxGamers == 3 && count($winners) === 1) {
-            $winners[auth()->id()] = $model->bank * 0.32;
+            $winners[$user] = $model->bank * 0.32;
         }
 
         if ($maxGamers == 4 && blank($winners)) {
-            $winners[auth()->id()] = $model->bank * 0.5;
+            $winners[$user] = $model->bank * 0.5;
         } elseif ($maxGamers == 4 && count($winners) === 1) {
-            $winners[auth()->id()] = $model->bank * 0.3;
+            $winners[$user] = $model->bank * 0.3;
         } elseif ($maxGamers == 4 && count($winners) == 2) {
-            $winners[auth()->id()] = $model->bank * 0.12;
+            $winners[$user] = $model->bank * 0.12;
         }
 
         if ($maxGamers == 5 && blank($winners)) {
-            $winners[auth()->id()] = $model->bank * 0.45;
+            $winners[$user] = $model->bank * 0.45;
         } elseif ($maxGamers == 5 && count($winners) === 1) {
-            $winners[auth()->id()] = $model->bank * 0.25;
+            $winners[$user] = $model->bank * 0.25;
         } elseif ($maxGamers == 5 && count($winners) === 2) {
-            $winners[auth()->id()] = $model->bank * 0.15;
+            $winners[$user] = $model->bank * 0.15;
         } elseif ($maxGamers == 5 && count($winners) === 3) {
-            $winners[auth()->id()] = $model->bank * 0.07;
+            $winners[$user] = $model->bank * 0.07;
         }
 
         if ($maxGamers == 6 && blank($winners)) {
-            $winners[auth()->id()] = $model->bank * 0.35;
+            $winners[$user] = $model->bank * 0.35;
         } elseif ($maxGamers == 6 && count($winners) === 1) {
-            $winners[auth()->id()] = $model->bank * 0.22;
+            $winners[$user] = $model->bank * 0.22;
         } elseif ($maxGamers == 6 && count($winners) === 2) {
-            $winners[auth()->id()] = $model->bank * 0.17;
+            $winners[$user] = $model->bank * 0.17;
         } elseif ($maxGamers == 6 && count($winners) === 3) {
-            $winners[auth()->id()] = $model->bank * 0.12;
+            $winners[$user] = $model->bank * 0.12;
         } elseif ($maxGamers == 6 && count($winners) === 4) {
-            $winners[auth()->id()] = $model->bank * 0.06;
+            $winners[$user] = $model->bank * 0.06;
         }
 
         $model->update([
@@ -129,7 +130,7 @@ class GameService implements GameContract
             return (bool) $this->centrifugo->publish('room', [
                 'event' => 'user_win',
                 'user_id' => $user,
-                'winners' => $this->calculateWinnerAmount($room),
+                'winners' => $this->calculateWinnerAmount($room->id, $user),
             ]);
         }
 

@@ -562,7 +562,6 @@ export default {
                     return document.querySelector(`div[data-player="${data.player}"]`).parentNode.remove()
                 case 'discard_card':
                     isAttackerPlayer = profile.id == data.attacker_player_index
-                    if (!isAttackerPlayer) return
                     const card = document.createElement('img')
                     card.dataset.player = Object.keys(data.deck.players).find(id => id != profile.id)
                     card.dataset.card = data.deck.table.at(-1)
@@ -589,7 +588,7 @@ export default {
                     const b = a.find(e => !e.parentElement.dataset.player)
                     b.classList.add('visible')
                     setTimeout(() => b.classList.remove('visible'), 3000)
-                    if (!b.parentElement.dataset.player) setTimeout(() => window.Telegram.WebApp.showAlert(`Ты выиграл: ${100}!`), 3000)
+                    if (!b.parentElement.dataset.player) setTimeout(() => window.Telegram.WebApp.showAlert(`Ты выиграл: ${data.winners[profile.id]}!`), 3000)
             }
         }).subscribe()
         this.centrifugo.connect()
@@ -693,7 +692,7 @@ export default {
 
         async function discardCard(card) {
             const discardIsMine = card.dataset.player == profile.id
-            if (!discardIsMine) {
+            if (!discardIsMine && !isAttackerPlayer) {
                 const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
                 if (!player) return console.error(`opponent player ${card.dataset.player} not found to give card`);
 
@@ -705,25 +704,25 @@ export default {
             }
 
             const gameCell = this.gameCells.findIndex(c => c.length < 2 && (c.length == 0 || c[0].dataset.player != card.dataset.player));
-            if (gameCell == -1)
-                if (!discardIsMine) return
-                else {
-                    const a = [...document.querySelectorAll('.win__amount')]
-                    // const b = a[~~(Math.random() * a.length)]
-                    const b = a.find(e => !e.parentElement.dataset.player)
-                    b.classList.add('visible')
-                    setTimeout(() => b.classList.remove('visible'), 3000)
-                    if (!b.parentElement.dataset.player) setTimeout(() => window.Telegram.WebApp.showAlert(`Ты выиграл: ${100}!`), 3000)
-
-                    for (const card of this.gameCells.flat()) {
-                        // const beforeMine = card.dataset.player == profile.id
-                        // card.dataset.player = profile.id;
-                        // this.addMyCard(card, !beforeMine)
-                        card.dataset.player = profile.id;
-                        // this.addMyCard(card, false)
-                    }
-                    // return this.addMyCard(card, false)
-                }
+            // if (gameCell == -1)
+            //     if (!discardIsMine) return
+                // else {
+                //     const a = [...document.querySelectorAll('.win__amount')]
+                //     // const b = a[~~(Math.random() * a.length)]
+                //     const b = a.find(e => !e.parentElement.dataset.player)
+                //     b.classList.add('visible')
+                //     setTimeout(() => b.classList.remove('visible'), 3000)
+                //     if (!b.parentElement.dataset.player) setTimeout(() => window.Telegram.WebApp.showAlert(`Ты выиграл: ${100}!`), 3000)
+                //
+                //     for (const card of this.gameCells.flat()) {
+                //         // const beforeMine = card.dataset.player == profile.id
+                //         // card.dataset.player = profile.id;
+                //         // this.addMyCard(card, !beforeMine)
+                //         card.dataset.player = profile.id;
+                //         // this.addMyCard(card, false)
+                //     }
+                //     // return this.addMyCard(card, false)
+                // }
 
             const top = this.gameCells[gameCell].length != 0;
             if (discardIsMine) {
