@@ -597,6 +597,7 @@ export default {
         document.addEventListener('touchstart', async e=>{
             const card = e.target;
             if (!card.dataset?.card) return
+            if (!isAttackerPlayer) return
             if (card.dataset.gameCell !== undefined) {
                 const otherCard = this.gameCells[card.dataset.gameCell].find(c => c.dataset.card != card.dataset.card)
                 const top = otherCard?.style.zIndex == 3;
@@ -629,7 +630,8 @@ export default {
             touch = false
             dragging = lastDragging = false
             if (!activeCard) return
-            ty > window.innerHeight*0.75 && !isAttackerPlayer ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
+            if (!isAttackerPlayer) return
+            ty > window.innerHeight*0.75 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             activeCard = null
         })
         let time = performance.now();
