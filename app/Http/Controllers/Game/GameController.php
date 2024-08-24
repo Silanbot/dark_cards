@@ -85,6 +85,7 @@ class GameController extends Controller
         $deck = new Deck($room->ready_state->toArray());
         // Это индексы, а не значения
         $attacker = array_rand($state->toArray());
+        // Значение
         $opponent = $state->toArray()[($attacker + 1) % $room->max_gamers];
 
         $room->update([

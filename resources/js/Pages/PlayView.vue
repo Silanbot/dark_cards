@@ -563,7 +563,6 @@ export default {
                     return document.querySelector(`div[data-player="${data.player}"]`).parentNode.remove()
                 case 'discard_card':
                     isAttackerPlayer = profile.id == data.attacker_player_index
-                    console.log('discard_card', data.attacker_player_index, isAttackerPlayer)
                     const card = document.createElement('img')
                     card.dataset.player = Object.keys(data.deck.players).find(id => id != profile.id)
                     card.dataset.card = data.deck.table.at(-1)
@@ -697,7 +696,7 @@ export default {
 
         async function discardCard(card) {
             const discardIsMine = card.dataset.player == profile.id
-            if (!discardIsMine && !isAttackerPlayer) {
+            if (!discardIsMine) {
                 const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
                 if (!player) return console.error(`opponent player ${card.dataset.player} not found to give card`);
 
@@ -730,7 +729,7 @@ export default {
                 // }
 
             const top = this.gameCells[gameCell].length != 0;
-            if (discardIsMine) {
+            if (discardIsMine && isAttackerPlayer) {
                 const isCheaters = localStorage.getItem('params')?.split(',').includes('cheaters') ?? false;
                 if (!isCheaters && top && this.cannotBeat(card.dataset.card, this.gameCells[gameCell][Number(!top)].dataset.card)) return this.addMyCard(card, false)
 

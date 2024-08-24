@@ -47,11 +47,6 @@ class GameService implements GameContract
         }
         $players = $room->deck->get('players');
         $players[$player] = $playerCards;
-        $this->centrifugo->publish('room', [
-            'cards' => array_map(fn ($card) => $this->formatCard($card), $playerTakeCards),
-            'event' => 'player_take_card',
-            'player' => $player,
-        ]);
         $room->update([
             'deck' => collect([
                 'cards' => array_values($cards),
@@ -61,6 +56,11 @@ class GameService implements GameContract
             ]),
             'attacker_player_index' => $room->opponent_player_index,
             'opponent_player_index' => $room->attacker_player_index,
+        ]);
+        $this->centrifugo->publish('room', [
+            'cards' => array_map(fn ($card) => $this->formatCard($card), $playerTakeCards),
+            'event' => 'player_take_card',
+            'player' => $player,
         ]);
 
         return $players[$player];
@@ -290,8 +290,8 @@ class GameService implements GameContract
             return $this->centrifugo->publish('room', [
                 'event' => 'beats',
                 'deck' => $room->deck,
-                'attacker_player_index' => $room->opponent_player_index,
-                'opponent_player_index' => $room->attacker_player_index,
+                'attacker_player_index' => $room->attacker_player_index,
+                'opponent_player_index' => $room->opponent_player_index,
             ]);
         }
 
