@@ -61,6 +61,8 @@ class GameService implements GameContract
             'cards' => array_map(fn ($card) => $this->formatCard($card), $playerTakeCards),
             'event' => 'player_take_card',
             'player' => $player,
+            'attacker_player_index' => $room->attacker_player_index,
+            'opponent_player_index' => $room->opponent_player_index,
         ]);
 
         return $players[$player];
@@ -283,15 +285,11 @@ class GameService implements GameContract
                     'trump' => last($room->deck->get('cards'))['suit'],
                 ],
                 'beats' => [],
-                'attacker_player_index' => $room->opponent_player_index,
-                'opponent_player_index' => $room->attacker_player_index,
             ]);
 
             return $this->centrifugo->publish('room', [
                 'event' => 'beats',
                 'deck' => $room->deck,
-                'attacker_player_index' => $room->attacker_player_index,
-                'opponent_player_index' => $room->opponent_player_index,
             ]);
         }
 

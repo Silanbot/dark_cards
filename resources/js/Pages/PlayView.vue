@@ -555,6 +555,7 @@ export default {
                     if (this.users.findIndex(u => u.id == data.user.id) !== -1) return
                     return this.users.push(data.user)
                 case 'player_take_card':
+                    isAttackerPlayer = profile.id == data.attacker_player_index
                     for (const card of data.cards) giveCard.bind(this)(data.player, card)
                     return
                 case 'player_take_table':
