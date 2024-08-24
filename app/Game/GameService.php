@@ -6,7 +6,6 @@ namespace App\Game;
 
 use App\Contracts\Game\GameContract;
 use App\Models\Room;
-use Illuminate\Database\Eloquent\Model;
 use phpcent\Client;
 
 class GameService implements GameContract
