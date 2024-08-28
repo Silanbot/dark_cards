@@ -529,7 +529,7 @@ export default {
         let tx, ty
 
         let activeCard = null
-        let canBeat = true;
+        let canBeat = false;
 
         let countElem = document.querySelector('.game__cart__cold__count')
         let count = parseInt(countElem.innerHTML)
@@ -620,7 +620,7 @@ export default {
                 const top = otherCard?.style.zIndex == 3;
 
                 const isCheaters = localStorage.getItem('params')?.split(',').includes('cheaters') ?? false;
-                if (!isCheaters || !top || !this.cannotBeat(card.dataset.card, otherCard.dataset.card)) return
+                if (!top || !this.cannotBeat(card.dataset.card, otherCard.dataset.card)) return
 
                 const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
                 if (!player) return console.error(`opponent player ${card.dataset.player} not found to give card`);
@@ -648,7 +648,8 @@ export default {
             dragging = lastDragging = false
             if (!activeCard) return
             if (!isAttackerPlayer) return
-            ty > window.innerHeight*0.75 || canBeat === false ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
+            canBeat ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
+            ty > window.innerHeight * 0.75 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             canBeat = true
             activeCard = null
         })
