@@ -593,6 +593,10 @@ export default {
                     b.classList.add('visible')
                     setTimeout(() => b.classList.remove('visible'), 3000)
                     if (!b.parentElement.dataset.player) setTimeout(() => window.Telegram.WebApp.showAlert(`Ты выиграл: ${data.winners[profile.id]}!`), 3000)
+                case 'table_full':
+                    isAttackerPlayer = false
+                    telegram.alert('Стол переполнен!', true)
+                    break;
             }
         }).subscribe()
         this.centrifugo.connect()

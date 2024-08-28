@@ -47,28 +47,6 @@ class GameService implements GameContract
         }
         $players = $room->deck->get('players');
         $players[$player] = $playerCards;
-        if ($player == $room->attacker_player_index) {
-            $room->update([
-                'deck' => collect([
-                    'cards' => array_values($cards),
-                    'players' => $players,
-                    'table' => [],
-                    'trump' => last($room->deck->get('cards'))['suit'],
-                ]),
-                'opponent_player_index' => $player,
-                'attacker_player_index' => $room->opponent_player_index,
-            ]);
-
-            $this->centrifugo->publish('room', [
-                'cards' => array_map(fn ($card) => $this->formatCard($card), $playerTakeCards),
-                'event' => 'player_take_card',
-                'player' => $player,
-                'attacker_player_index' => $room->attacker_player_index,
-                'opponent_player_index' => $room->opponent_player_index,
-            ]);
-
-            return $players[$player];
-        }
 
         $room->update([
             'deck' => collect([
@@ -77,8 +55,6 @@ class GameService implements GameContract
                 'table' => [],
                 'trump' => last($room->deck->get('cards'))['suit'],
             ]),
-            'attacker_player_index' => $room->opponent_player_index,
-            'opponent_player_index' => $room->attacker_player_index,
         ]);
         $this->centrifugo->publish('room', [
             'cards' => array_map(fn ($card) => $this->formatCard($card), $playerTakeCards),
@@ -308,11 +284,15 @@ class GameService implements GameContract
                     'trump' => last($room->deck->get('cards'))['suit'],
                 ],
                 'beats' => [],
+                'attacker_player_index' => $room->opponent_player_index,
+                'opponent_player_index' => $room->attacker_player_index,
             ]);
 
             return $this->centrifugo->publish('room', [
                 'event' => 'beats',
                 'deck' => $room->deck,
+                'attacker_player_index' => $room->attacker_player_index,
+                'opponent_player_index' => $room->opponent_player_index,
             ]);
         }
 
