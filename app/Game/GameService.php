@@ -19,7 +19,7 @@ class GameService implements GameContract
 
     private function formatCard(array $card): string
     {
-        return strtolower($card['rank'] === '10' ? '1' : $card['rank'].$card['suit'][0]);
+        return strtolower($card['rank'] === '10' ? '1'.$card['suit'][0] : $card['rank'].$card['suit'][0]);
     }
 
     public function takeFromDeck(int $id, int $player, int $count): array
