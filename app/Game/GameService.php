@@ -158,6 +158,7 @@ class GameService implements GameContract
                 'status' => true,
                 'attacker_player_index' => $room->opponent_player_index,
                 'opponent_player_index' => $room->attacker_player_index,
+                'player' => $user,
             ]);
         }
 
@@ -166,6 +167,7 @@ class GameService implements GameContract
             'status' => false,
             'attacker_player_index' => $room->opponent_player_index,
             'opponent_player_index' => $room->attacker_player_index,
+            'player' => $user
         ]);
     }
 
@@ -230,6 +232,7 @@ class GameService implements GameContract
             'deck' => $room->deck,
             'attacker_player_index' => $room->attacker_player_index,
             'opponent_player_index' => $room->opponent_player_index,
+            'player' => $player
         ]);
     }
 

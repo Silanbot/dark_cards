@@ -529,6 +529,7 @@ export default {
         let tx, ty
 
         let activeCard = null
+        let activeCard2 = null;
 
         let countElem = document.querySelector('.game__cart__cold__count')
         let count = parseInt(countElem.innerHTML)
@@ -560,7 +561,9 @@ export default {
                 case 'player_take_card':
                     this.updateAttacker(data)
                     isAttackerPlayer = profile.id == data.attacker_player_index
-                    for (const card of data.cards) giveCard.bind(this)(data.player, card)
+                    if (data.player == profile.id && count > 0) {
+                        for (const card of data.cards) giveCard.bind(this)(data.player, card)
+                    }
                     return
                 case 'player_take_table':
                     return this.takeFromTable(data)
@@ -600,15 +603,15 @@ export default {
                     telegram.alert('Стол переполнен!', true)
                     break;
                 case 'game_beat':
-                    if (!data.status) {
-                        this.addMyCard(activeCard, false)
+                    if (!data.status && data.player == profile.id) {
+                        this.addMyCard(activeCard2, false)
                     }
+                    activeCard2 = null
                     break;
             }
         }).subscribe()
         this.centrifugo.connect()
 
-        // touch events, strictly speaking - cards manipulation, won't work on "non touch surface" devices (imagine DIY mobile without touch screen 😀). a some workaround needs to be done with mouse events. either separate functions or bluntly write polyfill (note that im not talking about regular implementation/version polyfill you think off. it is an already implemented touch api by browser and our mouse -> touch polyfill kinda. not sure we can call this polyfill at this point)
         document.addEventListener('touchstart', async e=>{
             const card = e.target;
             if (!card.dataset?.card) return
@@ -646,6 +649,7 @@ export default {
             dragging = lastDragging = false
             if (!activeCard) return
             if (!isAttackerPlayer) return
+            activeCard2 = activeCard
             ty > window.innerHeight*0.75 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             activeCard = null
         })
