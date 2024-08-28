@@ -53,7 +53,7 @@ class GameService implements GameContract
                 'cards' => array_values($cards),
                 'players' => $players,
                 'table' => [],
-                'trump' => last($room->deck->get('cards'))['suit'],
+                'trump' => $room->deck->get('trump'),
             ]),
         ]);
         $this->centrifugo->publish('room', [
@@ -147,7 +147,7 @@ class GameService implements GameContract
                     'cards' => $room->deck->get('cards'),
                     'players' => $players,
                     'table' => $table,
-                    'trump' => last($room->deck->get('cards'))['suit'],
+                    'trump' => $room->deck->get('trump'),
                 ],
                 'attacker_player_index' => $room->opponent_player_index,
                 'opponent_player_index' => $room->attacker_player_index,
@@ -179,7 +179,7 @@ class GameService implements GameContract
                 'cards' => $room->deck->get('cards'),
                 'players' => $players,
                 'table' => [],
-                'trump' => last($room->deck->get('cards'))['suit'],
+                'trump' => $room->deck->get('trump'),
             ],
         ]);
 
@@ -217,7 +217,7 @@ class GameService implements GameContract
                 'cards' => $room->deck->get('cards'),
                 'table' => $table,
                 'players' => $players,
-                'trump' => last($room->deck->get('cards'))['suit'],
+                'trump' => $room->deck->get('trump'),
             ],
             'attacker_player_index' => $room->opponent_player_index,
             'opponent_player_index' => $room->attacker_player_index,
@@ -281,7 +281,7 @@ class GameService implements GameContract
                     'cards' => $room->deck->get('cards'),
                     'players' => $room->deck->get('players'),
                     'table' => [],
-                    'trump' => last($room->deck->get('cards'))['suit'],
+                    'trump' => $room->deck->get('trump'),
                 ],
                 'beats' => [],
                 'attacker_player_index' => $room->opponent_player_index,

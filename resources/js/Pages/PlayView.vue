@@ -157,7 +157,7 @@ import modalDialog from './components/modalDialog.vue'
                         </div>
                     </div>
                 </div>
-                <div class="game__cart">
+                <div class="game__cart" v-if="cardsCount > 0">
                     <div class="game__cart__cold">
                         <div class="game__cart__cold__count">36</div>
                         <div class="game__cart__cold__carts">
@@ -361,6 +361,7 @@ export default {
             started: false,
             myTurn: false,
             user: [],
+            cardsCount: 36,
 
             cardValues: {
                 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 1: 10,
@@ -531,6 +532,7 @@ export default {
 
         let countElem = document.querySelector('.game__cart__cold__count')
         let count = parseInt(countElem.innerHTML)
+        this.cardsCount = count
 
         let isAttackerPlayer = false;
 
