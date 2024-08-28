@@ -649,6 +649,7 @@ export default {
             if (!activeCard) return
             if (!isAttackerPlayer) return
             ty > window.innerHeight*0.75 || canBeat === false ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
+            canBeat = true
             activeCard = null
         })
         let time = performance.now();
