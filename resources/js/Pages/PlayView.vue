@@ -529,7 +529,7 @@ export default {
         let tx, ty
 
         let activeCard = null
-        let activeCard2 = null;
+        let canBeat = true;
 
         let countElem = document.querySelector('.game__cart__cold__count')
         let count = parseInt(countElem.innerHTML)
@@ -603,10 +603,9 @@ export default {
                     telegram.alert('Стол переполнен!', true)
                     break;
                 case 'game_beat':
-                    if (!data.status && data.player == profile.id) {
-                        this.addMyCard(activeCard2, false)
+                    if (data.status === false && data.player == profile.id) {
+                        canBeat = false
                     }
-                    activeCard2 = null
                     break;
             }
         }).subscribe()
@@ -649,8 +648,7 @@ export default {
             dragging = lastDragging = false
             if (!activeCard) return
             if (!isAttackerPlayer) return
-            activeCard2 = activeCard
-            ty > window.innerHeight*0.75 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
+            ty > window.innerHeight*0.75 || canBeat === false ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             activeCard = null
         })
         let time = performance.now();
