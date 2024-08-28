@@ -164,6 +164,8 @@ class GameService implements GameContract
         return (bool) $this->centrifugo->publish('room', [
             'event' => 'game_beat',
             'status' => false,
+            'attacker_player_index' => $room->opponent_player_index,
+            'opponent_player_index' => $room->attacker_player_index,
         ]);
     }
 

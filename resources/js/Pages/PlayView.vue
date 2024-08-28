@@ -599,13 +599,17 @@ export default {
                     isAttackerPlayer = false
                     telegram.alert('Стол переполнен!', true)
                     break;
+                case 'game_beat':
+                    if (!data.status) {
+                        this.addMyCard(activeCard, false)
+                    }
+                    break;
             }
         }).subscribe()
         this.centrifugo.connect()
 
         // touch events, strictly speaking - cards manipulation, won't work on "non touch surface" devices (imagine DIY mobile without touch screen 😀). a some workaround needs to be done with mouse events. either separate functions or bluntly write polyfill (note that im not talking about regular implementation/version polyfill you think off. it is an already implemented touch api by browser and our mouse -> touch polyfill kinda. not sure we can call this polyfill at this point)
         document.addEventListener('touchstart', async e=>{
-            console.log(isAttackerPlayer)
             const card = e.target;
             if (!card.dataset?.card) return
             if (!isAttackerPlayer) return
