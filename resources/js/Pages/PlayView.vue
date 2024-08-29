@@ -665,6 +665,13 @@ export default {
                 return
             }
 
+            if (!canBeat) {
+                this.addMyCard(activeCard, false)
+                activeCard = null
+
+                return
+            }
+
             if (ty > window.innerHeight * 0.75) {
                 this.addMyCard(activeCard, false)
             } else {

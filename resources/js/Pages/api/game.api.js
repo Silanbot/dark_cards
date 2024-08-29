@@ -31,7 +31,7 @@ export default new (class {
 		await (await this.api)({
 			method: 'GET',
 			url: '/api/game/revert-card',
-			params: { room_id, card, player }
+			params: { room_id, card: card, player: player }
 		});
 	}
 

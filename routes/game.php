@@ -13,4 +13,5 @@ Route::prefix('game')->group(function () {
     Route::get('/fight', [GameController::class, 'fight'])->name('game.fight');
     Route::get('/discard-card', [GameController::class, 'discardCard'])->name('game.discardCard');
     Route::get('/beats', [GameController::class, 'beats'])->name('game.beats');
+    Route::get('/revert-card', [GameController::class, 'revertCard'])->name('game.beats');
 });
