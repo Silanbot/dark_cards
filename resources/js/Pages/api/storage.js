@@ -12,7 +12,13 @@ class Storage {
     }
 
     getItem(key) {
-        return this.storage.getItem(key)
+        return this.storage.getItem(key, (err, value) => {
+            if (err) {
+                return console.error('Произошла ошибка при чтении данных из CloudStorage: ', err)
+            }
+
+            return value
+        })
     }
 }
 
