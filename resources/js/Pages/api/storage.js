@@ -1,29 +1,33 @@
-class Storage {
-    storage = localStorage
+class CloudStorage {
+    storage = new Storage()
 
-    constructor() {
-        if (window.Telegram.WebApp.initDataUnsafe.user && import.meta.env.VITE_STORAGE === 'cloud') {
-            this.storage = window.Telegram.WebApp.CloudStorage
-        }
-    }
+    // constructor() {
+    //     if (window.Telegram.WebApp.initDataUnsafe.user && import.meta.env.VITE_STORAGE === 'cloud') {
+    //         this.storage = window.Telegram.WebApp.CloudStorage
+    //     }
+    // }
 
     setItem(name, value) {
         this.storage.setItem(name, value)
     }
 
     getItem(key) {
-        return this.storage.getItem(key, (err, value) => {
-            if (err) {
-                return console.error('Произошла ошибка при чтении данных из CloudStorage: ', err)
-            }
+        // if (this.storage === window.Telegram.WebApp.CloudStorage) {
+        //     return this.storage.getItem(key, (err, value) => {
+        //         if (err) {
+        //             return console.error('Произошла ошибка с получением данных из облака: ', err)
+        //         }
+        //
+        //         return value
+        //     })
+        // }
 
-            return value
-        })
+        return this.storage.getItem(key)
     }
 }
 
 export default function useStorage() {
     return {
-        storage: new Storage()
+        storage: new CloudStorage()
     }
 }
