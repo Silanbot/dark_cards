@@ -1,11 +1,5 @@
 class CloudStorage {
-    storage = new Storage()
-
-    // constructor() {
-    //     if (window.Telegram.WebApp.initDataUnsafe.user && import.meta.env.VITE_STORAGE === 'cloud') {
-    //         this.storage = window.Telegram.WebApp.CloudStorage
-    //     }
-    // }
+    storage = localStorage
 
     setItem(name, value) {
         this.storage.setItem(name, value)
