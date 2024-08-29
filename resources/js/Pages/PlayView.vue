@@ -666,9 +666,9 @@ export default {
             }
 
             if (ty > window.innerHeight * 0.75) {
-                discardCard.bind(this)(activeCard)
-            } else {
                 this.addMyCard(activeCard, false)
+            } else {
+                discardCard.bind(this)(activeCard)
             }
 
             // ty > window.innerHeight * 0.75 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
