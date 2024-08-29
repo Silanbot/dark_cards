@@ -545,7 +545,6 @@ export default {
                 case 'game_started':
                     this.started = true
                     isAttackerPlayer = profile.id == data.attacker_player_index
-                    console.log('game_started', data.attacker_player_index, isAttackerPlayer)
                     this.updateAttacker(data)
                     setTrumpCard(data.deck.at(-1))
                     for (const [player, cards] of Object.entries(data.players))
@@ -561,7 +560,6 @@ export default {
                     if (this.users.findIndex(u => u.id == data.user.id) !== -1) return
                     return this.users.push(data.user)
                 case 'player_take_card':
-                    this.updateAttacker(data)
                     isAttackerPlayer = profile.id == data.attacker_player_index
                     if (data.player == profile.id && count > 0) {
                         for (const card of data.cards) giveCard.bind(this)(data.player, card)
@@ -573,6 +571,7 @@ export default {
                     return document.querySelector(`div[data-player="${data.player}"]`).parentNode.remove()
                 case 'discard_card':
                     isAttackerPlayer = profile.id == data.attacker_player_index
+                    this.updateAttacker(data)
                     const card = document.createElement('img')
                     card.dataset.player = Object.keys(data.deck.players).find(id => id != profile.id)
                     card.dataset.card = data.deck.table.at(-1)
@@ -605,7 +604,7 @@ export default {
                     telegram.alert('Стол переполнен!', true)
                     break;
                 case 'game_beat':
-                    if (data.status === false && data.player == profile.id) {
+                    if (data.status === false && data.player == (await telegram.profile()).id) {
                         canBeat = false
                     }
                     break;
@@ -616,7 +615,6 @@ export default {
         document.addEventListener('touchstart', async e=>{
             const card = e.target;
             if (!card.dataset?.card) return
-            if (!isAttackerPlayer) return
             if (card.dataset.gameCell !== undefined) {
                 const otherCard = this.gameCells[card.dataset.gameCell].find(c => c.dataset.card != card.dataset.card)
                 const top = otherCard?.style.zIndex == 3;
@@ -649,9 +647,13 @@ export default {
             touch = false
             dragging = lastDragging = false
             if (!activeCard) return
-            if (!isAttackerPlayer) return
+
+            this.cardsCount === 24 && this.gameCells.length === 10 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
+            this.gameCells.length >= 12 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
+            isAttackerPlayer ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
             canBeat ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
             ty > window.innerHeight * 0.75 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
+
             canBeat = true
             activeCard = null
         })
