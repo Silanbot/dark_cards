@@ -590,17 +590,16 @@ export default {
         }
     },
     async created() {
-        const profile = await telegram.profile()
-        this.user = await api.profile(profile.id, profile.username)
-        telegram.showBackButton()
-        telegram.addOnClickHandlerForBackButton('/profile')
-    },
-    beforeCreate() {
         const { storage } = useStorage()
 
         this.selectMode = parseInt(storage.getItem('selectMode')) || 1
         this.coins = storage.getItem('coins') || '1м - 1м'
         this.cash = storage.getItem('cash') || '1м - 1м'
-    }
+
+        const profile = await telegram.profile()
+        this.user = await api.profile(profile.id, profile.username)
+        telegram.showBackButton()
+        telegram.addOnClickHandlerForBackButton('/profile')
+    },
 }
 </script>
