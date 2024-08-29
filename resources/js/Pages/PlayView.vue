@@ -531,7 +531,7 @@ export default {
         let tx, ty
 
         let activeCard = null
-        let canBeat = false;
+        let canBeat = true;
 
         let countElem = document.querySelector('.game__cart__cold__count')
         let count = parseInt(countElem.innerHTML)
