@@ -156,8 +156,8 @@ class GameService implements GameContract
             return (bool) $this->centrifugo->publish('room', [
                 'event' => 'game_beat',
                 'status' => true,
-                'attacker_player_index' => $room->opponent_player_index,
-                'opponent_player_index' => $room->attacker_player_index,
+                'attacker_player_index' => $room->attacker_player_index,
+                'opponent_player_index' => $room->opponent_player_index,
                 'player' => $user,
             ]);
         }
@@ -165,8 +165,8 @@ class GameService implements GameContract
         return (bool) $this->centrifugo->publish('room', [
             'event' => 'game_beat',
             'status' => false,
-            'attacker_player_index' => $room->opponent_player_index,
-            'opponent_player_index' => $room->attacker_player_index,
+            'attacker_player_index' => $room->attacker_player_index,
+            'opponent_player_index' => $room->opponent_player_index,
             'player' => $user,
         ]);
     }
@@ -223,8 +223,8 @@ class GameService implements GameContract
                 'players' => $players,
                 'trump' => $room->deck->get('trump'),
             ],
-            'attacker_player_index' => $room->attacker_player_index,
-            'opponent_player_index' => $room->opponent_player_index,
+            'attacker_player_index' => $room->opponent_player_index,
+            'opponent_player_index' => $room->attacker_player_index,
         ]);
 
         return $this->centrifugo->publish('room', [
