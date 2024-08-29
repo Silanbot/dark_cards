@@ -565,6 +565,7 @@ export default {
                     if (data.player == profile.id && count > 0) {
                         for (const card of data.cards) giveCard.bind(this)(data.player, card)
                     }
+                    canBeat = true
                     return
                 case 'player_take_table':
                     return this.takeFromTable(data)
