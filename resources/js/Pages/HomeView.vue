@@ -488,31 +488,24 @@
 import telegram from "./api/telegram.js";
 import api from './api/users.api.js'
 import gameApi from "./api/game.api.js";
+import useStorage from "./api/storage.js";
 
 export default {
     data() {
         return {
-            selectMode: localStorage.getItem('selectMode') || 1,
+            selectMode: null,
             user: {},
-            token: '',
-            coins: '1м - 1м',
-            cash: '1м-1м'
+            coins: null,
+            cash: null,
+            coinsMode: 2,
+            cashMode: 1,
         }
     },
     methods: {
         async createGame() {
-            if (this.selectMode === 2) {
-                const bank = this.getBank()[0]
-                if (this.user.coins < bank) {
-                    telegram.alert('У вас недостаточно средств, выберите другой диапазон ставок', true)
-                    return
-                }
-            } else {
-                const bank = this.getBank()[0]
-                if (this.user.cash < bank) {
-                    telegram.alert('У вас недостаточно средств, выберите другой диапазон ставок', true)
-                    return
-                }
+            const status = this.checkPlayerBank()
+            if (!status) {
+                return telegram.alert('У вас недостаточно средств, выберите другой диапазон ставок', true)
             }
             const room = await gameApi.createGame(this.getBank()[0], this.selectMode, (await telegram.profile()).id)
 
@@ -521,8 +514,9 @@ export default {
             }
         },
         isParamExists(name) {
-            let storage = localStorage.getItem('params')
-            if (storage === null) {
+            const { storage } = useStorage()
+
+            if (storage.getItem('params') == null) {
                 return false
             }
 
@@ -530,30 +524,33 @@ export default {
         },
         changeCoins() {
             telegram.switchSelectFeedback()
-            this.selectMode = 2
-            localStorage.setItem('selectMode', '2')
+            this.selectMode = this.coinsMode
+
+            const { storage } = useStorage()
+            storage.setItem('selectMode', this.selectMode.toString())
         },
         changeCash() {
             telegram.switchSelectFeedback()
-            this.selectMode = 1
-            localStorage.setItem('selectMode', '1')
+            this.selectMode = this.cashMode
+
+            const { storage } = useStorage()
+            storage.setItem('selectMode', this.selectMode.toString())
+        },
+        checkPlayerBank() {
+            const bank = this.getBank()[0]
+
+            if (this.selectMode === this.coinsMode) {
+                return this.user.coins > bank
+            }
+
+            return this.user.cash > bank
         },
         async findRoom() {
-            if (localStorage.getItem('selectMode') === '2') { // coins
-                const bank = this.getBank()[0]
-                console.log('coins', bank, this.user.coins)
-                if (this.user.coins < bank) {
-                    telegram.alert('У вас недостаточно средств, выберите другой диапазон ставок', true)
-                    return
-                }
-            } else { // cash
-                const bank = this.getBank()[0]
-                console.log('cash', bank, this.user.cash)
-                if (this.user.cash < bank) {
-                    telegram.alert('У вас недостаточно средств, выберите другой диапазон ставок', true)
-                    return
-                }
+            const status = this.checkPlayerBank()
+            if (!status) {
+                return telegram.alert('У вас недостаточно средств, выберите другой диапазон ставок', true)
             }
+
             const id = await gameApi.findRoomID(this.getBank(), this.selectMode, 2)
             if (id === undefined || id === null) {
                 telegram.alert('В данный момент нет свободных комнат', true)
@@ -569,16 +566,12 @@ export default {
             };
 
             const match = str.match(/^(\d+(?:\.\d+)?)([мк]?)$/);
-            console.log('convert', str, match)
             if (match) {
                 const num = parseFloat(match[1]);
                 const unit = match[2];
-                console.log('unit', unit)
                 if (unit in conversionMap) {
-                    console.log('in conversion map', unit)
                     return num * (unit === 'м' ? 1000000 : 1000);
                 } else {
-                    console.log('not in conversionMap', num)
                     return num;
                 }
             } else {
@@ -586,9 +579,10 @@ export default {
             }
         },
         getBank() {
-            const values = localStorage.getItem('selectMode')  === '1' ? this.cash : this.coins;
+            const { storage } = useStorage()
+
+            const values = storage.getItem('selectMode') === this.cashMode.toString() ? this.cash : this.coins;
             const [min, max] = values.split(' - ').map(this.convertStringToNumber);
-            console.log([min, max])
             return [min, max];
         },
         redirect(route) {
@@ -601,9 +595,12 @@ export default {
         telegram.showBackButton()
         telegram.addOnClickHandlerForBackButton('/profile')
     },
-    mounted() {
-        this.coins = localStorage.getItem('coins') ?? '1м - 1м'
-        this.cash = localStorage.getItem('cash') ?? '1м - 1м'
+    beforeCreate() {
+        const { storage } = useStorage()
+
+        this.selectMode = parseInt(storage.getItem('selectMode')) || 1
+        this.coins = storage.getItem('coins') || '1м - 1м'
+        this.cash = storage.getItem('cash') || '1м - 1м'
     }
 }
 </script>

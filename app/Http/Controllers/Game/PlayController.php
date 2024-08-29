@@ -20,12 +20,4 @@ class PlayController extends Controller
             'players' => ! empty($room->ready_state) ? User::query()->whereIn('id', $room->ready_state)->get() : [],
         ]);
     }
-
-    public function distribute(Request $request, Client $centrifuge): void
-    {
-        $players = $request->players;
-        $deck = new Deck(players: $players);
-
-        $centrifuge->publish('room', $deck->getPlayers());
-    }
 }

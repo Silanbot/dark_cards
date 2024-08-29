@@ -146,6 +146,7 @@
 <script>
 import telegram from './api/telegram.js'
 import api from './api/users.api.js'
+import useStorage from "./api/storage.js";
 
 export default {
     data() {
@@ -157,6 +158,8 @@ export default {
     },
     methods: {
         submitFilters() {
+            const { storage } = useStorage()
+
             const from = window.getClosestRow(0)
             const to = window.getClosestRow(1)
 
@@ -168,11 +171,11 @@ export default {
             const url = new URL(document.location).searchParams
 
             if (url.has('coins')) {
-                localStorage.setItem('coins', this.range)
-                localStorage.setItem('selectMode', '2')
+                storage.setItem('coins', this.range)
+                storage.setItem('selectMode', '2')
             } else {
-                localStorage.setItem('cash', this.range)
-                localStorage.setItem('selectMode', '1')
+                storage.setItem('cash', this.range)
+                storage.setItem('selectMode', '1')
             }
 
             location.replace('/home')
@@ -284,12 +287,13 @@ export default {
 
     },
     async created() {
+        telegram.disableVerticalSwipes()
+
         const profile = await telegram.profile()
         this.user = await api.profile(profile.id, profile.username)
 
         telegram.showBackButton()
         telegram.addOnClickHandlerForBackButton('/home')
-        window.Telegram.WebApp.onEvent('viewportChanged', () => window.Telegram.WebApp.expand())
     }
 }
 </script>

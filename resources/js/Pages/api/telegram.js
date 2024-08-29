@@ -60,4 +60,8 @@ export default new class {
     confirm(message, callback) {
         this.telegram.showConfirm(message, callback)
     }
+
+    disableVerticalSwipes() {
+        window.Telegram.WebApp.disableVerticalSwipes()
+    }
 }

@@ -342,6 +342,7 @@ import {Centrifuge} from "centrifuge";
 import telegram from './api/telegram.js'
 import gameApi from './api/game.api.js'
 import api from './api/users.api.js'
+import useStorage from "./api/storage.js";
 
 export default {
     props: {
@@ -508,6 +509,7 @@ export default {
         const profile = await telegram.profile()
         const token = await api.generateConnectionToken(profile.id)
         this.user = await api.profile(profile.id, profile.username)
+        const { storage } = useStorage()
 
         window.Telegram.WebApp.BackButton.onClick(() => telegram.confirm('Ты действительно хочешь выйти из комнаты?', async () => {
             await gameApi.leave(this.user.id, this.room.id)
@@ -619,7 +621,7 @@ export default {
                 const otherCard = this.gameCells[card.dataset.gameCell].find(c => c.dataset.card != card.dataset.card)
                 const top = otherCard?.style.zIndex == 3;
 
-                const isCheaters = localStorage.getItem('params')?.split(',').includes('cheaters') ?? false;
+                const isCheaters = storage.getItem('params')?.split(',').includes('cheaters') ?? false;
                 if (!top || !this.cannotBeat(card.dataset.card, otherCard.dataset.card)) return
 
                 const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
@@ -747,7 +749,7 @@ export default {
 
             const top = this.gameCells[gameCell].length != 0;
             if (discardIsMine && isAttackerPlayer) {
-                const isCheaters = localStorage.getItem('params')?.split(',').includes('cheaters') ?? false;
+                const isCheaters = storage.getItem('params')?.split(',').includes('cheaters') ?? false;
                 if (!isCheaters && top && this.cannotBeat(card.dataset.card, this.gameCells[gameCell][Number(!top)].dataset.card)) return this.addMyCard(card, false)
 
                 if (top) gameApi.fight(this.room.id, this.gameCells[gameCell][Number(!top)].dataset.card, card.dataset.card, this.user.id)

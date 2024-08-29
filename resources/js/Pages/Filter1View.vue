@@ -428,6 +428,7 @@
 <script>
 import api from './api/users.api.js'
 import telegram from './api/telegram.js'
+import useStorage from "./api/storage.js";
 
 export default {
     data() {
@@ -438,14 +439,19 @@ export default {
     },
     methods: {
         addParams() {
+            const { storage } = useStorage()
+
             let filters = []
             document.querySelectorAll('.active').forEach(filter => filters.push(filter.getAttribute('name')))
             filters.push(`select_mode_${this.selectMode}`)
-            localStorage.setItem('params', filters.join(','))
+            storage.setItem('params', filters.join(','))
+
             location.replace('/home')
         },
         paramExists(name) {
-            return localStorage.getItem('params') !== null ? localStorage.getItem('params').split(',').includes(name) : false
+            const { storage } = useStorage()
+
+            return storage.getItem('params') !== null ? storage.getItem('params').split(',').includes(name) : false
         }
     },
     async created() {
