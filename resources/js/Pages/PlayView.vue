@@ -561,6 +561,7 @@ export default {
                     return this.users.push(data.user)
                 case 'player_take_card':
                     isAttackerPlayer = profile.id == data.attacker_player_index
+                    this.updateAttacker(data)
                     if (data.player == profile.id && count > 0) {
                         for (const card of data.cards) giveCard.bind(this)(data.player, card)
                     }
@@ -590,6 +591,7 @@ export default {
                     return document.querySelector('#cards').removeChild(cardd)
                 case 'beats':
                     if (!this.gameCells.flat().length) return
+                    isAttackerPlayer = data.attacker_player_index === (await telegram.profile()).id
                     this.updateAttacker(data);
                     return this.endCards(data)
                 case 'user_win':
@@ -606,8 +608,11 @@ export default {
                 case 'game_beat':
                     if (data.status === false && data.player == (await telegram.profile()).id) {
                         canBeat = false
+
+                        return
                     }
-                    break;
+                    this.updateAttacker(data)
+                    return
             }
         }).subscribe()
         this.centrifugo.connect()
@@ -648,10 +653,10 @@ export default {
             dragging = lastDragging = false
             if (!activeCard) return
 
-            this.cardsCount === 24 && this.gameCells.length === 10 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
-            this.gameCells.length >= 12 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
-            isAttackerPlayer ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
-            canBeat ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
+            // this.cardsCount === 24 && this.gameCells.length === 10 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
+            // this.gameCells.length >= 12 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
+            // isAttackerPlayer ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
+            // canBeat ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
             ty > window.innerHeight * 0.75 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
 
             canBeat = true
@@ -752,7 +757,16 @@ export default {
             const top = this.gameCells[gameCell].length != 0;
             if (discardIsMine && isAttackerPlayer) {
                 const isCheaters = storage.getItem('params')?.split(',').includes('cheaters') ?? false;
-                if (!isCheaters && top && this.cannotBeat(card.dataset.card, this.gameCells[gameCell][Number(!top)].dataset.card)) return this.addMyCard(card, false)
+                if (!isCheaters && top && this.cannotBeat(card.dataset.card, this.gameCells[gameCell][Number(!top)].dataset.card))
+                    return this.addMyCard(card, false)
+                console.log(this.gameCells, gameCell)
+                // Первый ход и остальные ходы
+                if ((this.gameCells.length === 10 && this.cardsCount === 24) || this.gameCells.length >= 12) {
+                    return this.addMyCard(card, false)
+                }
+                if (!this.myTurn) {
+                    return this.addMyCard(card, false)
+                }
 
                 if (top) gameApi.fight(this.room.id, this.gameCells[gameCell][Number(!top)].dataset.card, card.dataset.card, this.user.id)
                 gameApi.discard(card.dataset.card, this.room.id, this.user.id)
