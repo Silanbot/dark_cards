@@ -657,9 +657,21 @@ export default {
             // this.gameCells.length >= 12 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             // isAttackerPlayer ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
             // canBeat ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
-            ty > window.innerHeight * 0.75 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
+            if (!this.myTurn) {
+                this.addMyCard(activeCard, false)
+                activeCard = null
 
-            canBeat = true
+                return
+            }
+
+            if (ty > window.innerHeight * 0.75) {
+                discardCard.bind(this)(activeCard)
+            } else {
+                this.addMyCard(activeCard, false)
+            }
+
+            // ty > window.innerHeight * 0.75 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
+
             activeCard = null
         })
         let time = performance.now();
