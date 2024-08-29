@@ -516,11 +516,11 @@ export default {
         isParamExists(name) {
             const { storage } = useStorage()
 
-            if (storage.getItem('params') == null) {
+            if (!storage.getItem('params')) {
                 return false
             }
 
-            return storage.split(',').includes(name)
+            return storage.getItem('params').split(',').includes(name)
         },
         changeCoins() {
             telegram.switchSelectFeedback()
