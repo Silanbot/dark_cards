@@ -544,7 +544,7 @@ export default {
             switch (data.event) {
                 case 'game_started':
                     this.started = true
-                    isAttackerPlayer = profile.id == data.attacker_player_index
+                    isAttackerPlayer = (await telegram.profile()).id == data.attacker_player_index
                     this.updateAttacker(data)
                     setTrumpCard(data.deck.at(-1))
                     for (const [player, cards] of Object.entries(data.players))
@@ -657,7 +657,8 @@ export default {
             // this.gameCells.length >= 12 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             // isAttackerPlayer ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
             // canBeat ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
-            if (!this.myTurn) {
+            if (!isAttackerPlayer) {
+                console.log('isAttackerPlayer touchend', isAttackerPlayer)
                 this.addMyCard(activeCard, false)
                 activeCard = null
 
@@ -771,12 +772,12 @@ export default {
                 const isCheaters = storage.getItem('params')?.split(',').includes('cheaters') ?? false;
                 if (!isCheaters && top && this.cannotBeat(card.dataset.card, this.gameCells[gameCell][Number(!top)].dataset.card))
                     return this.addMyCard(card, false)
-                console.log(this.gameCells, gameCell)
+                console.log('gameCells', this.gameCells, gameCell)
                 // Первый ход и остальные ходы
-                if ((this.gameCells.length === 10 && this.cardsCount === 24) || this.gameCells.length >= 12) {
+                if (this.gameCells.length === 10 && this.cardsCount === 24) {
                     return this.addMyCard(card, false)
                 }
-                if (!this.myTurn) {
+                if (!isAttackerPlayer) {
                     return this.addMyCard(card, false)
                 }
 
