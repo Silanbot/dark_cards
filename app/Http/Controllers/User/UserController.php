@@ -29,10 +29,16 @@ final class UserController extends Controller
     {
         $user = $this->actor->findByID($request->id);
 
-        $user->update(['balance' => $request->balance]);
+        if ($request->has('cash')) {
+            $user->update(['cash' => $request->cash]);
+        }
+        if ($request->has('coins')) {
+            $user->update(['coins' => $request->coins]);
+        }
 
         return response()->json([
-            'balance' => $user->balance,
+            'coins' => $user->coins,
+            'cash' => $user->cash,
         ]);
     }
 }
