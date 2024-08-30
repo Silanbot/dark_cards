@@ -4,7 +4,6 @@ export default new (class {
     api  = makeApi()
 
 	async profile(id, username) {
-        console.log(id, username)
 		const response = await (await this.api)({
 			method: 'GET',
 			url: '/api/profile',

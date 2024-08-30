@@ -518,7 +518,6 @@ export default {
 
         this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })
         this.centrifugo.on('connected', async () => {
-            console.log('Successfully connected to WSS server')
             const res = await fetch(`/api/game/join?${new URLSearchParams({ id: this.room.id, user_id: profile.id })}`)
             for (const user of await res.json())
                 this.users.push(user);
@@ -659,7 +658,6 @@ export default {
             // isAttackerPlayer ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
             // canBeat ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
             if (!isAttackerPlayer) {
-                console.log('isAttackerPlayer touchend', isAttackerPlayer)
                 this.addMyCard(activeCard, false)
                 activeCard = null
 
@@ -780,7 +778,6 @@ export default {
                 const isCheaters = storage.getItem('params')?.split(',').includes('cheaters') ?? false;
                 if (!isCheaters && top && this.cannotBeat(card.dataset.card, this.gameCells[gameCell][Number(!top)].dataset.card))
                     return this.addMyCard(card, false)
-                console.log('gameCells', this.gameCells, gameCell)
                 // Первый ход и остальные ходы
                 if (this.gameCells.length === 10 && this.cardsCount === 24) {
                     return this.addMyCard(card, false)

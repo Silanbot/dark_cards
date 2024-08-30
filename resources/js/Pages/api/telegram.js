@@ -3,7 +3,6 @@ export default new class {
 	user = {};
 
 	constructor() {
-		console.log('import.meta.env.VITE_DEV', import.meta.env.VITE_DEV);
 		if (import.meta.env.VITE_DEV && !window.Telegram.WebApp.initDataUnsafe.user) {
 			window.Telegram.WebApp.initDataUnsafe.user = new Promise(async r =>
 				r(
@@ -17,9 +16,6 @@ export default new class {
 
 		this.telegram = window.Telegram.WebApp;
 		this.user = window.Telegram.WebApp.initDataUnsafe.user;
-		(async () => {
-			console.log('tg.user', await window.Telegram.WebApp.initDataUnsafe.user);
-		})();
 	}
 
 	notificationFeedback(style) {
