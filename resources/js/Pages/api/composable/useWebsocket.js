@@ -11,7 +11,7 @@ export default function useWebsocket(token, subscription) {
         onConnected: callback => centrifugo.on('connected', callback),
         runListening: () => {
             centrifugo.getSubscription(subscription).on('publication', ({ context }) => {
-                listeners.find(listener => listener.event === context.event).handler()
+                listeners.find(listener => listener.event === context.event).handler(context.data)
             }).subscribe()
 
             centrifugo.connect()

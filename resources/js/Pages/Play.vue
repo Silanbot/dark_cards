@@ -1,18 +1,22 @@
 <script setup>
-import {useWebApp, useWebAppBackButton, useWebAppCloudStorage, useWebAppHapticFeedback, useWebAppPopup} from "vue-tg"
-import {h, onMounted, ref} from "vue"
+import { useWebApp, useWebAppBackButton, useWebAppCloudStorage, useWebAppHapticFeedback, useWebAppPopup } from "vue-tg"
+import { h, onMounted, reactive, ref } from "vue"
 
 import useWebsocket from "./api/composable/useWebsocket.js";
 import useConnectionToken from "./api/composable/useConnectionToken.js";
 import useConnection from "./api/composable/useConnection.js";
 import useCards from "./api/composable/useCards.js";
 import Card from "./components/Card.vue";
-import {c} from "vite/dist/node/types.d-aGj9QkWt.js";
+import useCellPosition from "./api/composable/useCellPosition.js";
+import useCardHigherThan from "./api/composable/useCardHigherThan.js";
+import useThrowCard from "./api/composable/useThrowCard.js";
+import useFightCard from "./api/composable/useFightCard.js";
+import useEventListener from "./api/composable/useEventListener.js";
 
-const {initDataUnsafe} = useWebApp()
+const { initDataUnsafe } = useWebApp()
 const props = defineProps({
     room: Object,
-    players: Object
+    players: Array
 })
 const { $cards } = useCards()
 
@@ -27,6 +31,13 @@ const room = ref(props.room)
 const isAttackerPlayer = ref(false)
 const cards = ref([])
 const trump = ref([])
+const cells = reactive(Array.from({ length: 5 }, () => []))
+const hand = ref()
+const ranks = reactive({ 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 1: 10, j: 11, q: 12, k: 13, a: 14 })
+const suits = reactive({ s: 1, c: 2, h: 3, d: 4, j: 5 })
+const count = ref(document.querySelectorAll('img.my-card').length)
+const countCardsInDeck = ref(36)
+const isTouched = ref(false)
 
 const { getStorageItem } = useWebAppCloudStorage()
 const { showConfirm, showAlert } = useWebAppPopup()
@@ -44,58 +55,184 @@ function sendJoinEvent() {
     players.value = $players
 }
 
-function updateAttacker(attacker) {
+function setAttacker(attacker) {
     isAttackerPlayer.value = parseInt(attacker) === profile.id
 }
 
 function setTrump(deck) {
     const card = deck.at(-1)
-    const code = `${card.rank[0]}${card.suit[0]}`.toLowerCase()
+    const code = `${ card.rank[0] }${ card.suit[0] }`.toLowerCase()
 
-    trump.value.src = getCard(code).src
+    trump.value.src = getCardSrc(code)
+}
+
+function lt(a, b) {
+    return suits[a[1]] === suits[b[1]] ? ranks[a[0]] < ranks[b[0]] : suits[a[1]] < suits[b[1]]
+}
+
+function throwTheCard(card) {
+    const throwIsMine = parseInt(card.dataset.player) === profile.id
+
+    if (!throwIsMine) {
+        const player = [...document.querySelectorAll('.game__players__player__photo')].find(photo => photo.dataset.player === card.dataset.player)
+
+        if (!player) {
+            showAlert('Не найден оппонент для выброса карты')
+            notificationOccurred('error')
+
+            return
+        }
+
+        const playerRect = player.getBoundingClientRect()
+        card.style.transform = `translate(${playerRect.x + playerRect.width / 2}px, ${playerRect.y + playerRect.height / 2}px)`
+        card.style.width = '10vw'
+
+        hand.value.appendChild(card)
+        timeout(300)
+    }
+
+    const cell = cells.findIndex(c => c.length < 2 && (c.length === 0 || c[0].dataset.player !== card.dataset.player))
+    const isCovering = cells[cell].length !== 0
+
+    if (throwIsMine && isAttackerPlayer.value) {
+        let withCheaters = false;
+
+        getStorageItem('params')
+            .then(value => {
+                withCheaters = value.split(',').includes('cheaters') ?? false
+            })
+
+        if (!isCovering) {
+            return addCard(card, false)
+        }
+
+        if (isCovering) {
+            useThrowCard()
+        }
+
+        // Если это первый кон, то максимальное количество карт на столе 10
+        if (cells.length === 10 && countCardsInDeck.value === 24) {
+            return addCard(card, false)
+        }
+
+        const opponentCard = cells[cell][Number(!isCovering)].dataset.card
+        const isHigher = useCardHigherThan(card.dataset.card, opponentCard, trump.value)
+
+        // Если играем без шулеров и карта больше той, которую бьем
+        if (!withCheaters && isHigher) {
+            useFightCard(room.id, opponentCard, card.dataset.card, profile.id)
+        }
+
+        if (!withCheaters && !isHigher) {
+            return addCard(card, false)
+        }
+
+        if (withCheaters) {
+            useFightCard(room.id, opponentCard, card.dataset.card, profile.id)
+        }
+
+        useThrowCard()
+    }
+
+    if (!isAttackerPlayer.value) {
+        addCard(card, false)
+    }
 }
 
 function sendCards(players) {
     for (const [player, cards] of Object.entries(players)) {
         for (const code of cards) {
+            sendCard(player, code)
 
+            timeout(100)
         }
     }
 }
 
 function sendCard(player, code) {
-    const card = h('img', { attrs: { 'data-card': profile.id === parseInt(player) ? card : 'b', 'data-player': player, src: getCard(code).src } })
-    if (profile.id === parseInt(player)) addCard(card)
+    const card = document.createElement('img')
+    card.setAttribute('data-card', profile.id === parseInt(player) ? code : 'b')
+    card.setAttribute('data-player', player)
+    card.setAttribute('src', getCardSrc(code))
+
+    if (profile.id === parseInt(player)) {
+        return addCard(card)
+    }
+
+    const playerPhoto = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player === player)
+    if (!playerPhoto) {
+        showAlert('Не найден оппонент для раздачи')
+        notificationOccurred('error')
+
+        return
+    }
+
+    hand.value.appendChild(card)
+    const rect = playerPhoto.getBoundingClientRect()
+    card.style.transform = `translate(${rect.x + rect.width / 2}px, ${rect.y + rect.height / 2})`
+    card.style.width = '10vw'
+
+    countCardsInDeck.value = count.value--
 }
 
 function addCard(card, addElement = true) {
-    card.el.style.removeProperty('z-index')
-    card.el.style.width = '30vw'
-    card.el.style.left = '-15vw'
-    card.el.style.top = '-28vw'
-    card.el.classList.add('my-card');
+    card.style.removeProperty('z-index')
+    card.style.width = '30vw'
+    card.style.left = '-15vw'
+    card.style.top = '-28vw'
+    card.classList.add('my-card');
 
-    if (card.el.dataset.gameCell !== undefined) {
-        
+    if (card.dataset.cell !== undefined) {
+        const cell = cells[card.dataset.cell].findIndex(c => c.dataset.card === card.dataset.card)
+        cells[card.dataset.cell].splice(cell, 1)
+
+        if (cells[card.dataset.cell][0]) {
+            const positions = useCellPosition()
+            const [x, y] = positions[card.dataset.cell]
+
+            cells[card.dataset.cell][0].style.transform = `translate(${ x }px, ${ y }px)`
+            cells[card.dataset.cell][0].style.zIndex = 3
+        }
+
+        delete card.el.dataset.cell
     }
+
+    for (const cardHand of document.querySelectorAll('img.my-card')) {
+        if (lt(card.dataset.card, cardHand.dataset.card)) {
+            return hand.value.insertBefore(card, cardHand)
+        }
+    }
+
+    hand.value.appendChild(card)
 }
 
 function timeout(ms) {
     return new Promise(r => setTimeout(r, ms))
 }
 
-function getCard(code) {
-    return cards.value.find(card => card.dataset.cardimg === code)
+function getCardSrc(code) {
+    return cards.value.find(card => card.dataset.cardimg === code)?.src
+}
+
+function setStarted() {
+    started.value = true
 }
 
 function eventStartGame(data) {
-    started.value = true
-    updateAttacker(data.attacker_player_index)
-    setTrump(data.deck)
+    const { attacker_player_index, deck, players } = data
+
+    setStarted()
+    setTrump(deck)
+    sendCards(players)
+    setAttacker(attacker_player_index)
 }
 
-function eventPlayerJoin() {
+function eventPlayerJoin(data) {
+    const { user } = data
 
+    if (user.id !== profile.id || players.value.findIndex(user => user.id === profile.id) === -1) {
+        players.value.push(user)
+    }
 }
 
 function eventPlayerTakeCard() {
@@ -110,7 +247,8 @@ function eventPlayerLeft() {
 
 }
 
-function eventDiscardCard() {
+function eventDiscardCard(data) {
+    isAttackerPlayer.value = parseInt(data.attacker_player_index) === profile.id
 
 }
 
@@ -127,7 +265,7 @@ function eventPlayerWin() {
 }
 
 function eventTableFull() {
-
+    showAlert('Стол переполнен!')
 }
 
 function eventGameBeat() {
@@ -141,7 +279,7 @@ onMounted(() => {
 
     getStorageItem('mode')
         .then(value => (mode.value = parseInt(value)))
-        .catch(err => (console.error(`Произошла ошибка при получении данных с CloudStorage: ${err}`)))
+        .catch(err => (console.error(`Произошла ошибка при получении данных с CloudStorage: ${ err }`)))
     const { $token } = useConnectionToken(profile.id)
     const $websocket = useWebsocket($token, 'room')
 
@@ -161,12 +299,30 @@ onMounted(() => {
     $websocket.addListener({ event: 'game_beat', handler: eventGameBeat })
 
     $websocket.runListening()
+
+    useEventListener('touchstart', e => {
+        const card = e.target
+        if (!card.dataset.card) {
+            return
+        }
+
+        if (card.dataset.cell !== undefined) {
+            const opponentCard = cells[card.dataset.cell].find(c => c.dataset.card !== card,dataset.card)
+            const isCover = opponentCard?.style.zIndex === 3
+
+            let withCheaters = false;
+            getStorageItem('params')
+                .then(value => {
+                    withCheaters = value.split(',').includes('cheaters')
+                })
+        }
+    })
 })
 </script>
 
 <template>
     <div style="display:none">
-        <Card v-for="card of listOfCards" ref="cards" :data-cardimg="card.img" :src="card.src" />
+        <Card v-for="card of listOfCards" ref="cards" :data-cardimg="card.img" :src="card.src"/>
     </div>
     <section class="inter section section-inter">
         <div class="inter__header inter__header_play">
@@ -228,13 +384,13 @@ onMounted(() => {
             <div class="inter__monet inter__monet_right">
                 <span>{{ room.bank }}</span>
                 <img src="./sources/coin2.svg" alt="" v-if="room.game_type == 1"/>
-                <img src="./sources/coin1.svg" alt="" v-else />
+                <img src="./sources/coin1.svg" alt="" v-else/>
             </div>
         </div>
         <div class="inter__inner el-2 blured">
             <img src="./sources/back-3.png" class="back-3" alt=""/>
             <section class="section-game game">
-                <div id="cards"></div>
+                <div id="cards" ref="hand"></div>
                 <div class="game__players">
                     <div class="game__players__player" :key="i" v-for="(user, i) of users" :class="(() => {
                         const d = i + 1 - ~~(users.length / 2)
@@ -277,10 +433,16 @@ onMounted(() => {
                     <div class="footer__button" @click="setReadyState" v-else>Не готов</div>
                 </template>
                 <template v-else>
-                    <div class="footer__button" @click="startFinishBeat"       v-if="!myTurn && gameCells.filter(c => c.length).length && gameCells.filter(c => c.length).every(c => c.length == 2)">Бито</div>
-                    <div class="footer__button"                                v-else-if="myTurn">Ваш ход</div>
+                    <div class="footer__button" @click="startFinishBeat"
+                         v-if="!myTurn && gameCells.filter(c => c.length).length && gameCells.filter(c => c.length).every(c => c.length == 2)">
+                        Бито
+                    </div>
+                    <div class="footer__button" v-else-if="myTurn">Ваш ход</div>
                     <!--                    gameCells.every(c => !c.length)-->
-                    <div class="footer__button" @click="() => takeFromTable()" v-else :style="{ visibility: !myTurn && gameCells.filter(c => !c.length).length && gameCells.filter(c => c.length).every(c => c.length == 2) ? 'hidden' : undefined }">Взять</div>
+                    <div class="footer__button" @click="() => takeFromTable()" v-else
+                         :style="{ visibility: !myTurn && gameCells.filter(c => !c.length).length && gameCells.filter(c => c.length).every(c => c.length == 2) ? 'hidden' : undefined }">
+                        Взять
+                    </div>
                 </template>
 
                 <div class="footer__person">
