@@ -365,7 +365,7 @@ onMounted(() => {
             notificationOccurred('error')
         })
     const { $token } = useConnectionToken(profile.id)
-    const $websocket = useWebsocket($token, 'room')
+    const $websocket = useWebsocket($token, channel.value)
 
     $websocket.onConnected(sendJoinEvent)
     $websocket.subscribe(channel.value)
