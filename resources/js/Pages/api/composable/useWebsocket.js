@@ -2,7 +2,7 @@ import {Centrifuge} from "centrifuge";
 
 
 export default function useWebsocket(token, subscription) {
-    const endpoint = `https://${window.location.host}/connection/websocket`
+    const endpoint = `wss://${window.location.host}/connection/websocket`
     const centrifugo = new Centrifuge(endpoint, { token })
     let listeners = []
 
