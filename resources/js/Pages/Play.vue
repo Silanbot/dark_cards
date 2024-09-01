@@ -54,7 +54,8 @@ const { notificationOccurred } = useWebAppHapticFeedback()
 const { showBackButton, onBackButtonClicked } = useWebAppBackButton()
 showBackButton()
 onBackButtonClicked(() => {
-    showConfirm('Ты действительно хочешь выйти из комнаты?', async () => await useLeaveEvent(room.value.id, user.value.id))
+    // При выходе удалять из списка игроков для избежания дублей
+    showConfirm('Ты действительно хочешь выйти из комнаты?', async (ok) => ok ? await useLeaveEvent(room.value.id, user.value.id) : false)
     notificationOccurred('warning')
 })
 
