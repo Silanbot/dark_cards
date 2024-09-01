@@ -55,7 +55,7 @@ function sendLeaveEvent() {
 }
 
 async function sendJoinEvent() {
-    console.log(profile.value)
+    console.log(profile.value.id)
     const { $players } = useConnection(room.value.id, profile.value)
     players.value = $players
 
