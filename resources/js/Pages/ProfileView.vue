@@ -87,7 +87,7 @@
                         />
                     </svg>
                 </div>
-                <a href="/achievements" class="inter__buttons__item">
+                <a href="/play/1?new" class="inter__buttons__item">
                     <div class="svg">
                         <img src="./sources/i3.svg" alt=""/>
                     </div>

@@ -19,3 +19,7 @@ Route::get('/filter1', function () {
 Route::get('/filter3', function () {
     return inertia('Filter3View');
 });
+
+Route::get('/v2/play/1', function () {
+    return inertia('Play');
+});

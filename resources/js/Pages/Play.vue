@@ -1,17 +1,17 @@
 <script setup>
 import { useWebApp, useWebAppBackButton, useWebAppCloudStorage, useWebAppHapticFeedback, useWebAppPopup } from "vue-tg"
-import { h, onMounted, reactive, ref } from "vue"
+import { onMounted, reactive, ref } from "vue"
 
 import useWebsocket from "./api/composable/useWebsocket.js";
 import useConnectionToken from "./api/composable/useConnectionToken.js";
 import useConnection from "./api/composable/useConnection.js";
 import useCards from "./api/composable/useCards.js";
-import Card from "./components/Card.vue";
 import useCellPosition from "./api/composable/useCellPosition.js";
 import useCardHigherThan from "./api/composable/useCardHigherThan.js";
 import useThrowCard from "./api/composable/useThrowCard.js";
 import useFightCard from "./api/composable/useFightCard.js";
 import useEventListener from "./api/composable/useEventListener.js";
+import useQuerySelector from "./api/composable/useQuerySelector.js";
 
 const { initDataUnsafe } = useWebApp()
 const props = defineProps({
@@ -38,6 +38,12 @@ const suits = reactive({ s: 1, c: 2, h: 3, d: 4, j: 5 })
 const count = ref(document.querySelectorAll('img.my-card').length)
 const countCardsInDeck = ref(36)
 const isTouched = ref(false)
+const isDragging = ref(false)
+const activeCard = ref()
+const tx = ref()
+const ty = ref()
+const withCheaters = ref(false)
+
 
 const { getStorageItem } = useWebAppCloudStorage()
 const { showConfirm, showAlert } = useWebAppPopup()
@@ -84,7 +90,7 @@ function throwTheCard(card) {
         }
 
         const playerRect = player.getBoundingClientRect()
-        card.style.transform = `translate(${playerRect.x + playerRect.width / 2}px, ${playerRect.y + playerRect.height / 2}px)`
+        card.style.transform = `translate(${ playerRect.x + playerRect.width / 2 }px, ${ playerRect.y + playerRect.height / 2 }px)`
         card.style.width = '10vw'
 
         hand.value.appendChild(card)
@@ -95,11 +101,9 @@ function throwTheCard(card) {
     const isCovering = cells[cell].length !== 0
 
     if (throwIsMine && isAttackerPlayer.value) {
-        let withCheaters = false;
-
         getStorageItem('params')
             .then(value => {
-                withCheaters = value.split(',').includes('cheaters') ?? false
+                withCheaters.value = value.split(',').includes('cheaters') ?? false
             })
 
         if (!isCovering) {
@@ -119,15 +123,15 @@ function throwTheCard(card) {
         const isHigher = useCardHigherThan(card.dataset.card, opponentCard, trump.value)
 
         // Если играем без шулеров и карта больше той, которую бьем
-        if (!withCheaters && isHigher) {
+        if (!withCheaters.value && isHigher) {
             useFightCard(room.id, opponentCard, card.dataset.card, profile.id)
         }
 
-        if (!withCheaters && !isHigher) {
+        if (!withCheaters.value && !isHigher) {
             return addCard(card, false)
         }
 
-        if (withCheaters) {
+        if (withCheaters.value) {
             useFightCard(room.id, opponentCard, card.dataset.card, profile.id)
         }
 
@@ -169,7 +173,7 @@ function sendCard(player, code) {
 
     hand.value.appendChild(card)
     const rect = playerPhoto.getBoundingClientRect()
-    card.style.transform = `translate(${rect.x + rect.width / 2}px, ${rect.y + rect.height / 2})`
+    card.style.transform = `translate(${ rect.x + rect.width / 2 }px, ${ rect.y + rect.height / 2 })`
     card.style.width = '10vw'
 
     countCardsInDeck.value = count.value--
@@ -272,6 +276,83 @@ function eventGameBeat() {
 
 }
 
+function touchstart(e) {
+    const card = e.target
+    if (!card.dataset.card) {
+        return
+    }
+
+    if (card.dataset.cell !== undefined) {
+        const opponentCard = cells[card.dataset.cell].find(c => c.dataset.card !== card, dataset.card)
+        const isCover = opponentCard?.style.zIndex === 3
+
+        getStorageItem('params')
+            .then(value => {
+                withCheaters.value = value.split(',').includes('cheaters')
+            })
+
+        const isHigher = useCardHigherThan(card.dataset.card, opponentCard.dataset.card)
+
+        if (!withCheaters.value && !isCover && !isHigher) {
+            return addCard(card, false)
+        }
+
+        const playerPhoto = [...useQuerySelector('..game__players__player__photo')].find(e => e, dataset.player === card.dataset.player)
+        if (!playerPhoto) {
+            showAlert('Не найден оппонент для игры')
+            notificationOccurred('error')
+
+            return
+        }
+
+        const playerRect = playerPhoto.getBoundingClientRect()
+        card.style.transform = `translate(${ playerRect.x + playerRect.width / 2 }px, ${ playerRect.y + playerRect.height / 2 }px)`
+        card.style.width = '10vw'
+        playerPhoto.style.zIndex = 6
+        timeout(300)
+
+        useQuerySelector('#cards').removeChild(card)
+        playerPhoto.style.zIndex = 1
+
+
+        // Revert card
+    }
+
+    isTouched.value = true
+    tx.value = e.touches[0].clientX
+    ty.value = e.touches[0].clientY
+    activeCard.value = card
+}
+
+function touchmove(e) {
+    tx.value = e.touches[0].clientX
+    ty.value = e.touches[0].clientY
+
+    const card = document.elementFromPoint(tx.value, ty.value)
+    if (isTouched.value && !isDragging.value && parseInt(card?.dataset.player) === profile.id) {
+        activeCard.value = card
+    }
+}
+
+function touchend(e) {
+    isTouched.value = false
+    isDragging.value = false
+
+    if (!activeCard.value) {
+        return
+    }
+
+    if (!isAttackerPlayer.value) {
+        return addCard(activeCard.value, false)
+    }
+
+    if (ty.value > window.innerHeight * 0.75) {
+        return addCard(activeCard.value, false)
+    }
+
+    useThrowCard(activeCard, room.value.id, profile.id)
+}
+
 onMounted(() => {
     const button = useWebAppBackButton()
     button.showBackButton()
@@ -279,7 +360,10 @@ onMounted(() => {
 
     getStorageItem('mode')
         .then(value => (mode.value = parseInt(value)))
-        .catch(err => (console.error(`Произошла ошибка при получении данных с CloudStorage: ${ err }`)))
+        .catch(err => {
+            showAlert('Произошла ошибка при получении данных с CloudStorage')
+            notificationOccurred('error')
+        })
     const { $token } = useConnectionToken(profile.id)
     const $websocket = useWebsocket($token, 'room')
 
@@ -300,29 +384,15 @@ onMounted(() => {
 
     $websocket.runListening()
 
-    useEventListener('touchstart', e => {
-        const card = e.target
-        if (!card.dataset.card) {
-            return
-        }
-
-        if (card.dataset.cell !== undefined) {
-            const opponentCard = cells[card.dataset.cell].find(c => c.dataset.card !== card,dataset.card)
-            const isCover = opponentCard?.style.zIndex === 3
-
-            let withCheaters = false;
-            getStorageItem('params')
-                .then(value => {
-                    withCheaters = value.split(',').includes('cheaters')
-                })
-        }
-    })
+    useEventListener('touchstart', touchstart)
+    useEventListener('touchmove', touchmove)
+    useEventListener('touchend', touchend)
 })
 </script>
 
 <template>
     <div style="display:none">
-        <Card v-for="card of listOfCards" ref="cards" :data-cardimg="card.img" :src="card.src"/>
+        <img v-for="card of listOfCards" ref="cards" :data-cardimg="card.img" :src="card.src"  alt=""/>
     </div>
     <section class="inter section section-inter">
         <div class="inter__header inter__header_play">
@@ -383,7 +453,7 @@ onMounted(() => {
             </div>
             <div class="inter__monet inter__monet_right">
                 <span>{{ room.bank }}</span>
-                <img src="./sources/coin2.svg" alt="" v-if="room.game_type == 1"/>
+                <img src="./sources/coin2.svg" alt="" v-if="parseInt(room.game_type) === 1"/>
                 <img src="./sources/coin1.svg" alt="" v-else/>
             </div>
         </div>
@@ -392,12 +462,12 @@ onMounted(() => {
             <section class="section-game game">
                 <div id="cards" ref="hand"></div>
                 <div class="game__players">
-                    <div class="game__players__player" :key="i" v-for="(user, i) of users" :class="(() => {
-                        const d = i + 1 - ~~(users.length / 2)
-                        const m = Math.abs(users.length % 2 != 0 || d > 0 ? d - 1 : d);
+                    <div class="game__players__player" :key="i" v-for="(player, i) of players" :class="(() => {
+                        const d = i + 1 - ~~(players.length / 2)
+                        const m = Math.abs(players.length % 2 !== 0 || d > 0 ? d - 1 : d);
                         return {
-                            small1: users.length > 3,
-                            small2: users.length > 4,
+                            small1: players.length > 3,
+                            small2: players.length > 4,
                             down1: m > 0,
                             down2: m > 1,
                         }
@@ -405,17 +475,17 @@ onMounted(() => {
                         <div class="game__players__player__cart" v-if="started">
                             <img src="./sources/cartes.svg" alt=""/>
                         </div>
-                        <div class="game__players__player__photo" :data-player="user.id">
+                        <div class="game__players__player__photo" :data-player="player.id">
                             <div class="win__amount">+100</div>
                             <img class="game__players__player__photo__img" src="./sources/player.png" alt=""/>
                             <div class="game__players__player__photo__text">
                                 <img src="./sources/level-2.png" alt=""/>
                             </div>
-                            <div class="game__players__player__photo__name">{{ user.username }}</div>
+                            <div class="game__players__player__photo__name">{{ player.username }}</div>
                         </div>
                     </div>
                 </div>
-                <div class="game__cart" v-if="cardsCount > 0">
+                <div class="game__cart">
                     <div class="game__cart__cold">
                         <div class="game__cart__cold__count">36</div>
                         <div class="game__cart__cold__carts">
@@ -429,18 +499,18 @@ onMounted(() => {
         <footer class="footer" style="z-index: 100">
             <div class="footer__inner footer__inner_play">
                 <template v-if="!started">
-                    <div class="footer__button" @click="setReadyState" v-if="!ready">Готов</div>
-                    <div class="footer__button" @click="setReadyState" v-else>Не готов</div>
+                    <div class="footer__button" @click="() => {}" v-if="true">Готов</div>
+                    <div class="footer__button" @click="() => {}" v-else>Не готов</div>
                 </template>
                 <template v-else>
-                    <div class="footer__button" @click="startFinishBeat"
-                         v-if="!myTurn && gameCells.filter(c => c.length).length && gameCells.filter(c => c.length).every(c => c.length == 2)">
+                    <div class="footer__button" @click="() => {}"
+                         v-if="!isAttackerPlayer && cells.filter(c => c.length).length && cells.filter(c => c.length).every(c => c.length === 2)">
                         Бито
                     </div>
-                    <div class="footer__button" v-else-if="myTurn">Ваш ход</div>
+                    <div class="footer__button" v-else-if="isAttackerPlayer">Ваш ход</div>
                     <!--                    gameCells.every(c => !c.length)-->
-                    <div class="footer__button" @click="() => takeFromTable()" v-else
-                         :style="{ visibility: !myTurn && gameCells.filter(c => !c.length).length && gameCells.filter(c => c.length).every(c => c.length == 2) ? 'hidden' : undefined }">
+                    <div class="footer__button" @click="() => {}" v-else
+                         :style="{ visibility: !isAttackerPlayer && cells.filter(c => !c.length).length && cells.filter(c => c.length).every(c => c.length === 2) ? 'hidden' : undefined }">
                         Взять
                     </div>
                 </template>
@@ -448,14 +518,14 @@ onMounted(() => {
                 <div class="footer__person">
                     <div class="win__amount win__amount__self">+100</div>
                     <div class="footer__person__img">
-                        <img :src="user.avatar" alt=""/>
+                        <img :src="profile.photo_url" alt=""/>
                         <div class="text">
                             <!--                            <img src="./sources/level-6.png" alt=""/>-->
                         </div>
                     </div>
-                    <div class="footer__person__name">{{ user.username }}</div>
+                    <div class="footer__person__name">{{ profile.username }}</div>
                 </div>
-                <div class="footer__button chat" v-if="!step" @click="modalDialogShow = true">
+                <div class="footer__button chat" v-if="true" @click="() => {}">
                     <svg width="50" height="43" viewBox="0 0 50 43" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M30.1728 7.38039C32.4847 8.8617 34.1058 11.3684 34.401 14.2781C35.3438 14.7283 36.3902 14.9872 37.4997 14.9872C41.55 14.9872 44.8328 11.6324 44.8328 7.4939C44.8328 3.35478 41.55 0 37.4997 0C33.4881 0.00127534 30.234 3.29612 30.1728 7.38039ZM25.3688 22.724C29.4191 22.724 32.7019 19.3686 32.7019 15.2301C32.7019 11.0916 29.4184 7.73685 25.3688 7.73685C21.3191 7.73685 18.0344 11.0923 18.0344 15.2307C18.0344 19.3692 21.3191 22.724 25.3688 22.724ZM28.4793 23.2348H22.257C17.0797 23.2348 12.8678 27.5397 12.8678 32.8304V40.6068L12.8872 40.7286L13.4113 40.8963C18.3521 42.4739 22.6445 43 26.1775 43C33.0781 43 37.0779 40.9894 37.3244 40.8613L37.8142 40.6081H37.8666V32.8304C37.8685 27.5397 33.6566 23.2348 28.4793 23.2348ZM40.6115 15.4986H34.4372C34.3704 18.0231 33.3159 20.2964 31.648 21.9314C36.2498 23.3298 39.6169 27.6908 39.6169 32.8419V35.2383C45.7132 35.01 49.2263 33.2443 49.4578 33.1257L49.9476 32.8719H50V25.093C50 19.8028 45.7881 15.4986 40.6115 15.4986ZM12.5016 14.9884C13.9361 14.9884 15.2708 14.5606 16.4015 13.8317C16.7609 11.436 18.0176 9.3425 19.8128 7.91667C19.8203 7.77639 19.8334 7.63737 19.8334 7.49581C19.8334 3.3567 16.55 0.00191287 12.5016 0.00191287C8.45064 0.00191287 5.16848 3.3567 5.16848 7.49581C5.16848 11.633 8.45064 14.9884 12.5016 14.9884ZM19.0871 21.9314C17.4273 20.3047 16.3765 18.0435 16.2998 15.5343C16.0708 15.5171 15.8443 15.4986 15.6109 15.4986H9.38912C4.21191 15.4986 0 19.8028 0 25.093V32.8706L0.0193436 32.9905L0.543492 33.1595C4.50705 34.424 8.04443 35.0068 11.1169 35.1905V32.8419C11.1182 27.6908 14.484 23.3311 19.0871 21.9314Z"
@@ -463,7 +533,7 @@ onMounted(() => {
                     </svg>
                     <span>Чат</span>
                 </div>
-                <div class="footer__btns" v-if="step">
+                <div class="footer__btns" v-if="true">
                     <div class="footer__btns__row">
                         <div class="footer__btns__row__cart">
                             <div class="footer__btns__row__cart__icon">

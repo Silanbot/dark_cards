@@ -13,6 +13,13 @@ class PlayController extends Controller
 {
     public function connect(Request $request, Room $room): Response|ResponseFactory
     {
+        if ($request->has('new')) {
+            return inertia('Play', [
+                'room' => $room,
+                'players' => ! empty($room->ready_state) ? User::query()->whereIn('id', $room->ready_state)->get() : [],
+            ]);
+        }
+
         return inertia('PlayView', [
             'room' => $room,
             'players' => ! empty($room->ready_state) ? User::query()->whereIn('id', $room->ready_state)->get() : [],
