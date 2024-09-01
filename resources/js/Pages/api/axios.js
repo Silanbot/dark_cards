@@ -7,10 +7,10 @@ export const makeApi = async () => {
 
     api = axios.create({});
     const profile = await telegram.profile()
-    console.log(profile)
     const tokenData = (await api.post(`/api/authorize?web_app_data=${JSON.stringify(profile)}`)).data;
     const authData = `${tokenData.token_type} ${tokenData.token}`
     localStorage.setItem('token', authData)
+    localStorage.setItem('profile', profile)
     api.interceptors.request.use(config => {
         config.headers['Authorization'] = authData;
         return config;

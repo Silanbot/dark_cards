@@ -21,7 +21,7 @@ const props = defineProps({
 const { $cards } = useCards()
 
 // const profile = initDataUnsafe?.user
-let profile = null
+let profile = localStorage.getItem('profile')
 const listOfCards = ref($cards)
 
 const mode = ref(1)
@@ -358,10 +358,6 @@ onMounted(async () => {
     const button = useWebAppBackButton()
     button.showBackButton()
     button.onBackButtonClicked(sendLeaveEvent)
-
-    profile = window.Telegram.WebApp.initDataUnsafe.user
-
-    console.log(profile)
 
     getStorageItem('mode')
         .then(value => (mode.value = parseInt(value)))
