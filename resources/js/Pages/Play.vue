@@ -234,7 +234,7 @@ function eventStartGame(data) {
 }
 
 function eventPlayerJoin(data) {
-    if (parseInt(data.user.id) !== parseInt(profile.id) || players.value.findIndex(u => parseInt(u.id) === parseInt(user.id)) === -1) {
+    if (parseInt(data.user.id) !== parseInt(user.value.id) || players.value.findIndex(u => parseInt(u.id) === parseInt(user.value.id)) === -1) {
         players.value.push(user)
     }
 }
