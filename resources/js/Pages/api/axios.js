@@ -8,8 +8,8 @@ export const makeApi = async () => {
 
     api = axios.create({});
     const { initDataUnsafe } = useWebApp()
-
-    const profile = initDataUnsafe.user.id
+    console.log(initDataUnsafe)
+    const profile = initDataUnsafe.user
     const tokenData = (await api.post(`/api/authorize?web_app_data=${JSON.stringify(profile)}`)).data;
     const authData = `${tokenData.token_type} ${tokenData.token}`
     api.interceptors.request.use(async config => {
