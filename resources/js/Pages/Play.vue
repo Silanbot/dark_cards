@@ -355,9 +355,12 @@ function touchend(e) {
 }
 
 onMounted(async () => {
-    const button = useWebAppBackButton()
-    button.showBackButton()
-    button.onBackButtonClicked(() => sendLeaveEvent())
+    const { showBackButton, onBackButtonClicked } = useWebAppBackButton()
+    showBackButton()
+    onBackButtonClicked(() => {
+        showConfirm('Ты действительно хочешь выйти из комнаты?')
+        notificationOccurred('warning')
+    })
 
     getStorageItem('mode')
         .then(value => (mode.value = parseInt(value)))
