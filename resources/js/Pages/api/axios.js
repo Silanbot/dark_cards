@@ -7,9 +7,7 @@ export const makeApi = async () => {
     if (api !== undefined) return api;
 
     api = axios.create({});
-    const { initDataUnsafe } = useWebApp()
-    console.log(initDataUnsafe)
-    const profile = initDataUnsafe.user
+    const profile = window.Telegram.WebApp.initDataUnsafe.user
     const tokenData = (await api.post(`/api/authorize?web_app_data=${JSON.stringify(profile)}`)).data;
     const authData = `${tokenData.token_type} ${tokenData.token}`
     api.interceptors.request.use(async config => {
