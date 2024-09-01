@@ -12,7 +12,6 @@ import useThrowCard from "./api/composable/useThrowCard.js";
 import useFightCard from "./api/composable/useFightCard.js";
 import useEventListener from "./api/composable/useEventListener.js";
 import useQuerySelector from "./api/composable/useQuerySelector.js";
-import telegram from "./api/telegram.js";
 
 const props = defineProps({
     room: Object,
@@ -20,7 +19,6 @@ const props = defineProps({
 })
 const { $cards } = useCards()
 
-// const profile = initDataUnsafe?.user
 let profile = JSON.parse(localStorage.getItem('profile'))
 const listOfCards = ref($cards)
 
@@ -233,6 +231,7 @@ function eventStartGame(data) {
 }
 
 function eventPlayerJoin(data) {
+    console.log(data)
     const { user } = data
 
     if (user.id !== profile.id || players.value.findIndex(user => user.id === profile.id) === -1) {
