@@ -53,7 +53,6 @@ class GameController extends Controller
 
         $alreadyJoined->add($player);
         $room->update(['join_state' => $alreadyJoined->toArray()]);
-        unset($alreadyJoined[$alreadyJoined->search($player)]);
         $alreadyJoined = User::query()->findMany($alreadyJoined);
 
         foreach ($alreadyJoined as $user) {
@@ -65,6 +64,7 @@ class GameController extends Controller
         $this->centrifugo->publish('room', [
             'event' => 'user_join_room',
             'user' => User::query()->findOrFail($player),
+            'avatar' => $action->extract($player),
         ]);
 
         return response()->json($alreadyJoined);
