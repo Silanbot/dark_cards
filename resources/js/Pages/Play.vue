@@ -615,3 +615,61 @@ onMounted(() => {
         </footer>
     </section>
 </template>
+
+<style scoped lang="scss">
+.inter__header_play {
+    flex-shrink: 0;
+    align-items: center;
+
+    .inter__monet_icon {
+        width: 7% !important;
+        height: 8vh !important;
+        flex-shrink: 0 !important;
+        padding: 0 10px !important;
+
+        svg {
+            height: 150% !important;
+            width: 120% !important;
+        }
+
+        border-radius: 10px !important;
+    }
+
+    .inter__monet_right {
+        gap: 3% !important;
+        width: 37% !important;
+        flex-shrink: 0 !important;
+        padding: 0 !important;
+        height: 8vh !important;
+        border-radius: 10px !important;
+
+        span {
+            font-size: 5vw !important;
+        }
+
+        img {
+            width: 18% !important;
+        }
+    }
+}
+
+:has(.win__amount) {
+    position: relative;
+    overflow: visible !important;
+}
+.win__amount {
+    visibility: hidden;
+    position: absolute;
+    z-index: 1;
+    color: white;
+    font-weight: 600;
+    font-size: 24px;
+    font-family: "SF Pro Display";
+    text-shadow: #000 5px 0 5px;
+    top: -15px;
+    left: -5px;
+}
+.win__amount.visible {
+    visibility: inherit;
+}
+</style>
