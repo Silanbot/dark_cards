@@ -13,6 +13,7 @@ import useFightCard from "./api/composable/useFightCard.js";
 import useEventListener from "./api/composable/useEventListener.js";
 import useQuerySelector from "./api/composable/useQuerySelector.js";
 import useProfile from "./api/composable/useProfile.js";
+import useLeaveEvent from "./api/composable/useLeaveEvent.js";
 
 const props = defineProps({
     room: Object,
@@ -53,7 +54,7 @@ const { notificationOccurred } = useWebAppHapticFeedback()
 const { showBackButton, onBackButtonClicked } = useWebAppBackButton()
 showBackButton()
 onBackButtonClicked(() => {
-    showConfirm('Ты действительно хочешь выйти из комнаты?')
+    showConfirm('Ты действительно хочешь выйти из комнаты?', async () => await useLeaveEvent(room.value.id, user.value.id))
     notificationOccurred('warning')
 })
 
