@@ -361,7 +361,7 @@ onMounted(async () => {
 
     profile.value = window.Telegram.WebApp.initDataUnsafe.user
 
-    console.log(profile.value)
+    console.log(profile.value.id)
 
     getStorageItem('mode')
         .then(value => (mode.value = parseInt(value)))
