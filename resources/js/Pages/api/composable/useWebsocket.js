@@ -11,12 +11,12 @@ export default function useWebsocket(token, subscription) {
         onConnected: callback => centrifugo.on('connected', callback),
         runListening: () => {
             centrifugo.getSubscription(subscription).on('publication', ({ context }) => {
-                const listener = listeners.find(listener => listener.event === context.event)
-                console.log(listener)
+                // const listener = listeners.find(listener => listener.event === context.event)
+                // console.log(listener)
                 console.log(context.event, context)
-                listeners.find(listener => listener.event === context.event).handler(context)
-            }).subscribe()
-            console.log(listeners)
+                // listeners.find(listener => listener.event === context.event).handler(context)
+            })
+            centrifugo.getSubscription(subscription).subscribe()
             centrifugo.connect()
         },
         addListener: listener => listeners.push(listener),
