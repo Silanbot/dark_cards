@@ -55,7 +55,6 @@ function sendLeaveEvent() {
 }
 
 async function sendJoinEvent() {
-    console.log(profile.value.id)
     const { $players } = useConnection(room.value.id, profile.value)
     players.value = $players
 
@@ -360,7 +359,7 @@ onMounted(async () => {
     button.showBackButton()
     button.onBackButtonClicked(sendLeaveEvent)
 
-    const { initDataUnsafe } = useWebApp()
+    const { initDataUnsafe } = await useWebApp()
     profile.value = initDataUnsafe?.user
 
     getStorageItem('mode')
