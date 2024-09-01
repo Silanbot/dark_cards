@@ -21,7 +21,7 @@ const props = defineProps({
 const { $cards } = useCards()
 
 // const profile = initDataUnsafe?.user
-let profile = localStorage.getItem('profile')
+let profile = JSON.parse(localStorage.getItem('profile'))
 const listOfCards = ref($cards)
 
 const mode = ref(1)
