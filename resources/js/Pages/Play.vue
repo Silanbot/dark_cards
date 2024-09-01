@@ -231,7 +231,7 @@ function eventStartGame(data) {
 }
 
 function eventPlayerJoin(data) {
-    console.log(data)
+    console.log('eventPlayerJoin', data)
     const { user } = data
 
     if (user.id !== profile.id || players.value.findIndex(user => user.id === profile.id) === -1) {
