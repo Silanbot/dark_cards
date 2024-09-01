@@ -12,6 +12,8 @@ import useThrowCard from "./api/composable/useThrowCard.js";
 import useFightCard from "./api/composable/useFightCard.js";
 import useEventListener from "./api/composable/useEventListener.js";
 import useQuerySelector from "./api/composable/useQuerySelector.js";
+import gameApi from "./api/game.api.js";
+import telegram from "./api/telegram.js";
 
 const { initDataUnsafe } = useWebApp()
 const props = defineProps({
@@ -20,7 +22,8 @@ const props = defineProps({
 })
 const { $cards } = useCards()
 
-const profile = initDataUnsafe?.user
+// const profile = initDataUnsafe?.user
+const profile = await telegram.profile()
 const listOfCards = ref($cards)
 
 const mode = ref(1)
@@ -526,7 +529,7 @@ onMounted(async () => {
                     </div>
                     <div class="footer__person__name">{{ profile.username }}</div>
                 </div>
-                <div class="footer__button chat" v-if="true" @click="() => {}">
+                <div class="footer__button chat" v-if="false" @click="() => {}">
                     <svg width="50" height="43" viewBox="0 0 50 43" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M30.1728 7.38039C32.4847 8.8617 34.1058 11.3684 34.401 14.2781C35.3438 14.7283 36.3902 14.9872 37.4997 14.9872C41.55 14.9872 44.8328 11.6324 44.8328 7.4939C44.8328 3.35478 41.55 0 37.4997 0C33.4881 0.00127534 30.234 3.29612 30.1728 7.38039ZM25.3688 22.724C29.4191 22.724 32.7019 19.3686 32.7019 15.2301C32.7019 11.0916 29.4184 7.73685 25.3688 7.73685C21.3191 7.73685 18.0344 11.0923 18.0344 15.2307C18.0344 19.3692 21.3191 22.724 25.3688 22.724ZM28.4793 23.2348H22.257C17.0797 23.2348 12.8678 27.5397 12.8678 32.8304V40.6068L12.8872 40.7286L13.4113 40.8963C18.3521 42.4739 22.6445 43 26.1775 43C33.0781 43 37.0779 40.9894 37.3244 40.8613L37.8142 40.6081H37.8666V32.8304C37.8685 27.5397 33.6566 23.2348 28.4793 23.2348ZM40.6115 15.4986H34.4372C34.3704 18.0231 33.3159 20.2964 31.648 21.9314C36.2498 23.3298 39.6169 27.6908 39.6169 32.8419V35.2383C45.7132 35.01 49.2263 33.2443 49.4578 33.1257L49.9476 32.8719H50V25.093C50 19.8028 45.7881 15.4986 40.6115 15.4986ZM12.5016 14.9884C13.9361 14.9884 15.2708 14.5606 16.4015 13.8317C16.7609 11.436 18.0176 9.3425 19.8128 7.91667C19.8203 7.77639 19.8334 7.63737 19.8334 7.49581C19.8334 3.3567 16.55 0.00191287 12.5016 0.00191287C8.45064 0.00191287 5.16848 3.3567 5.16848 7.49581C5.16848 11.633 8.45064 14.9884 12.5016 14.9884ZM19.0871 21.9314C17.4273 20.3047 16.3765 18.0435 16.2998 15.5343C16.0708 15.5171 15.8443 15.4986 15.6109 15.4986H9.38912C4.21191 15.4986 0 19.8028 0 25.093V32.8706L0.0193436 32.9905L0.543492 33.1595C4.50705 34.424 8.04443 35.0068 11.1169 35.1905V32.8419C11.1182 27.6908 14.484 23.3311 19.0871 21.9314Z"
