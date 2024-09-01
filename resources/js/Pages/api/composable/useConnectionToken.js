@@ -12,6 +12,8 @@ export default async function useConnectionToken(id) {
         }
     })
 
+    console.log('useConnectionToken', response.data)
+
     return {
         $token: response.data.token
     }
