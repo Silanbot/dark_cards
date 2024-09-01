@@ -55,11 +55,11 @@ function sendLeaveEvent() {
 }
 
 async function sendJoinEvent() {
+    const { $players } = useConnection(room.value.id, profile.value)
+    players.value = $players
+
     showAlert('Успешное подключение!')
     notificationOccurred('success')
-
-    const { $players } = useConnection(room.value.id, profile)
-    players.value = $players
 }
 
 function setAttacker(attacker) {
@@ -368,7 +368,7 @@ onMounted(async () => {
             showAlert('Произошла ошибка при получении данных с CloudStorage')
             notificationOccurred('error')
         })
-    const $token = await useConnectionToken(profile.id)
+    const $token = await useConnectionToken(profile.value.id)
 
     const $websocket = useWebsocket($token, channel.value)
 

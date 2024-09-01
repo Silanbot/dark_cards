@@ -6,7 +6,7 @@ export default async function useConnection($id, profile) {
     const response = await (await api)({
         method: 'GET',
         url: '/api/game/join',
-        params: { room_id: $id, user_id: profile.id },
+        params: { id: $id, user_id: profile.id },
         headers: { Authorization: localStorage.getItem('token') }
     })
 
