@@ -10,5 +10,5 @@ export default async function useProfile(id, username) {
         headers: { Authorization: localStorage.getItem('token') }
     })
 
-    localStorage.setItem('profile', JSON.stringify(response.data))
+    return response.data
 }
