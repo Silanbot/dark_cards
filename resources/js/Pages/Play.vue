@@ -50,6 +50,14 @@ const { getStorageItem } = useWebAppCloudStorage()
 const { showConfirm, showAlert } = useWebAppPopup()
 const { notificationOccurred } = useWebAppHapticFeedback()
 
+const { showBackButton, onBackButtonClicked } = useWebAppBackButton()
+showBackButton()
+onBackButtonClicked(() => {
+    showConfirm('Ты действительно хочешь выйти из комнаты?')
+    notificationOccurred('warning')
+})
+
+
 function sendLeaveEvent() {
     showConfirm('Ты действительно хочешь выйти из комнаты?')
     notificationOccurred('warning')
@@ -355,13 +363,6 @@ function touchend(e) {
 }
 
 onMounted(async () => {
-    const { showBackButton, onBackButtonClicked } = useWebAppBackButton()
-    showBackButton()
-    onBackButtonClicked(() => {
-        showConfirm('Ты действительно хочешь выйти из комнаты?')
-        notificationOccurred('warning')
-    })
-
     getStorageItem('mode')
         .then(value => (mode.value = parseInt(value)))
         .catch(err => {
