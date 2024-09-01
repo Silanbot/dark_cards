@@ -1,4 +1,4 @@
-import {makeApi} from "../axios.js";
+import { makeApi } from "../axios.js";
 
 export default async function useProfile(id, username) {
     const api = makeApi()
@@ -6,7 +6,8 @@ export default async function useProfile(id, username) {
     const response = await (await api)({
         method: 'GET',
         url: '/api/profile',
-        params: { id, username }
+        params: { id, username },
+        headers: { Authorization: localStorage.getItem('token') }
     })
 
     localStorage.setItem('profile', JSON.stringify(response.data))
