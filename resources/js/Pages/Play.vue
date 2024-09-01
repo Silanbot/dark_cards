@@ -364,8 +364,8 @@ onMounted(() => {
             showAlert('Произошла ошибка при получении данных с CloudStorage')
             notificationOccurred('error')
         })
-    const { $token } = useConnectionToken(profile.id)
-    console.log($token)
+    const $token = useConnectionToken(profile.id)
+    console.log('Play token', $token)
     const $websocket = useWebsocket($token, channel.value)
 
     $websocket.onConnected(sendJoinEvent)

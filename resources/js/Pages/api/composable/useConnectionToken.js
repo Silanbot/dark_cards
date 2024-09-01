@@ -12,9 +12,7 @@ export default async function useConnectionToken(id) {
         }
     })
 
-    console.log('useConnectionToken', response.data)
+    console.log('useConnectionToken', response.data.token)
 
-    return {
-        $token: response.data.token
-    }
+    return response.data.token
 }
