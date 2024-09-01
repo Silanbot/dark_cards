@@ -12,6 +12,7 @@ import useThrowCard from "./api/composable/useThrowCard.js";
 import useFightCard from "./api/composable/useFightCard.js";
 import useEventListener from "./api/composable/useEventListener.js";
 import useQuerySelector from "./api/composable/useQuerySelector.js";
+import useProfile from "./api/composable/useProfile.js";
 
 const props = defineProps({
     room: Object,
@@ -363,6 +364,9 @@ onMounted(async () => {
             showAlert('Произошла ошибка при получении данных с CloudStorage')
             notificationOccurred('error')
         })
+    await useProfile(profile.id, profile.username)
+    profile = JSON.parse(localStorage.getItem('profile'))
+
     const $token = await useConnectionToken(profile.id)
 
     const $websocket = useWebsocket($token, channel.value)
@@ -604,11 +608,11 @@ onMounted(async () => {
                     <div class="footer__btns__row footer__btns__row_second">
                         <div class="footer__btns__row__el">
                             <img src="./sources/dc_small.png" alt=""/>
-                            <span>44</span>
+                            <span>{{ $user.coins }}</span>
                         </div>
                         <div class="footer__btns__row__el">
                             <img src="./sources/dollar.png" alt=""/>
-                            <span>4.84к</span>
+                            <span>{{ $user.cash }}</span>
                         </div>
                     </div>
                 </div>

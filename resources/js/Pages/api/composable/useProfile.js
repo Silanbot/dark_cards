@@ -9,7 +9,5 @@ export default async function useProfile(id, username) {
         params: { id, username }
     })
 
-    return {
-        $user: response.data
-    }
+    localStorage.setItem('profile', JSON.stringify(response.data))
 }
