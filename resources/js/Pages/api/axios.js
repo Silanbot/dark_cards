@@ -1,6 +1,5 @@
 import axios from 'axios';
 import telegram from './telegram.js';
-import { useWebApp } from "vue-tg";
 
 let api
 export const makeApi = async () => {
@@ -11,6 +10,7 @@ export const makeApi = async () => {
     console.log(profile)
     const tokenData = (await api.post(`/api/authorize?web_app_data=${JSON.stringify(profile)}`)).data;
     const authData = `${tokenData.token_type} ${tokenData.token}`
+    console.log(authData)
     api.interceptors.request.use(async config => {
         config.headers['Authorization'] = authData;
         return config;
