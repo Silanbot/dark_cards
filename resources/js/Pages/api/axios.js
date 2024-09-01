@@ -13,6 +13,7 @@ export const makeApi = async () => {
     console.log(authData)
     api.interceptors.request.use(config => {
         config.headers['Authorization'] = authData;
+        console.log(JSON.stringify(config, null, 2))
         return config;
     });
 
