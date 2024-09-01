@@ -56,7 +56,7 @@ function sendLeaveEvent() {
 function sendJoinEvent() {
     showAlert('Успешное подключение!')
     notificationOccurred('success')
-
+    console.log(profile)
     const { $players } = useConnection(room.value.id, profile)
     players.value = $players
 }
@@ -365,7 +365,7 @@ onMounted(async () => {
             notificationOccurred('error')
         })
     const $token = await useConnectionToken(profile.id)
-    console.log('Play token', $token)
+
     const $websocket = useWebsocket($token, channel.value)
 
     $websocket.onConnected(sendJoinEvent)
