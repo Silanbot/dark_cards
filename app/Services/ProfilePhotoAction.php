@@ -13,7 +13,7 @@ final class ProfilePhotoAction
         ]);
 
         if ($response->json('result.total_count') === 0) {
-            return './sources/profile.jpg';
+            return '/sources/profile.jpg';
         }
 
         $fileID = $response->json('result.photos.0.1.file_id');

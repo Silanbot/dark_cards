@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('total_coins')->default(0);
             $table->unsignedBigInteger('total_cash')->default(0);
             $table->unsignedBigInteger('trophies')->default(0);
+            $table->text('avatar')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

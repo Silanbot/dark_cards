@@ -59,7 +59,6 @@ class GameController extends Controller
         $this->centrifugo->publish('room', [
             'event' => 'user_join_room',
             'user' => User::query()->findOrFail($player),
-            'profile_picture' => $action->extract($player),
         ]);
 
         return response()->json($alreadyJoined);
