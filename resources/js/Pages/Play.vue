@@ -233,7 +233,7 @@ function eventStartGame(data) {
 function eventPlayerJoin(data) {
     const { user } = data
 
-    if (user.id !== profile.id || players.value.findIndex(user => user.id === profile.id) === -1) {
+    if (parseInt(user.id) !== parseInt(profile.id) || players.value.findIndex(user => parseInt(user.id) === parseInt(profile.id)) === -1) {
         players.value.push(user)
     }
 }
