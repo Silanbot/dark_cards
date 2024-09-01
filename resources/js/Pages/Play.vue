@@ -365,6 +365,7 @@ onMounted(() => {
             notificationOccurred('error')
         })
     const { $token } = useConnectionToken(profile.id)
+    console.log($token)
     const $websocket = useWebsocket($token, channel.value)
 
     $websocket.onConnected(sendJoinEvent)
