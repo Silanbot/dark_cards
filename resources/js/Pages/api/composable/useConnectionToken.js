@@ -1,4 +1,4 @@
-import {makeApi} from "../axios.js";
+import { makeApi } from "../axios.js";
 
 export default async function useConnectionToken(id) {
     const api = makeApi()

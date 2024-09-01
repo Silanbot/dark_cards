@@ -11,7 +11,7 @@ export const makeApi = async () => {
     const tokenData = (await api.post(`/api/authorize?web_app_data=${JSON.stringify(profile)}`)).data;
     const authData = `${tokenData.token_type} ${tokenData.token}`
     console.log(authData)
-    api.interceptors.request.use(async config => {
+    api.interceptors.request.use(config => {
         config.headers['Authorization'] = authData;
         return config;
     });
