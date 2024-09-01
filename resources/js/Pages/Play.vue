@@ -523,7 +523,7 @@ onMounted(async () => {
                 <div class="footer__person">
                     <div class="win__amount win__amount__self">+100</div>
                     <div class="footer__person__img">
-                        <img :src="profile.photo_url" alt=""/>
+                        <img :src="user.avatar" alt=""/>
                         <div class="text">
                             <!--                            <img src="./sources/level-6.png" alt=""/>-->
                         </div>
