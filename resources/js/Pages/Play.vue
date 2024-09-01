@@ -482,7 +482,7 @@ onMounted(async () => {
                         </div>
                         <div class="game__players__player__photo" :data-player="player.id">
                             <div class="win__amount">+100</div>
-                            <img class="game__players__player__photo__img" src="./sources/player.png" alt=""/>
+                            <img class="game__players__player__photo__img" :src="player.profile_picture" alt=""/>
                             <div class="game__players__player__photo__text">
                                 <img src="./sources/level-2.png" alt=""/>
                             </div>
