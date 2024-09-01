@@ -53,10 +53,10 @@ function sendLeaveEvent() {
     showConfirm('Ты действительно хочешь выйти из комнаты?')
 }
 
-function sendJoinEvent() {
+async function sendJoinEvent() {
     showAlert('Успешное подключение!')
     notificationOccurred('success')
-    console.log(profile.id)
+
     const { $players } = useConnection(room.value.id, profile)
     players.value = $players
 }
