@@ -369,7 +369,7 @@ onMounted(async () => {
     const $websocket = useWebsocket($token, channel.value)
 
     $websocket.onConnected(sendJoinEvent)
-    $websocket.subscribe(channel.value)
+    const sub = $websocket.newSubscription(channel.value)
 
     $websocket.addListener({ event: 'game_started', handler: eventStartGame })
     $websocket.addListener({ event: 'user_join_room', handler: eventPlayerJoin })
@@ -383,7 +383,8 @@ onMounted(async () => {
     $websocket.addListener({ event: 'table_full', handler: eventTableFull })
     $websocket.addListener({ event: 'game_beat', handler: eventGameBeat })
 
-    $websocket.runListening()
+    $websocket.runListening(sub)
+    $websocket.connect()
 
     useEventListener('touchstart', touchstart)
     useEventListener('touchmove', touchmove)

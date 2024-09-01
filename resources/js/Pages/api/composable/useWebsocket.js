@@ -9,13 +9,13 @@ export default function useWebsocket(token, subscription) {
     return {
         $websocket: centrifugo,
         onConnected: callback => centrifugo.on('connected', callback),
-        runListening: () => {
-            centrifugo.getSubscription(subscription).on('publication', ({ context }) => {
+        runListening: sub => {
+            sub.on('publication', ({ context }) => {
+                console.log(context)
                 listeners.find(listener => listener.event === context.event).handler(context)
             }).subscribe()
-            centrifugo.connect()
         },
         addListener: listener => listeners.push(listener),
-        subscribe: channel => centrifugo.newSubscription(channel),
+        connect: () => centrifugo.connect()
     }
 }
