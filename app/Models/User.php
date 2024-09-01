@@ -29,6 +29,7 @@ class User extends Authenticatable
         'coins',
         'cash',
         'id',
+        'avatar',
     ];
 
     public function achievements(): BelongsToMany
