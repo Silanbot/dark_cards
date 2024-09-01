@@ -373,7 +373,7 @@ onMounted(async () => {
 
     const $websocket = useWebsocket($token, channel.value)
 
-    $websocket.onConnected(sendJoinEvent)
+    await $websocket.onConnected(sendJoinEvent)
     $websocket.subscribe(channel.value)
 
     $websocket.addListener({ event: 'game_started', handler: eventStartGame })
