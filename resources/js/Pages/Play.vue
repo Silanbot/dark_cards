@@ -12,10 +12,8 @@ import useThrowCard from "./api/composable/useThrowCard.js";
 import useFightCard from "./api/composable/useFightCard.js";
 import useEventListener from "./api/composable/useEventListener.js";
 import useQuerySelector from "./api/composable/useQuerySelector.js";
-import gameApi from "./api/game.api.js";
 import telegram from "./api/telegram.js";
 
-const { initDataUnsafe } = useWebApp()
 const props = defineProps({
     room: Object,
     players: Array
@@ -23,7 +21,7 @@ const props = defineProps({
 const { $cards } = useCards()
 
 // const profile = initDataUnsafe?.user
-const profile = await telegram.profile()
+const profile = ref()
 const listOfCards = ref($cards)
 
 const mode = ref(1)
@@ -360,6 +358,9 @@ onMounted(async () => {
     const button = useWebAppBackButton()
     button.showBackButton()
     button.onBackButtonClicked(sendLeaveEvent)
+
+    const { initDataUnsafe } = useWebApp()
+    profile.value = initDataUnsafe?.user
 
     getStorageItem('mode')
         .then(value => (mode.value = parseInt(value)))
