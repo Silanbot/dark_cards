@@ -52,6 +52,7 @@ const { notificationOccurred } = useWebAppHapticFeedback()
 
 function sendLeaveEvent() {
     showConfirm('Ты действительно хочешь выйти из комнаты?')
+    notificationOccurred('warning')
 }
 
 async function sendJoinEvent() {
@@ -356,7 +357,7 @@ function touchend(e) {
 onMounted(async () => {
     const button = useWebAppBackButton()
     button.showBackButton()
-    button.onBackButtonClicked(sendLeaveEvent)
+    button.onBackButtonClicked(() => sendLeaveEvent())
 
     getStorageItem('mode')
         .then(value => (mode.value = parseInt(value)))
