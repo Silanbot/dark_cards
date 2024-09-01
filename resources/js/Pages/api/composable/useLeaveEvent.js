@@ -8,4 +8,6 @@ export default async function useLeaveEvent(room_id, id) {
         url: '/api/game/leave',
         params: {id: room_id, user_id: id}
     })
+
+    location.replace('/home')
 }
