@@ -15,6 +15,7 @@ export default function useWebsocket(token, subscription) {
                 listeners.find(listener => listener.event === context.event).handler(context)
             }).subscribe()
         },
+        newSubscription: channel => centrifugo.newSubscription(channel),
         addListener: listener => listeners.push(listener),
         connect: () => centrifugo.connect()
     }
