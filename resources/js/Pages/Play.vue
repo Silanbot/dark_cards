@@ -55,7 +55,7 @@ function sendLeaveEvent() {
 }
 
 async function sendJoinEvent() {
-    const { $players } = await useConnection(room.value.id, profile)
+    const { $players } = await useConnection(room.value.id, user.value)
     players.value = $players
 
     showAlert('Успешное подключение!')
