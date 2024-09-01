@@ -23,6 +23,7 @@ const { $cards } = useCards()
 let profile = JSON.parse(localStorage.getItem('profile'))
 const listOfCards = ref($cards)
 
+const user = ref()
 const mode = ref(1)
 const started = ref(false)
 const players = ref(props.players)
@@ -364,8 +365,7 @@ onMounted(async () => {
             showAlert('Произошла ошибка при получении данных с CloudStorage')
             notificationOccurred('error')
         })
-    await useProfile(profile.id, profile.username)
-    profile = JSON.parse(localStorage.getItem('profile'))
+    user.value = await useProfile(profile.id, profile.username)
 
     const $token = await useConnectionToken(profile.id)
 
@@ -608,11 +608,11 @@ onMounted(async () => {
                     <div class="footer__btns__row footer__btns__row_second">
                         <div class="footer__btns__row__el">
                             <img src="./sources/dc_small.png" alt=""/>
-                            <span>{{ $user.coins }}</span>
+                            <span>{{ user.coins }}</span>
                         </div>
                         <div class="footer__btns__row__el">
                             <img src="./sources/dollar.png" alt=""/>
-                            <span>{{ $user.cash }}</span>
+                            <span>{{ user.cash }}</span>
                         </div>
                     </div>
                 </div>
