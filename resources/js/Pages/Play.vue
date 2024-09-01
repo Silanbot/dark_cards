@@ -233,9 +233,7 @@ function eventStartGame(data) {
 }
 
 function eventPlayerJoin(data) {
-    const { user } = data
-
-    if (parseInt(user.id) !== parseInt(user.id) || players.value.findIndex(u => parseInt(u.id) === parseInt(user.id)) === -1) {
+    if (parseInt(data.user.id) !== parseInt(profile.id) || players.value.findIndex(u => parseInt(u.id) === parseInt(user.id)) === -1) {
         players.value.push(user)
     }
 }
@@ -366,6 +364,7 @@ onMounted(async () => {
             notificationOccurred('error')
         })
     user.value = await useProfile(profile.id, profile.username)
+
     const $token = await useConnectionToken(profile.id)
 
     const $websocket = useWebsocket($token, channel.value)
