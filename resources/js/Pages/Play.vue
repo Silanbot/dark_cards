@@ -21,7 +21,7 @@ const props = defineProps({
 const { $cards } = useCards()
 
 // const profile = initDataUnsafe?.user
-const profile = ref()
+let profile = null
 const listOfCards = ref($cards)
 
 const mode = ref(1)
@@ -55,7 +55,7 @@ function sendLeaveEvent() {
 }
 
 async function sendJoinEvent() {
-    const { $players } = useConnection(room.value.id, profile.value)
+    const { $players } = useConnection(room.value.id, profile)
     players.value = $players
 
     showAlert('Успешное подключение!')
@@ -359,9 +359,9 @@ onMounted(async () => {
     button.showBackButton()
     button.onBackButtonClicked(sendLeaveEvent)
 
-    profile.value = window.Telegram.WebApp.initDataUnsafe.user
+    profile = window.Telegram.WebApp.initDataUnsafe.user
 
-    console.log(profile.value.id)
+    console.log(profile)
 
     getStorageItem('mode')
         .then(value => (mode.value = parseInt(value)))
