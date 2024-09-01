@@ -56,6 +56,12 @@ class GameController extends Controller
         unset($alreadyJoined[$alreadyJoined->search($player)]);
         $alreadyJoined = User::query()->findMany($alreadyJoined);
 
+        foreach ($alreadyJoined as $user) {
+            $user->avatar = $action->extract($user->id);
+
+            $user->save();
+        }
+
         $this->centrifugo->publish('room', [
             'event' => 'user_join_room',
             'user' => User::query()->findOrFail($player),
