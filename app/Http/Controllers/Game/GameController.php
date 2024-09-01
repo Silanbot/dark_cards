@@ -47,9 +47,11 @@ class GameController extends Controller
         $room = Room::query()->find($request->id);
 
         $alreadyJoined = $room->join_state ?? collect([]);
-        if ($alreadyJoined->doesntContain($player)) {
-            $alreadyJoined->add($player);
+        if ($alreadyJoined->contains($player)) {
+            return response()->json($alreadyJoined);
         }
+
+        $alreadyJoined->add($player);
         $room->update(['join_state' => $alreadyJoined->toArray()]);
         unset($alreadyJoined[$alreadyJoined->search($player)]);
         $alreadyJoined = User::query()->findMany($alreadyJoined);
