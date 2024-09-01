@@ -366,7 +366,7 @@ onMounted(async () => {
             notificationOccurred('error')
         })
     user.value = await useProfile(profile.id, profile.username)
-
+    console.log(user.value)
     const $token = await useConnectionToken(profile.id)
 
     const $websocket = useWebsocket($token, channel.value)
