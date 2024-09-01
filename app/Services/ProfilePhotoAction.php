@@ -9,7 +9,7 @@ final class ProfilePhotoAction
     public function extract(int $id): ?string
     {
         $response = Http::post('https://api.telegram.org/bot'.config('bot.token').'/getUserProfilePhotos', [
-            'user_id' => auth()->id(),
+            'user_id' => $id,
         ]);
 
         if ($response->json('result.total_count') === 0) {
