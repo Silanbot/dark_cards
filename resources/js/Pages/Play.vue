@@ -359,8 +359,7 @@ onMounted(async () => {
     button.showBackButton()
     button.onBackButtonClicked(sendLeaveEvent)
 
-    const { initDataUnsafe } = await useWebApp()
-    profile.value = initDataUnsafe?.user
+    profile.value = window.Telegram.WebApp.initDataUnsafe.user
 
     getStorageItem('mode')
         .then(value => (mode.value = parseInt(value)))
