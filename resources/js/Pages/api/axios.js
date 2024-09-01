@@ -10,6 +10,7 @@ export const makeApi = async () => {
     const tokenData = (await api.post(`/api/authorize?web_app_data=${JSON.stringify(profile)}`)).data;
     const authData = `${tokenData.token_type} ${tokenData.token}`
     localStorage.setItem('token', authData)
+    localStorage.setItem('profile', JSON.stringify(profile))
     api.interceptors.request.use(config => {
         config.headers['Authorization'] = authData;
         return config;
