@@ -353,7 +353,7 @@ function touchend(e) {
     useThrowCard(activeCard, room.value.id, profile.id)
 }
 
-onMounted(() => {
+onMounted(async () => {
     const button = useWebAppBackButton()
     button.showBackButton()
     button.onBackButtonClicked(sendLeaveEvent)
@@ -364,7 +364,7 @@ onMounted(() => {
             showAlert('Произошла ошибка при получении данных с CloudStorage')
             notificationOccurred('error')
         })
-    const $token = useConnectionToken(profile.id)
+    const $token = await useConnectionToken(profile.id)
     console.log('Play token', $token)
     const $websocket = useWebsocket($token, channel.value)
 
