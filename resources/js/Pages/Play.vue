@@ -174,11 +174,12 @@ function sendCards(players) {
 
 function sendCard(player, code) {
     const card = document.createElement('img')
-    card.setAttribute('data-card', profile.id === parseInt(player) ? code : 'b')
+    card.setAttribute('data-card', user.value.id === parseInt(player) ? code : 'b')
     card.setAttribute('data-player', player)
+    console.log('card src', getCardSrc(code))
     card.setAttribute('src', getCardSrc(code))
 
-    if (profile.id === parseInt(player)) {
+    if (user.value.id === parseInt(player)) {
         return addCard(card)
     }
 
