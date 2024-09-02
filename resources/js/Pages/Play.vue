@@ -258,10 +258,11 @@ function eventPlayerTakeTable() {
 }
 
 function eventPlayerLeft(data) {
-    players.value = players.value.filter(p => parseInt(p.id) !== parseInt(data.player.id))
-
-    showAlert(`Игрок ${data.player.username} покинул игру`)
-    notificationOccurred('warning')
+    players.value = players.value.filter(p => parseInt(p.id) !== parseInt(data.player))
+    if (parseInt(user.value.id) !== parseInt(data.player)) {
+        showAlert(`Игрок покинул игру`)
+        notificationOccurred('warning')
+    }
 }
 
 function eventDiscardCard(data) {
