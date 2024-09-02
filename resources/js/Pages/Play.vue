@@ -179,7 +179,7 @@ function sendCard(player, code) {
     console.log('card src', getCardSrc(code))
     card.setAttribute('src', getCardSrc(code))
 
-    if (user.value.id === parseInt(player)) {
+    if (parseInt(user.value.id) === parseInt(player)) {
         return addCard(card)
     }
 
