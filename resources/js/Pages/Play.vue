@@ -14,6 +14,7 @@ import useEventListener from "./api/composable/useEventListener.js";
 import useQuerySelector from "./api/composable/useQuerySelector.js";
 import useProfile from "./api/composable/useProfile.js";
 import useLeaveEvent from "./api/composable/useLeaveEvent.js";
+import useSetReady from "./api/composable/useSetReady.js";
 
 const props = defineProps({
     room: Object,
@@ -42,6 +43,7 @@ const countCardsInDeck = ref(36)
 const isTouched = ref(false)
 const isDragging = ref(false)
 const activeCard = ref()
+const isReady = ref(false);
 const tx = ref()
 const ty = ref()
 const withCheaters = ref(false)
@@ -58,6 +60,11 @@ onBackButtonClicked(() => {
     notificationOccurred('warning')
 })
 
+function setReady() {
+    useSetReady(user.value.id, room.value.id)
+
+    isReady.value = !isReady.value
+}
 
 function sendLeaveEvent() {
     showConfirm('Ты действительно хочешь выйти из комнаты?')
@@ -513,8 +520,8 @@ onMounted(async () => {
         <footer class="footer" style="z-index: 100">
             <div class="footer__inner footer__inner_play">
                 <template v-if="!started">
-                    <div class="footer__button" @click="() => {}" v-if="true">Готов</div>
-                    <div class="footer__button" @click="() => {}" v-else>Не готов</div>
+                    <div class="footer__button" @click="setReady" v-if="!isReady">Готов</div>
+                    <div class="footer__button" @click="setReady" v-else>Не готов</div>
                 </template>
                 <template v-else>
                     <div class="footer__button" @click="() => {}"
