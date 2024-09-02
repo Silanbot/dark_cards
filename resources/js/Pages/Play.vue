@@ -176,10 +176,10 @@ function sendCard(player, code) {
     const card = document.createElement('img')
     card.setAttribute('data-card', user.value.id === parseInt(player) ? code : 'b')
     card.setAttribute('data-player', player)
-    console.log('card src', getCardSrc(code))
     card.setAttribute('src', getCardSrc(code))
 
     if (parseInt(user.value.id) === parseInt(player)) {
+        console.log('addCard', card)
         return addCard(card)
     }
 
@@ -207,8 +207,11 @@ function addCard(card, addElement = true) {
     card.classList.add('my-card');
 
     if (card.dataset.cell !== undefined) {
+        console.log('card dataset !== undefined')
         const cell = cells[card.dataset.cell].findIndex(c => c.dataset.card === card.dataset.card)
         cells[card.dataset.cell].splice(cell, 1)
+
+        console.log('cells', cells)
 
         if (cells[card.dataset.cell][0]) {
             const positions = useCellPosition()
@@ -220,9 +223,10 @@ function addCard(card, addElement = true) {
 
         delete card.el.dataset.cell
     }
-
+    console.log('card dataset === undefined')
     for (const cardHand of document.querySelectorAll('img.my-card')) {
         if (lt(card.dataset.card, cardHand.dataset.card)) {
+            console.log('insertBefore', hand.value)
             return hand.value.insertBefore(card, cardHand)
         }
     }
