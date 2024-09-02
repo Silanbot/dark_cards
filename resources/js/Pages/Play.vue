@@ -1,5 +1,5 @@
 <script setup>
-import { useWebApp, useWebAppBackButton, useWebAppCloudStorage, useWebAppHapticFeedback, useWebAppPopup } from "vue-tg"
+import {  useWebAppBackButton, useWebAppCloudStorage, useWebAppHapticFeedback, useWebAppPopup } from "vue-tg"
 import { onMounted, reactive, ref } from "vue"
 
 import useWebsocket from "./api/composable/useWebsocket.js";
@@ -54,7 +54,6 @@ const { notificationOccurred } = useWebAppHapticFeedback()
 const { showBackButton, onBackButtonClicked } = useWebAppBackButton()
 showBackButton()
 onBackButtonClicked(() => {
-    // При выходе удалять из списка игроков для избежания дублей
     showConfirm('Ты действительно хочешь выйти из комнаты?', async (ok) => ok ? await useLeaveEvent(room.value.id, user.value.id) : false)
     notificationOccurred('warning')
 })
@@ -258,8 +257,11 @@ function eventPlayerTakeTable() {
 
 }
 
-function eventPlayerLeft() {
+function eventPlayerLeft(data) {
+    players.value = players.value.filter(p => parseInt(p.id) !== parseInt(data.player.id))
 
+    showAlert(`Игрок ${data.player.username} покинул игру`)
+    notificationOccurred('warning')
 }
 
 function eventDiscardCard(data) {
