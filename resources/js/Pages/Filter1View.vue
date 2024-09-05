@@ -18,7 +18,7 @@
                     <div class="filter__block border-bottom">
                         <div class="filter__title">Кол-во игроков</div>
                         <div class="filter__buttons">
-                            <div class="filter__buttons__item active" :class="{active: paramExists('max_gamers_2')}" name="max_gamers_2" @click="setActive">
+                            <div class="filter__buttons__item" :class="{active: paramExists('max_gamers_2')}" name="max_gamers_2" @click="setActive">
                                 <div class="filter__buttons__item__inner">
                                     <div class="cont">2</div>
                                 </div>
