@@ -456,7 +456,7 @@ export default {
         setActive(e) {
             const { storage } = useStorage()
             const name = e.currentTarget.getAttribute('name')
-            const modes = storage.getItem('params')?.split(',')
+            const modes = storage.getItem('params')?.split(',') ?? []
 
             if (name.startsWith('max_gamers_')) {
                 const maxGamers = modes.filter(key => /^max_gamers_.*$/.test(key))
