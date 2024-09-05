@@ -15,6 +15,7 @@ import useQuerySelector from "./api/composable/useQuerySelector.js";
 import useProfile from "./api/composable/useProfile.js";
 import useLeaveEvent from "./api/composable/useLeaveEvent.js";
 import useSetReady from "./api/composable/useSetReady.js";
+import useTakeFromDeck from "./api/composable/useTakeFromDeck.js";
 
 const props = defineProps({
     room: Object,
@@ -34,7 +35,7 @@ const room = ref(props.room)
 const isAttackerPlayer = ref(false)
 const cards = ref([])
 const trump = ref([])
-const cells = reactive(Array.from({ length: 5 }, () => []))
+let cells = reactive(Array.from({ length: 5 }, () => []))
 const hand = ref()
 const ranks = reactive({ 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 1: 10, j: 11, q: 12, k: 13, a: 14 })
 const suits = reactive({ s: 1, c: 2, h: 3, d: 4, j: 5 })
@@ -42,6 +43,7 @@ const count = ref(document.querySelectorAll('img.my-card').length)
 const countCardsInDeck = ref(36)
 const isTouched = ref(false)
 const isDragging = ref(false)
+const isLastDragging = ref(false)
 const activeCard = ref()
 const isReady = ref(false);
 const tx = ref()
@@ -179,11 +181,9 @@ function sendCard(player, code) {
     card.setAttribute('src', getCardSrc(code))
 
     if (parseInt(user.value.id) === parseInt(player)) {
-        console.log('addCard', card)
         return addCard(card)
     }
-
-    const playerPhoto = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player === player)
+    const playerPhoto = [...useQuerySelector('.game__players__player__photo')].find(e => e.dataset.player === player)
     if (!playerPhoto) {
         showAlert('Не найден оппонент для раздачи')
         notificationOccurred('error')
@@ -199,6 +199,62 @@ function sendCard(player, code) {
     countCardsInDeck.value = count.value--
 }
 
+let time = performance.now()
+function refreshCards(t) {
+    const dt = t - time
+    time = t
+    const myCards = [...useQuerySelector('img.my-card')]
+    myCards.sort((a, b) => lt(a.dataset.card, b.dataset.card) ? -1 : 1)
+    myCards.forEach((card, i) => {
+        let fromCenter = i - myCards.length / 2
+
+        if (card.data === undefined) {
+            card.data = { x: 0, y: window.innerHeight / 2 }
+        }
+
+        card.data.tx = window.innerWidth / 2 + window.innerWidth * 0.1 + fromCenter * window.innerHeight * 0.8 / myCards.length
+        card.data.ty = window.innerHeight * 0.75 - (isTouched.value ? (card === activeCard ? 40 : i && myCards[i - 1] === activeCard ? 10 : 0) : 0)
+        card.data.x += (card.data.tx - card.data.x) * 0.1 * dt
+        card.data.y = (card.data.ty - card.data.y) * 0.1 * dt
+        card.style.zIndex = 10 + i
+        card.style.transfrom = `translate(${card.data.x.toFixed(0)}px, ${card.data.y.toFixed(0)}px) rotate(${fromCenter * 2}deg)`
+    })
+
+    if (isTouched.value && activeCard.value && ty.value < window.innerHeight * 0.75) {
+        isDragging.value = true
+        if (!isLastDragging.value) {
+            isLastDragging.value = true
+            activeCard.value.style.zIndex = 10
+        }
+    }
+
+    if (isDragging.value) {
+        activeCard.value.style.transform = `translate(${tx.value}px, ${ty.value - window.innerWidth * 0.25}px)`
+    }
+
+    requestAnimationFrame(refreshCards)
+}
+
+requestAnimationFrame(refreshCards)
+
+function end(data) {
+    for (const card of cells.flat()) {
+        card.style.transform = `translate(${window.innerWidth}px, ${window.innerHeight / 2}px) rotate(${Math.random() * 360}deg)`
+
+        setTimeout(() => {
+            card.src = useQuerySelector('img[data-cardimg="b"]').src
+        }, 200)
+    }
+
+    cells = Array.from({ length: 5 }, () => {})
+    setAttacker(data)
+
+    const count = 6 - [...useQuerySelector('img.my-card')].length
+    if (count > 0) {
+        useTakeFromDeck(room.value.id, user.value.id, count)
+    }
+}
+
 function addCard(card, addElement = true) {
     card.style.removeProperty('z-index')
     card.style.width = '30vw'
@@ -211,8 +267,6 @@ function addCard(card, addElement = true) {
         const cell = cells[card.dataset.cell].findIndex(c => c.dataset.card === card.dataset.card)
         cells[card.dataset.cell].splice(cell, 1)
 
-        console.log('cells', cells)
-
         if (cells[card.dataset.cell][0]) {
             const positions = useCellPosition()
             const [x, y] = positions[card.dataset.cell]
@@ -221,12 +275,10 @@ function addCard(card, addElement = true) {
             cells[card.dataset.cell][0].style.zIndex = 3
         }
 
-        delete card.el.dataset.cell
+        delete card.dataset.cell
     }
-    console.log('card dataset === undefined')
     for (const cardHand of document.querySelectorAll('img.my-card')) {
         if (lt(card.dataset.card, cardHand.dataset.card)) {
-            console.log('insertBefore', hand.value)
             return hand.value.insertBefore(card, cardHand)
         }
     }
@@ -363,6 +415,7 @@ function touchmove(e) {
 function touchend(e) {
     isTouched.value = false
     isDragging.value = false
+    isLastDragging.value = false
 
     if (!activeCard.value) {
         return
