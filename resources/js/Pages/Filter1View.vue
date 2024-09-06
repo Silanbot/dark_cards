@@ -466,6 +466,8 @@ export default {
                     modes.splice(index, 1)
                     storage.setItem('params', modes.join(','))
 
+                    telegram.impactFeedback('light')
+
                     return
                 }
 
@@ -473,6 +475,8 @@ export default {
                     modes.push(name)
                     storage.setItem('params', modes.join(','))
                     e.currentTarget.classList.add('active')
+
+                    telegram.impactFeedback('light')
 
                     return
                 }
@@ -489,6 +493,8 @@ export default {
                     modes.splice(index, 1)
                     storage.setItem('params', modes.join(','))
 
+                    telegram.impactFeedback('light')
+
                     return
                 }
 
@@ -496,6 +502,8 @@ export default {
                     modes.push(name)
                     storage.setItem('params', modes.join(','))
                     e.currentTarget.classList.add('active')
+
+                    telegram.impactFeedback('light')
 
                     return
                 }
