@@ -116,7 +116,7 @@
                     <div class="filter__rows">
                         <div class="filter__rows__title">Режимы игры</div>
                         <div class="filter__rows__row">
-                            <div class="filter__rows__item" :class="{active: paramExists('thrown')}" name="thrown" onclick="this.classList.toggle('active')">
+                            <div class="filter__rows__item" :class="{active: paramExists('thrown')}" name="thrown" @click="toggleGameMode">
                                 <svg
                                     width="75"
                                     height="102"
@@ -144,7 +144,7 @@
                                 </svg>
                                 <span>Подкидной</span>
                             </div>
-                            <div class="filter__rows__item" :class="{active: paramExists('neighbors')}" name="neighbors" onclick="this.classList.toggle('active')">
+                            <div class="filter__rows__item" :class="{active: paramExists('neighbors')}" name="neighbors" @click="toggleGameMode">
                                 <svg
                                     width="119"
                                     height="68"
@@ -182,7 +182,7 @@
                                 </svg>
                                 <span>Соседи</span>
                             </div>
-                            <div class="filter__rows__item" :class="{active: paramExists('cheaters')}" name="cheaters" onclick="this.classList.toggle('active')">
+                            <div class="filter__rows__item" :class="{active: paramExists('cheaters')}" name="cheaters" @click="toggleGameMode">
                                 <svg
                                     width="72"
                                     height="71"
@@ -251,7 +251,7 @@
                             </div>
                         </div>
                         <div class="filter__rows__row">
-                            <div class="filter__rows__item" :class="{active: paramExists('transferable')}" name="transferable" onclick="this.classList.toggle('active')">
+                            <div class="filter__rows__item" :class="{active: paramExists('transferable')}" name="transferable" @click="toggleGameMode">
                                 <svg
                                     width="69"
                                     height="102"
@@ -502,6 +502,26 @@ export default {
 
                 telegram.notificationFeedback('error')
             }
+        },
+        toggleGameMode(e) {
+            const name = e.currentTarget.getAttribute('name')
+            const { storage } = useStorage()
+            let modes = []
+
+            if (name === 'thrown') {
+                document.querySelector('div[name="transferable"]').classList.remove('active')
+            }
+            if (name === 'transferable') {
+                document.querySelector('div[name="thrown"]').classList.remove('active')
+            }
+
+            const params = document.querySelectorAll('.active')
+            for (const param of params) {
+                modes.push(param.getAttribute('name'))
+            }
+
+            storage.setItem('params', modes.join(','))
+            telegram.impactFeedback('light')
         }
     },
     async created() {
