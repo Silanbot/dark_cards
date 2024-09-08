@@ -165,12 +165,10 @@ function throwTheCard(card) {
 
 function sendCards(players) {
     for (const [player, cards] of Object.entries(players)) {
-        (async () => {
-            for (const code of cards) {
-                sendCard(player, code)
-                await new Promise(r => setTimeout(r, 100))
-            }
-        })
+        for (const code of cards) {
+            sendCard(player, code)
+            timeout(100)
+        }
     }
 }
 
@@ -283,6 +281,8 @@ function addCard(card, addElement = true) {
         return
     }
     for (const cardHand of document.querySelectorAll('img.my-card')) {
+        console.log(card, cardHand)
+        console.log('lt', lt(card.dataset.card, cardHand.dataset.card))
         if (lt(card.dataset.card, cardHand.dataset.card)) {
             console.log('lt - true', cardHand)
             document.querySelector('#cards').insertBefore(card, cardHand)
