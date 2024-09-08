@@ -180,22 +180,20 @@ function sendCard(player, code) {
     card.setAttribute('src', getCardSrc(code))
     console.log('card', card)
     if (parseInt(user.value.id) === parseInt(player)) {
-        return addCard(card)
+        addCard(card)
+    } else {
+        const playerPhoto = [...useQuerySelector('.game__players__player__photo')].find(e => parseInt(e.dataset.player) === parseInt(player))
+        if (!playerPhoto) {
+            showAlert('Не найден оппонент для раздачи')
+            notificationOccurred('error')
+        } else {
+            document.querySelector('#cards').appendChild(card)
+            hand.value.appendChild(card)
+            const rect = playerPhoto.getBoundingClientRect()
+            card.style.transform = `translate(${ rect.x + rect.width / 2 }px, ${ rect.y + rect.height / 2 })`
+            card.style.width = '10vw'
+        }
     }
-    const playerPhoto = [...useQuerySelector('.game__players__player__photo')].find(e => parseInt(e.dataset.player) === parseInt(player))
-    if (!playerPhoto) {
-        showAlert('Не найден оппонент для раздачи')
-        notificationOccurred('error')
-
-        return
-    }
-
-    hand.value.appendChild(card)
-    console.log('hand', hand.value)
-    const rect = playerPhoto.getBoundingClientRect()
-    card.style.transform = `translate(${ rect.x + rect.width / 2 }px, ${ rect.y + rect.height / 2 })`
-    card.style.width = '10vw'
-    console.log('card2', card)
 
     countCardsInDeck.value = count.value--
 }
