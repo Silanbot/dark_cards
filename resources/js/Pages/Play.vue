@@ -168,7 +168,7 @@ function sendCards(players) {
         (async () => {
             for (const code of cards) {
                 sendCard(player, code)
-                await timeout(100)
+                await new Promise(r => setTimeout(r, 100))
             }
         })
     }
