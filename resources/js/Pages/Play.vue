@@ -191,7 +191,7 @@ function sendCard(player, code) {
             document.querySelector('#cards').appendChild(card)
             hand.value.appendChild(card)
             const rect = playerPhoto.getBoundingClientRect()
-            card.style.transform = `translate(${ rect.x + rect.width / 2 }px, ${ rect.y + rect.height / 2 })`
+            card.style.transform = `translate(${ rect.x + rect.width / 2 }px, ${ rect.y + rect.height / 2 }px)`
             card.style.width = '10vw'
         }
     }
