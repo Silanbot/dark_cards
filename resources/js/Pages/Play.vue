@@ -167,7 +167,6 @@ function sendCards(players) {
     for (const [player, cards] of Object.entries(players)) {
         for (const code of cards) {
             sendCard(player, code)
-            console.log(player, code)
             timeout(100)
         }
     }
@@ -179,8 +178,10 @@ function sendCard(player, code) {
     card.setAttribute('data-player', player)
     card.setAttribute('src', getCardSrc(code))
     console.log('card', card)
+    console.log('player', player)
     if (parseInt(user.value.id) === parseInt(player)) {
-        addCard(card)
+        console.log('addCard emitted', user.value.id, player)
+        addCard(card, true)
     } else {
         const playerPhoto = [...useQuerySelector('.game__players__player__photo')].find(e => parseInt(e.dataset.player) === parseInt(player))
         if (!playerPhoto) {
@@ -260,7 +261,7 @@ function addCard(card, addElement = true) {
     card.style.left = '-15vw'
     card.style.top = '-28vw'
     card.classList.add('my-card');
-
+    console.log('addCard', card)
     if (card.dataset.cell !== undefined) {
         console.log('card dataset !== undefined')
         const cell = cells[card.dataset.cell].findIndex(c => c.dataset.card === card.dataset.card)
@@ -278,10 +279,12 @@ function addCard(card, addElement = true) {
     }
     for (const cardHand of document.querySelectorAll('img.my-card')) {
         if (lt(card.dataset.card, cardHand.dataset.card)) {
+            document.querySelector('#cards').insertBefore(card, cardHand)
             return hand.value.insertBefore(card, cardHand)
         }
     }
 
+    document.querySelector('#cards').appendChild(card)
     hand.value.appendChild(card)
 }
 
