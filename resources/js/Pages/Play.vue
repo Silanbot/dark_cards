@@ -69,7 +69,6 @@ function setReady() {
 }
 
 function sendLeaveEvent() {
-    showConfirm('Ты действительно хочешь выйти из комнаты?')
     notificationOccurred('warning')
 }
 
@@ -168,7 +167,7 @@ function sendCards(players) {
     for (const [player, cards] of Object.entries(players)) {
         for (const code of cards) {
             sendCard(player, code)
-
+            console.log(player, code)
             timeout(100)
         }
     }
@@ -179,11 +178,11 @@ function sendCard(player, code) {
     card.setAttribute('data-card', user.value.id === parseInt(player) ? code : 'b')
     card.setAttribute('data-player', player)
     card.setAttribute('src', getCardSrc(code))
-
+    console.log('card', card)
     if (parseInt(user.value.id) === parseInt(player)) {
         return addCard(card)
     }
-    const playerPhoto = [...useQuerySelector('.game__players__player__photo')].find(e => e.dataset.player === player)
+    const playerPhoto = [...useQuerySelector('.game__players__player__photo')].find(e => parseInt(e.dataset.player) === parseInt(player))
     if (!playerPhoto) {
         showAlert('Не найден оппонент для раздачи')
         notificationOccurred('error')
@@ -192,9 +191,11 @@ function sendCard(player, code) {
     }
 
     hand.value.appendChild(card)
+    console.log('hand', hand.value)
     const rect = playerPhoto.getBoundingClientRect()
     card.style.transform = `translate(${ rect.x + rect.width / 2 }px, ${ rect.y + rect.height / 2 })`
     card.style.width = '10vw'
+    console.log('card2', card)
 
     countCardsInDeck.value = count.value--
 }
