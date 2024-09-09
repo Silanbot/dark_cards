@@ -442,10 +442,31 @@ export default {
             const { storage } = useStorage()
 
             let filters = []
-            document.querySelectorAll('.active').forEach(filter => filters.push(filter.getAttribute('name')))
+            document.querySelectorAll('.active').forEach(filter => {
+                if (filter) {
+                    filters.push(filter.getAttribute('name'))
+                }
+            })
+            let count = 0
+
+            for (const filter of filters) {
+                if (filter !== null) {
+                    if (filter.startsWith('cards_') || filter.startsWith('max_gamers_')) {
+                        continue;
+                    }
+
+                    count++
+                }
+            }
+
+            if (count < 3) {
+                telegram.alert('Необходимо выбрать 4 режима игры для поиска', true, 'error')
+
+                return
+            }
+
             filters.push(`select_mode_${this.selectMode}`)
             storage.setItem('params', filters.join(','))
-
             location.replace('/home')
         },
         paramExists(name) {
@@ -515,39 +536,26 @@ export default {
             const name = e.currentTarget.getAttribute('name')
             e.currentTarget.classList.add('active')
             const { storage } = useStorage()
-            let modes = []
 
-            if (name === 'thrown') {
-                document.querySelector('div[name="transferable"]').classList.remove('active')
-            }
-            if (name === 'transferable') {
-                document.querySelector('div[name="thrown"]').classList.remove('active')
-            }
-            if (name === 'neighbors') {
-                document.querySelector('div[name="all"]').classList.remove('active')
-            }
-            if (name === 'all') {
-                document.querySelector('div[name="neighbors"]').classList.remove('active')
-            }
-            if (name === 'honest') {
-                document.querySelector('div[name="cheaters"]').classList.remove('active')
-            }
-            if (name === 'cheaters') {
-                document.querySelector('div[name="honest"]').classList.remove('active')
-            }
-            if (name === 'classic') {
-                document.querySelector('div[name="draw"]').classList.remove('active')
-            }
-            if (name === 'draw') {
-                document.querySelector('div[name="classic"]').classList.remove('active')
+            const opposingModes = {
+                thrown: 'transferable',
+                transferable: 'thrown',
+                neighbors: 'all',
+                all: 'neighbors',
+                honest: 'cheaters',
+                cheaters: 'honest',
+                classic: 'draw',
+                draw: 'classic'
             }
 
-            const params = document.querySelectorAll('.active')
-            for (const param of params) {
-                modes.push(param.getAttribute('name'))
+            const opposingMode = opposingModes[name]
+            if (opposingMode) {
+                document.querySelector(`div[name="${opposingMode}"]`).classList.remove('active')
             }
 
-            storage.setItem('params', modes.join(','))
+            const activeModes = [...document.querySelectorAll('.active')].map(param => param.getAttribute('name'))
+            storage.setItem('params', activeModes.join(','))
+
             telegram.impactFeedback('light')
         }
     },
