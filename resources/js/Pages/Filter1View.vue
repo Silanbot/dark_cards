@@ -566,6 +566,11 @@ export default {
         this.user = await api.profile(profile.id, profile.username)
         telegram.showBackButton()
         telegram.addOnClickHandlerForBackButton('/home')
+
+        const { storage } = useStorage()
+        if (!storage.getItem('params')) {
+            storage.setItem('params', 'max_gamers_2,cards_24')
+        }
     }
 }
 </script>
