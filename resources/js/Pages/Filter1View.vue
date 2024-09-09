@@ -461,7 +461,7 @@ export default {
 
             if (count < 3) {
                 telegram.alert('Необходимо выбрать 4 режима игры для поиска', true, 'error')
-
+                count = 0
                 return
             }
 
