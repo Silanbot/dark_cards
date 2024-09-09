@@ -451,7 +451,9 @@ export default {
 
             for (const filter of filters) {
                 if (filter !== null) {
-                    if (filter.startsWith('cards_') || filter.startsWith('max_gamers_')) {
+                    if (filter.startsWith('cards_')
+                        || filter.startsWith('max_gamers_')
+                        || filter.startsWith('select_mode_')) {
                         continue;
                     }
 
@@ -461,7 +463,7 @@ export default {
 
             if (count < 3) {
                 telegram.alert('Необходимо выбрать 4 режима игры для поиска', true, 'error')
-                count = 0
+
                 return
             }
 
