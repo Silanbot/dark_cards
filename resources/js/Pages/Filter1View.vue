@@ -569,7 +569,7 @@ export default {
 
         const { storage } = useStorage()
         if (!storage.getItem('params')) {
-            storage.setItem('params', 'max_gamers_2,cards_24')
+            storage.setItem('params', 'max_gamers_2,cards_36')
         }
     }
 }
