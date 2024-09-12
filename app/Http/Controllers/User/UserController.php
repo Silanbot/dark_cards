@@ -20,7 +20,9 @@ final class UserController extends Controller
     {
         $service = new ProfilePhotoAction;
         $user = $this->actor->findOrCreateUser($request->id, $request->username)->toArray();
-        $user['avatar'] = $service->extract($request->id);
+        if (config('app.env') === 'production') {
+            $user['avatar'] = $service->extract($request->id);
+        }
 
         return $user;
     }
