@@ -330,6 +330,8 @@ class GameService implements GameContract
         $room->update(['beats' => $beats]);
 
         if ($beats->count() === $room->max_gamers - 1) {
+            $this->updatePlayerIndices($room, true);
+
             $room->update([
                 'deck' => [
                     'cards' => $room->deck->get('cards'),
