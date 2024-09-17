@@ -231,10 +231,10 @@ import modalDialog from './components/modalDialog.vue'
                     <div class="footer__button" @click="setReadyState" v-else>Не готов</div>
                 </template>
                 <template v-else>
-                    <div class="footer__button" @click="startFinishBeat"       v-if="!myTurn && gameCells.filter(c => c.length).length && gameCells.filter(c => c.length).every(c => c.length == 2)">Бито</div>
+                    <div class="footer__button" @click="startFinishBeat"       v-if="myTurn && gameCells.some(cell => cell.length === 2)">Бито</div>
                     <div class="footer__button"                                v-else-if="myTurn">Ваш ход</div>
 <!--                    gameCells.every(c => !c.length)-->
-                    <div class="footer__button" @click="() => takeFromTable()" v-else :style="{ visibility: gameCells.filter(c => !c.length).length && gameCells.filter(c => c.length).every(c => c.length == 2) ? 'hidden' : undefined }">Взять</div>
+                    <div class="footer__button" @click="() => takeFromTable()" v-else :style="{ visibility: !myTurn && gameCells.some(cell => cell.length === 1) ? 'hidden' : undefined }">Взять</div>
                 </template>
 
                 <div class="footer__person">
@@ -654,12 +654,13 @@ export default {
             if (!activeCard) return
 
             console.log('attackerPlayer', isAttackerPlayer)
+            console.log('myTurn?', this.myTurn)
 
             // this.cardsCount === 24 && this.gameCells.length === 10 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             // this.gameCells.length >= 12 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             // isAttackerPlayer ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
             // canBeat ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
-            if (!isAttackerPlayer) {
+            if (!this.myTurn) {
                 this.addMyCard(activeCard, false)
                 activeCard = null
 
@@ -769,7 +770,7 @@ export default {
                 // }
 
             const top = this.gameCells[gameCell].length != 0;
-            if (discardIsMine && isAttackerPlayer) {
+            if (discardIsMine && this.myTurn) {
                 const isCheaters = storage.getItem('params')?.split(',').includes('cheaters') ?? false;
                 if (!isCheaters && top && this.cannotBeat(card.dataset.card, this.gameCells[gameCell][Number(!top)].dataset.card))
                     return this.addMyCard(card, false)
@@ -777,7 +778,7 @@ export default {
                 if (this.gameCells.length === 10 && this.cardsCount === 24) {
                     return this.addMyCard(card, false)
                 }
-                if (!isAttackerPlayer) {
+                if (!this.myTurn) {
                     return this.addMyCard(card, false)
                 }
 
