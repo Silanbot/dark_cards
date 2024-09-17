@@ -653,18 +653,13 @@ export default {
             dragging = lastDragging = false
             if (!activeCard) return
 
+            console.log('attackerPlayer', isAttackerPlayer)
+
             // this.cardsCount === 24 && this.gameCells.length === 10 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             // this.gameCells.length >= 12 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             // isAttackerPlayer ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
             // canBeat ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
             if (!isAttackerPlayer) {
-                this.addMyCard(activeCard, false)
-                activeCard = null
-
-                return
-            }
-
-            if (!canBeat) {
                 this.addMyCard(activeCard, false)
                 activeCard = null
 
