@@ -235,7 +235,7 @@ import modalDialog from './components/modalDialog.vue'
                     <div class="footer__button"                                v-else-if="myTurn">Ваш ход</div>
 <!--                    gameCells.every(c => !c.length)-->
                     <div class="footer__button" @click="() => takeFromTable()" v-else :style="{
-                        visibility: !myTurn && gameCells.some(cell => cell.length > 0) &&
+                        visibility: !myTurn && gameCells.length > 0 && gameCells.some(cell => cell.length > 0) &&
                                 gameCells.some(cell => cell.length === 1) &&
                                 gameCells.every(cell => cell.length === 2) ? 'hidden' : undefined }">Взять</div>
                 </template>
