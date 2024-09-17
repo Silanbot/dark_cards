@@ -7,20 +7,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
 /**
  * @property int $id
  * @property int $bank
  * @property int $game_type
  * @property int $max_gamers
- * @property array $deck
- * @property array $ready_state
- * @property array $join_state
- * @property array $mode
+ * @property Collection $deck
+ * @property Collection $ready_state
+ * @property Collection $join_state
+ * @property Collection $mode
  * @property string $password
  * @property int $attacker_player_index
  * @property int $opponent_player_index
- * @property array beats
+ * @property Collection $beats
  */
 class Room extends Model
 {
