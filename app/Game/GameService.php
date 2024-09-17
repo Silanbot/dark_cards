@@ -325,7 +325,7 @@ class GameService implements GameContract
 
         $beats->push($player);
 
-        $this->updatePlayerIndices($room, true, $player);
+//        $this->updatePlayerIndices($room, true, $player);
 
         $room->update(['beats' => $beats]);
 
