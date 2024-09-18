@@ -26,7 +26,7 @@ class GameService implements GameContract
         if ($playerTookCards !== null) {
             $newOpponentIndex = array_search($playerTookCards, $players);
             $newAttackerIndex = $this->findNextActiveIndex($players, $currentAttackerIndex);
-        } else if ($playersCount === 2) {
+        } elseif ($playersCount === 2) {
             $newAttackerIndex = ($currentAttackerIndex + 1) % $playersCount;
             $newOpponentIndex = $currentAttackerIndex;
         } else {
@@ -89,7 +89,7 @@ class GameService implements GameContract
         $players = $room->deck->get('players');
         $players[$player] = $playerCards;
 
-//        $this->updatePlayerIndices($room, true, $player);
+        //        $this->updatePlayerIndices($room, true, $player);
 
         $room->update([
             'deck' => collect([
@@ -324,9 +324,6 @@ class GameService implements GameContract
         }
 
         $beats->push($player);
-
-//        $this->updatePlayerIndices($room, true, $player);
-
         $room->update(['beats' => $beats]);
 
         if ($beats->count() === $room->max_gamers - 1) {
