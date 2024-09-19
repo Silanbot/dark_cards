@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Message;
 use App\Http\Controllers\Controller;
 use App\Models\Message;
 use App\Repositories\Contracts\MessageRepositoryContract;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use phpcent\Client;
 
@@ -14,7 +15,7 @@ class MessageController extends Controller
         private readonly MessageRepositoryContract $entity
     ) {}
 
-    public function index(Request $request, Client $centrifuge)
+    public function index(Request $request, Client $centrifuge): JsonResponse
     {
         $messages = $this->entity->messages($request->room_id);
 

@@ -65,7 +65,7 @@ export default {
         const messages = await messages.load(this.room.id, 'room')
         this.messages = messages.map(message => ({ message: message.message, from_me: message.user_id === this.user.id }))
 
-        const subscription = this.centrifugo.newSubscription(`room:1`)
+        const subscription = this.centrifugo.newSubscription(`room`)
 
         subscription.on('publication', context => {
             this.messages.push({ message: context.data.message, from_me: context.data.user_id === this.user })
