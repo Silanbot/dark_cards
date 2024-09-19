@@ -1,3 +1,47 @@
+<script setup>
+import { onMounted, reactive, ref } from "vue";
+
+import useProfile from "../api/composable/useProfile.js";
+import useConnectionToken from "../api/composable/useConnectionToken.js";
+import useWebsocket from "../api/composable/useWebsocket.js";
+import messagesApi from "../api/messages.api.js";
+
+const player = JSON.parse(localStorage.getItem('profile'))
+const props = defineProps({
+    room: Object,
+})
+
+const profile = ref()
+const messages = reactive([])
+const chatroom = ref(props.room)
+const text = defineModel({ required: true })
+
+function onMessage(data) {
+    messages.push({ message: data.message, from_me: parseInt(data.user_id) === parseInt(profile.value.id) })
+}
+
+function onSendMessage() {
+    messagesApi.send(text.value, profile.value.id, chatroom.value.id, 'chatroom')
+    text.value = ''
+}
+
+async function onloadMessages() {
+    messages.push(await messagesApi.load(chatroom.value.id, 'chatroom'))
+}
+
+onMounted(async () => {
+    profile.value = await useProfile(player.id, player.username)
+    const $token = await useConnectionToken(profile.id)
+    const $websocket = useWebsocket($token, 'chatroom')
+    const sub = $websocket.newSubscription('chatroom')
+
+    $websocket.addListener({ event: 'message', handler:  onMessage })
+    $websocket.runListening(sub)
+    $websocket.connect()
+})
+
+</script>
+
 <template>
   <div class="background-modal">
     <div class="modal">
@@ -28,56 +72,56 @@
       </div>
       <div class="modal__input">
         <input v-model="text" type="text" placeholder="Сообщение" />
-        <img @click="sendMessage" src="../sources/msg.png" alt="" />
+        <img @click="onSendMessage" src="../sources/msg.png" alt="" />
       </div>
     </div>
   </div>
 </template>
-<script>
-import {Centrifuge} from "centrifuge";
-import telegram from '../api/telegram.js'
-import api from '../api/users.api.js'
-import messages from '../api/messages.api.js'
+<!--<script>-->
+<!--import {Centrifuge} from "centrifuge";-->
+<!--import telegram from '../api/telegram.js'-->
+<!--import api from '../api/users.api.js'-->
+<!--import messages from '../api/messages.api.js'-->
 
-export default {
-    props: {
-        room: Object
-    },
-    data() {
-        return {
-            messages: [],
-            text: '',
-            user: null,
-            centrifuge: null
-        }
-    },
-    methods: {
-        async sendMessage() {
-            await messages.send(this.text, this.user.id, this.room.id, 'chatroom')
-            this.text = ''
-        }
-    },
-    async created() {
-        this.user = await telegram.profile()
+<!--export default {-->
+<!--    props: {-->
+<!--        room: Object-->
+<!--    },-->
+<!--    data() {-->
+<!--        return {-->
+<!--            messages: [],-->
+<!--            text: '',-->
+<!--            user: null,-->
+<!--            centrifuge: null-->
+<!--        }-->
+<!--    },-->
+<!--    methods: {-->
+<!--        async sendMessage() {-->
+<!--            await messages.send(this.text, this.user.id, this.room.id, 'chatroom')-->
+<!--            this.text = ''-->
+<!--        }-->
+<!--    },-->
+<!--    async mounted() {-->
+<!--        this.user = await telegram.profile()-->
 
-        const token = await api.generateConnectionToken(this.user.id)
-        this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })
-        const messages = await messages.load(this.room.id, 'chatroom')
-        this.messages = messages.map(message => ({ message: message.message, from_me: message.user_id === this.user.id }))
+<!--        const token = await api.generateConnectionToken(this.user.id)-->
+<!--        this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })-->
+<!--        const messages = await messages.load(this.room.id, 'chatroom')-->
+<!--        this.messages = messages.map(message => ({ message: message.message, from_me: message.user_id === this.user.id }))-->
 
-        const subscription = this.centrifugo.newSubscription(`chatroom`)
+<!--        const subscription = this.centrifugo.newSubscription(`chatroom`)-->
 
-        subscription.on('publication', context => {
-            if (context.data.event === 'message') {
-                this.messages.push({ message: context.data.message, from_me: context.data.user_id === this.user.id })
-                console.log(this.messages)
-            }
-        }).subscribe()
+<!--        subscription.on('publication', context => {-->
+<!--            if (context.data.event === 'message') {-->
+<!--                this.messages.push({ message: context.data.message, from_me: context.data.user_id === this.user.id })-->
+<!--                console.log(this.messages)-->
+<!--            }-->
+<!--        }).subscribe()-->
 
-        this.centrifugo.connect()
-    }
-}
-</script>
+<!--        this.centrifugo.connect()-->
+<!--    }-->
+<!--}-->
+<!--</script>-->
 <style lang="scss" scoped>
 .background-modal {
   position: fixed;
