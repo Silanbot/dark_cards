@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="modal__title">Чат игроков</div>
-      <div class="modal__dialog" v-for="message of messages">
+      <div class="modal__dialog" v-for="message of messages" :key="message.user_id">
         <div v-if="!message.from_me" class="modal__dialog__item main">
           <div class="modal__dialog__item__header">
             <div class="modal__dialog__item__header__title">Игрок</div>
