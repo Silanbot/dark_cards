@@ -33,6 +33,7 @@ class MessageController extends Controller
         $centrifuge->publish($request->room_name, [
             'message' => $message->message,
             'user_id' => $message->user_id,
+            'event' => 'message'
         ]);
     }
 }

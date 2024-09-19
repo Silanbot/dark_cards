@@ -68,7 +68,9 @@ export default {
         const subscription = this.centrifugo.newSubscription(`room`)
 
         subscription.on('publication', context => {
-            this.messages.push({ message: context.data.message, from_me: context.data.user_id === this.user })
+            if (context.data.event === 'message') {
+                this.messages.push({ message: context.data.message, from_me: context.data.user_id === this.user.id })
+            }
         }).subscribe()
 
         this.centrifugo.connect()
