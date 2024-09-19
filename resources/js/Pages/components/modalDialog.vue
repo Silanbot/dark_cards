@@ -53,7 +53,7 @@ export default {
     },
     methods: {
         async sendMessage() {
-            await messages.send(this.text, this.user.id, this.room.id, 'room')
+            await messages.send(this.text, this.user.id, this.room.id, 'chatroom')
             this.text = ''
         }
     },
@@ -62,10 +62,10 @@ export default {
 
         const token = await api.generateConnectionToken(this.user.id)
         this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })
-        const messages = await messages.load(this.room.id, 'room')
+        const messages = await messages.load(this.room.id, 'chatroom')
         this.messages = messages.map(message => ({ message: message.message, from_me: message.user_id === this.user.id }))
 
-        const subscription = this.centrifugo.newSubscription(`room`)
+        const subscription = this.centrifugo.newSubscription(`chatroom`)
 
         subscription.on('publication', context => {
             if (context.data.event === 'message') {
