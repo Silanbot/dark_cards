@@ -8,7 +8,7 @@ import modalDialog from './components/modalDialog.vue'
     <modalProfile @showReport="modalChatShow = true; modalProfileShow = false" @hide="modalProfileShow = false"
                   v-if="modalProfileShow"/>
     <modalChat @hide="modalChatShow = false" v-if="modalChatShow"/>
-    <modalDialog @hide="modalDialogShow = false" v-if="modalDialogShow"/>
+    <modalDialog @hide="modalDialogShow = false" :room="room" v-if="modalDialogShow"/>
     <div style="display:none">
         <img data-cardimg="b" src="./sources/cards/back.svg">
         <img data-cardimg="6s" src="./sources/cards/6_of_spades.svg">
