@@ -70,6 +70,7 @@ export default {
         subscription.on('publication', context => {
             if (context.data.event === 'message') {
                 this.messages.push({ message: context.data.message, from_me: context.data.user_id === this.user.id })
+                console.log(this.messages)
             }
         }).subscribe()
 
