@@ -353,7 +353,7 @@ footer.footer {
       }
     }
   }
-  div.footer__button {
+  .footer__button {
     z-index: 3;
     display: flex;
     justify-content: center;
@@ -388,10 +388,21 @@ footer.footer {
     }
 
   }
-
-    .turn {
-        border-radius: 10px !important;
+    .footer__button_turn {
+        z-index: 3;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "SF Pro Display";
+        height: 56px;
+        width: 37%;
+        font-size: 20px;
+        color: #eb3d3d;
+        background: #eb3d3d35;
+        border: 1px solid #eb3d3d;
+        border-radius: 1px;
     }
+
 
   .footer__play {
     align-items: center;
