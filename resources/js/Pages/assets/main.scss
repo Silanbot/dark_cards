@@ -364,10 +364,7 @@ footer.footer {
     background: #eb3d3d35;
     border: 1px solid #eb3d3d;
     border-radius: 30px;
-      &.turn {
-          border-radius: 1px !important;
-      }
-    &.chat {
+    &.chat &.turn {
       gap: 5px;
       align-items: center;
       svg {
@@ -379,10 +376,6 @@ footer.footer {
     }
 
   }
-    .turn {
-        border-radius: 1px !important;
-    }
-
 
   .footer__play {
     align-items: center;
