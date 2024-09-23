@@ -224,9 +224,7 @@ section {
   display: none !important;
 }
 
-.turn {
-    border-radius: 1px;
-}
+
 
 footer.footer {
   // flex-grow: 1;
@@ -368,7 +366,17 @@ footer.footer {
     background: #eb3d3d35;
     border: 1px solid #eb3d3d;
     border-radius: 30px;
-    &.chat &.turn {
+      .turn {
+          gap: 5px;
+          align-items: center;
+          svg {
+              width: 16px;
+          }
+          width: 30%;
+          height: 40px;
+          border-radius: 10px;
+      }
+    &.chat .turn {
       gap: 5px;
       align-items: center;
       svg {
