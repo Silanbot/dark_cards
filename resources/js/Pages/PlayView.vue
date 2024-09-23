@@ -233,7 +233,7 @@ import modalDialog from './components/modalDialog.vue'
                 <template v-else>
                     <div class="footer__button" @click="startFinishBeat"       v-if="(!myTurn && gameCells.filter(c => c.length).length && gameCells.filter(c => c.length).every(c => c.length % 2 === 0))">Бито</div>
                     <div class="footer__button"                                v-else-if="myTurn">Ваш ход</div>
-                    <div class="footer__button" @click="() => takeFromTable()" v-else :style="{ visibility: (myTurn && gameCells.every(c => !c.length)) ? 'hidden' : undefined }">Взять</div>
+                    <div class="footer__button" @click="() => takeFromTable()" v-else :style="{ visibility: (myTurn && gameCells.filter(c => c.length).every(c => c.length % 2 !== 0)) ? 'hidden' : undefined }">Взять</div>
                 </template>
 
                 <div class="footer__person">
@@ -654,6 +654,7 @@ export default {
 
             console.log('attackerPlayer', isAttackerPlayer)
             console.log('myTurn?', this.myTurn)
+            console.log('gameCells?', this.gameCells.filter(c => c.length).length)
 
             // this.cardsCount === 24 && this.gameCells.length === 10 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             // this.gameCells.length >= 12 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
