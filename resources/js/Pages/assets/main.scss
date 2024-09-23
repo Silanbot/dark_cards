@@ -373,11 +373,11 @@ footer.footer {
       width: 30%;
       height: 40px;
       border-radius: 10px;
-    }
+    } ,
+      &.turn {
+          border: none;
+      }
   }
-    .btn_turn {
-        border: none;
-    }
   .footer__play {
     align-items: center;
     width: 70px;
