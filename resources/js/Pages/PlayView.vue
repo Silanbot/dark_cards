@@ -515,7 +515,7 @@ export default {
             location.replace('/home')
         }))
 
-        this.centrifugo = new Centrifuge(`ws://127.0.0.1:8888/connection/websocket`, { token })
+        this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })
         this.centrifugo.on('connected', async () => {
             const res = await fetch(`/api/game/join?${new URLSearchParams({ id: this.room.id, user_id: profile.id })}`)
             for (const user of await res.json())
