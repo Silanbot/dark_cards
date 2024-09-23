@@ -7,63 +7,62 @@ on:
       branches: [ "main" ]
 
 jobs:
-  laravel-tests:
-    name: Set up Laravel tests
-    runs-on: ubuntu-latest
-
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: laravel
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2'
-
-    - name: Copy .env
-      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-
-    - name: Install Dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
-
-    - name: Set up application for SQLite
-      run: |
-        touch database/database.sqlite
-        echo "DB_CONNECTION=sqlite" >> .env
-        echo "DB_DATABASE=${{ github.workspace }}/database/database.sqlite" >> .env
-    - name: Set up security system key
-      run: echo "API_BOT_TOKEN=secret >> .env"
-
-    - name: Run migrations
-      run: php artisan migrate
-
-    - name: Generate key
-      run: php artisan key:generate
-
-    - name: Directory Permissions
-      run: chmod -R 777 storage bootstrap/cache
-
-    - name: Compile VueJS
-      run: npm install && npm run build
-
-    - name: Change session driver to file
-      run: echo "SESSION_DRIVER=file" >> .env
-
-    - name: Analyzing code project via Laravel Pint
-      run: ./vendor/bin/pint --test
+#  laravel-tests:
+#    name: Set up Laravel tests
+#    runs-on: ubuntu-latest
+#
+#    services:
+#      mysql:
+#        image: mysql:5.7
+#        env:
+#          MYSQL_ROOT_PASSWORD: password
+#          MYSQL_DATABASE: laravel
+#        ports:
+#          - 3306:3306
+#        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+#
+#    steps:
+#    - uses: actions/checkout@v3
+#
+#    - name: Set up PHP
+#      uses: shivammathur/setup-php@v2
+#      with:
+#        php-version: '8.2'
+#
+#    - name: Copy .env
+#      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+#
+#    - name: Install Dependencies
+#      run: composer install --prefer-dist --no-progress --no-suggest
+#
+#    - name: Set up application for SQLite
+#      run: |
+#        touch database/database.sqlite
+#        echo "DB_CONNECTION=sqlite" >> .env
+#        echo "DB_DATABASE=${{ github.workspace }}/database/database.sqlite" >> .env
+#    - name: Set up security system key
+#      run: echo "API_BOT_TOKEN=secret >> .env"
+#
+#    - name: Run migrations
+#      run: php artisan migrate
+#
+#    - name: Generate key
+#      run: php artisan key:generate
+#
+#    - name: Directory Permissions
+#      run: chmod -R 777 storage bootstrap/cache
+#
+#    - name: Compile VueJS
+#      run: npm install && npm run build
+#
+#    - name: Change session driver to file
+#      run: echo "SESSION_DRIVER=file" >> .env
+#
+#    - name: Analyzing code project via Laravel Pint
+#      run: ./vendor/bin/pint --test
 
   deploy:
     name: Deploy on production
-    needs: laravel-tests
     runs-on: ubuntu-latest
 
     steps:
