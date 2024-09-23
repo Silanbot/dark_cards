@@ -373,25 +373,12 @@ footer.footer {
       width: 30%;
       height: 40px;
       border-radius: 10px;
-    } ,
+    }
       &.turn {
-          border: none;
+          border-radius: 0;
       }
   }
-    .footer__button__turn {
-        z-index: 3;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-family: "SF Pro Display";
-        height: 56px;
-        width: 37%;
-        font-size: 20px;
-        color: #eb3d3d;
-        background: #eb3d3d35;
-        border: 1px solid #eb3d3d;
-        border-radius: 0;
-    }
+
   .footer__play {
     align-items: center;
     width: 70px;
