@@ -364,6 +364,9 @@ footer.footer {
     background: #eb3d3d35;
     border: 1px solid #eb3d3d;
     border-radius: 30px;
+      .turn {
+          border-radius: 1px !important;
+      }
     &.chat {
       gap: 5px;
       align-items: center;
@@ -374,9 +377,7 @@ footer.footer {
       height: 40px;
       border-radius: 10px;
     }
-      &.turn {
-          border-radius: 1px !important;
-      }
+
   }
 
   .footer__play {
