@@ -232,7 +232,7 @@ import modalDialog from './components/modalDialog.vue'
                 </template>
                 <template v-else>
                     <div class="footer__button" @click="startFinishBeat"       v-if="(myTurn && gameCells.filter(c => c.length).length > 0 && gameCells.filter(c => c.length).every(c => c.length % 2 === 0))">Бито</div>
-                    <div class="footer_button_turn"                                v-else-if="myTurn">Ваш ход</div>
+                    <div class="footer__button"                                v-else-if="myTurn">Ваш ход</div>
                     <div class="footer__button" @click="() => takeFromTable()" v-else :style="{ visibility: (myTurn  && gameCells.every(c => !c.length) && gameCells.filter(c => c.length).length !== 0) || (gameCells.filter(c => c.length).length === 0) || (!myTurn && (gameCells.filter(c => c.length).length+2) %2 === 1) ? 'hidden' : undefined }">Взять</div>
                 </template>
 
