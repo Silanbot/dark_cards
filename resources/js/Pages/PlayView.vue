@@ -655,6 +655,8 @@ export default {
             console.log('attackerPlayer', isAttackerPlayer)
             console.log('myTurn?', this.myTurn)
             console.log('gameCells?', this.gameCells.filter(c => c.length).length)
+            console.log('gameCells/0?', this.gameCells.filter(c => c.length).every(c => c.length % 2 === 0))
+            console.log('gameCells/1?', this.gameCells.filter(c => c.length).every(c => c.length % 2 !== 0))
 
             // this.cardsCount === 24 && this.gameCells.length === 10 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             // this.gameCells.length >= 12 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
