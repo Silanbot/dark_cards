@@ -415,6 +415,9 @@ footer.footer {
             height: 40px;
             border-radius: 10px;
         }
+        &.turn {
+            border-radius: 1px;
+        }
     }
 
     .footer__play {
