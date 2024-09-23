@@ -233,7 +233,7 @@ import modalDialog from './components/modalDialog.vue'
                 <template v-else>
                     <div class="footer__button" @click="startFinishBeat"       v-if="(!myTurn && gameCells.filter(c => c.length).length && gameCells.filter(c => c.length).every(c => c.length % 2 === 0))">Бито</div>
                     <div class="footer__button"                                v-else-if="myTurn">Ваш ход</div>
-                    <div class="footer__button" @click="() => takeFromTable()" v-else :style="{ visibility: (myTurn && gameCells.length % 2 !== 0 && gameCells.filter(c => !c.length).length) ? 'hidden' : undefined }">Взять</div>
+                    <div class="footer__button" @click="() => takeFromTable()" v-else :style="{ visibility: (myTurn && gameCells.every(c => !c.length)) ? 'hidden' : undefined }">Взять</div>
                 </template>
 
                 <div class="footer__person">
@@ -515,7 +515,7 @@ export default {
             location.replace('/home')
         }))
 
-        this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })
+        this.centrifugo = new Centrifuge(`ws://127.0.0.1:8888/connection/websocket`, { token })
         this.centrifugo.on('connected', async () => {
             const res = await fetch(`/api/game/join?${new URLSearchParams({ id: this.room.id, user_id: profile.id })}`)
             for (const user of await res.json())
