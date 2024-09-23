@@ -376,7 +376,7 @@ footer.footer {
           height: 40px;
           border-radius: 10px;
       }
-    &.chat .turn {
+    &.chat, .turn {
       gap: 5px;
       align-items: center;
       svg {
