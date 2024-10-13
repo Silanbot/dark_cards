@@ -15,7 +15,7 @@ class MessageController extends Controller
         private readonly MessageRepositoryContract $entity
     ) {}
 
-    public function index(Request $request, Client $centrifuge): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $messages = $this->entity->messages($request->room_id);
 

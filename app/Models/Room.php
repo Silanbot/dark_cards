@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
@@ -41,6 +42,8 @@ class Room extends Model
         'beats',
     ];
 
+    protected $with = ['settings'];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -49,6 +52,11 @@ class Room extends Model
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class);
+    }
+
+    public function settings(): BelongsToMany
+    {
+        return $this->belongsToMany(Setting::class);
     }
 
     public function casts(): array

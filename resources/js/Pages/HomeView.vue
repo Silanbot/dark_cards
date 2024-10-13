@@ -507,7 +507,7 @@ export default {
             if (!status) {
                 return telegram.alert('У вас недостаточно средств, выберите другой диапазон ставок', true)
             }
-            const room = await gameApi.createGame(this.getBank()[0], this.selectMode, (await telegram.profile()).id)
+            const room = await gameApi.createGame(this.getBank()[0], this.selectMode, (await telegram.profile()).id, this.getSettings())
 
             if (Object.keys(room).includes('id')) {
                 this.redirect(`/play/${room.id}`)
@@ -540,10 +540,10 @@ export default {
             const bank = this.getBank()[0]
 
             if (this.selectMode === this.coinsMode) {
-                return this.user.coins > bank
+                return this.user.coins >= bank
             }
 
-            return this.user.cash > bank
+            return this.user.cash >= bank
         },
         async findRoom() {
             const status = this.checkPlayerBank()
@@ -587,6 +587,9 @@ export default {
         },
         redirect(route) {
             location.replace(route)
+        },
+        getSettings() {
+            return localStorage.getItem('params')
         }
     },
     async created() {

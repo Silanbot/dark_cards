@@ -14,16 +14,14 @@ return new class extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class);
-            $table->unsignedInteger('bank');
-            $table->tinyInteger('game_type');
-            $table->unsignedTinyInteger('max_gamers')->default(2);
+            $table->unsignedBigInteger('bank');
             $table->jsonb('deck')->nullable();
             $table->jsonb('ready_state')->nullable();
             $table->jsonb('mode')->nullable();
             $table->jsonb('winners')->nullable();
             $table->string('password', length: 6)->nullable();
             $table->jsonb('beats')->default('[]');
+            $table->jsonb('join_state')->nullable();
             $table->unsignedBigInteger('opponent_player_index')->nullable();
             $table->unsignedBigInteger('attacker_player_index')->nullable();
             $table->timestamps();

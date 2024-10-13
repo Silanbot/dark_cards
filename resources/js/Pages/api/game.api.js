@@ -67,11 +67,11 @@ export default new (class {
 		});
 	}
 
-	async createGame(bank, game_type, user_id) {
+	async createGame(bank, game_type, user_id, settings) {
 		const response = await (await this.api)({
 			method: 'POST',
 			url: '/api/create-game',
-			data: { bank, game_type, user_id }
+			data: { bank, game_type, user_id, settings }
 		});
 
 		return response.data;

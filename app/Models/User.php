@@ -14,6 +14,7 @@ use Multicaret\Acquaintances\Traits\Friendable;
  * @property int $id
  * @property string $username
  * @property float $balance
+ * @property string $avatar
  */
 class User extends Authenticatable
 {

@@ -7,8 +7,10 @@ use App\Game\Card;
 use App\Game\Deck;
 use App\Http\Controllers\Controller;
 use App\Models\Room;
+use App\Models\Setting;
 use App\Models\User;
 use App\Services\ProfilePhotoAction;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use phpcent\Client;
@@ -22,7 +24,13 @@ class GameController extends Controller
 
     public function createGame(Request $request): array
     {
-        $room = Room::query()->create($request->only(['bank', 'game_type', 'user_id']));
+        $settingNames = $request->get('settings');
+        $settingNames = array_filter(explode(',', $settingNames));
+
+        $room = Room::query()->create($request->only('bank'));
+        $settings = Setting::query()->whereIn('name', $settingNames)->pluck('id');
+
+        $room->settings()->attach($settings);
 
         return [
             'id' => $room->id,
@@ -31,9 +39,9 @@ class GameController extends Controller
 
     public function searching(Request $request): array
     {
-        $room = Room::query()->whereBetween('bank', $request->bank)
-            ->where('game_type', $request->type)
-            ->where('max_gamers', $request->max_players)
+        $room = Room::query()->whereBetween('bank', $request->get('bank'))
+            ->where('game_type', $request->get('type'))
+            ->where('max_gamers', $request->get('max_players'))
             ->first();
 
         return [
@@ -43,10 +51,10 @@ class GameController extends Controller
 
     public function join(Request $request, ProfilePhotoAction $action): JsonResponse
     {
-        $player = $request->user_id;
-        $room = Room::query()->find($request->id);
+        $player = $request->get('user_id');
+        $room = Room::query()->find($request->get('id'));
 
-        $alreadyJoined = $room->join_state ?? collect([]);
+        $alreadyJoined = $room->join_state ?? collect();
         if ($alreadyJoined->contains($player)) {
             return response()->json(User::query()->findMany($alreadyJoined->reject(fn ($e) => (int) $e === (int) $player)));
         }
@@ -55,6 +63,7 @@ class GameController extends Controller
         $room->update(['join_state' => $alreadyJoined->toArray()]);
         $alreadyJoined = User::query()->findMany($alreadyJoined);
 
+        /** @var User $user */
         foreach ($alreadyJoined as $user) {
             $user->avatar = $action->extract($user->id);
 
@@ -70,23 +79,28 @@ class GameController extends Controller
         return response()->json($alreadyJoined);
     }
 
-    public function setReadyState(Request $request, Room $room)
+    /**
+     * @param Request $request
+     * @param Room $room
+     * @return ResponseFactory
+     */
+    public function setReadyState(Request $request, Room $room): ResponseFactory
     {
-        $state = $room->ready_state ?? collect([]);
-        if ($state->contains($request->user_id)) {
+        $state = $room->ready_state ?? collect();
+        if ($state->contains($request->get('user_id'))) {
             if ($room->max_gamers === count($state)) {
                 return response(null, 400);
             }
 
-            unset($state[$state->search($request->user_id)]);
+            unset($state[$state->search($request->get('user_id'))]);
         } else {
-            $state->add($request->user_id);
+            $state->add($request->get('user_id'));
         }
 
         if ($room->max_gamers !== count($state)) {
             $room->update(['ready_state' => $state->toArray()]);
 
-            return;
+            return response(null, 400);
         }
 
         $deck = new Deck($room->ready_state->toArray());
@@ -113,42 +127,44 @@ class GameController extends Controller
             'attacker_player_index' => $state->toArray()[$attacker],
             'opponent_player_index' => $opponent,
         ]);
+
+        return response(null, 200);
     }
 
     public function leave(Request $request): void
     {
-        $room = Room::query()->find($request->id);
+        $room = Room::query()->find($request->get('id'));
 
-        $this->contract->userLeft($room->id, $request->user_id);
+        $this->contract->userLeft($room->id, $request->get('user_id'));
     }
 
     public function fight(Request $request): void
     {
-        $this->contract->beat($request->fight_card, $request->card, $request->room_id, $request->user_id);
+        $this->contract->beat($request->get('fight_card'), $request->get('card'), $request->get('room_id'), $request->get('user_id'));
     }
 
     public function takeFromDeck(Request $request): void
     {
-        $this->contract->takeFromDeck($request->id, $request->user_id, $request->count);
+        $this->contract->takeFromDeck($request->get('id'), $request->get('user_id'), $request->get('count'));
     }
 
     public function takeFromTable(Request $request): void
     {
-        $this->contract->takeFromTable($request->id, $request->player);
+        $this->contract->takeFromTable($request->get('id'), $request->get('player'));
     }
 
     public function revertCard(Request $request): void
     {
-        $this->contract->revertCard($request->card, $request->room_id, $request->player);
+        $this->contract->revertCard($request->get('card'), $request->get('room_id'), $request->get('player'));
     }
 
     public function discardCard(Request $request): void
     {
-        $this->contract->discardCard(Card::build($request->card), $request->room_id, $request->user_id);
+        $this->contract->discardCard(Card::build($request->get('card')), $request->get('room_id'), $request->get('user_id'));
     }
 
     public function beats(Request $request): void
     {
-        $this->contract->beats($request->id, $request->player);
+        $this->contract->beats($request->get('id'), $request->get('player'));
     }
 }
