@@ -9,6 +9,7 @@
         "centrifugal/phpcent": "~5.0",
         "inertiajs/inertia-laravel": "^1.0",
         "laravel/framework": "^11.0",
+        "laravel/octane": "^2.5",
         "laravel/pulse": "^1.0",
         "laravel/sanctum": "^4.0",
         "laravel/telescope": "^5.0",
