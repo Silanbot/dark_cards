@@ -13,12 +13,6 @@ class PlayController extends Controller
 {
     public function connect(Request $request, Room $room): Response|ResponseFactory
     {
-        if ($request->has('new')) {
-            return inertia('Play', [
-                'room' => $room,
-                'players' => !empty($room->ready_state) ? User::query()->whereIn('id', $room->ready_state)->get() : [],
-            ]);
-        }
         $settings = array_filter($room->settings->toArray(), fn(array $setting) => !str_starts_with($setting['name'], 'cards_')
             && !str_starts_with($setting['name'], 'max_gamers_')
             && !str_starts_with($setting['name'], 'select_mode_')

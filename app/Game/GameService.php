@@ -89,8 +89,6 @@ class GameService implements GameContract
         $players = $room->deck->get('players');
         $players[$player] = $playerCards;
 
-        //        $this->updatePlayerIndices($room, true, $player);
-
         $room->update([
             'deck' => collect([
                 'cards' => array_values($cards),

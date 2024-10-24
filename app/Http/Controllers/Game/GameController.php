@@ -39,10 +39,12 @@ class GameController extends Controller
 
     public function searching(Request $request): array
     {
-        $room = Room::query()->whereBetween('bank', $request->get('bank'))
-            ->where('game_type', $request->get('type'))
-            ->where('max_gamers', $request->get('max_players'))
-            ->first();
+//        $room = Room::query()->whereBetween('bank', $request->get('bank'))
+//            ->where('game_type', $request->get('type'))
+//            ->where('max_gamers', $request->get('max_players'))
+//            ->first();
+
+        $room = Room::query()->latest()->first();
 
         return [
             'room_id' => $room?->id,
