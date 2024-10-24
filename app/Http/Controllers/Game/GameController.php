@@ -11,8 +11,10 @@ use App\Models\Setting;
 use App\Models\User;
 use App\Services\ProfilePhotoAction;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use phpcent\Client;
 
 class GameController extends Controller
@@ -39,10 +41,12 @@ class GameController extends Controller
 
     public function searching(Request $request): array
     {
-        $room = Room::query()->whereBetween('bank', $request->get('bank'))
-            ->where('game_type', $request->get('type'))
-            ->where('max_gamers', $request->get('max_players'))
-            ->first();
+//        $room = Room::query()->whereBetween('bank', $request->get('bank'))
+//            ->where('game_type', $request->get('type'))
+//            ->where('max_gamers', $request->get('max_players'))
+//            ->first();
+
+        $room = Room::query()->latest()->first();
 
         return [
             'room_id' => $room?->id,
@@ -82,9 +86,8 @@ class GameController extends Controller
     /**
      * @param Request $request
      * @param Room $room
-     * @return ResponseFactory
      */
-    public function setReadyState(Request $request, Room $room): ResponseFactory
+    public function setReadyState(Request $request, Room $room): Application|Response|ResponseFactory
     {
         $state = $room->ready_state ?? collect();
         if ($state->contains($request->get('user_id'))) {
