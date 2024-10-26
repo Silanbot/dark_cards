@@ -92,7 +92,7 @@ class GameController extends Controller
         $state = $room->ready_state ?? collect();
         if ($state->contains($request->get('user_id'))) {
             if ($room->max_gamers === count($state)) {
-                return response(null, 400);
+                return response(null, 200);
             }
 
             unset($state[$state->search($request->get('user_id'))]);
@@ -103,7 +103,7 @@ class GameController extends Controller
         if ($room->max_gamers !== count($state)) {
             $room->update(['ready_state' => $state->toArray()]);
 
-            return response(null, 400);
+            return response(null, 200);
         }
 
         $deck = new Deck($room->ready_state->toArray());
