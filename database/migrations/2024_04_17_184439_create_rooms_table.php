@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('bank');
+            $table->unsignedTinyInteger('max_gamers')->default(2);
             $table->jsonb('deck')->nullable();
             $table->jsonb('ready_state')->nullable();
             $table->jsonb('mode')->nullable();
