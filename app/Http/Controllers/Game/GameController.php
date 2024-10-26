@@ -87,7 +87,7 @@ class GameController extends Controller
      * @param Request $request
      * @param Room $room
      */
-    public function setReadyState(Request $request, Room $room): Application|Response|ResponseFactory
+    public function setReadyState(Request $request, Room $room)
     {
         $state = $room->ready_state ?? collect();
         if ($state->contains($request->get('user_id'))) {
