@@ -10,11 +10,8 @@ use App\Models\Room;
 use App\Models\Setting;
 use App\Models\User;
 use App\Services\ProfilePhotoAction;
-use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use phpcent\Client;
 
 class GameController extends Controller

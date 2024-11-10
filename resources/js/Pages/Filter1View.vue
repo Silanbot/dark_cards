@@ -481,6 +481,11 @@ export default {
             const name = e.currentTarget.getAttribute('name')
             const modes = storage.getItem('params')?.split(',') ?? []
 
+            // storage.setItem('params', modes.join(','))
+            // e.currentTarget.classList.add('active')
+            //
+            // telegram.impactFeedback('light')
+
             if (name.startsWith('max_gamers_')) {
                 const maxGamers = modes.filter(key => /^max_gamers_.*$/.test(key))
                 if (maxGamers.includes(name) && maxGamers.length > 1) {
@@ -535,26 +540,28 @@ export default {
             }
         },
         toggleGameMode(e) {
-            const name = e.currentTarget.getAttribute('name')
+            // const name = e.currentTarget.getAttribute('name')
             e.currentTarget.classList.add('active')
             const { storage } = useStorage()
 
-            const opposingModes = {
-                thrown: 'transferable',
-                transferable: 'thrown',
-                neighbors: 'all',
-                all: 'neighbors',
-                honest: 'cheaters',
-                cheaters: 'honest',
-                classic: 'draw',
-                draw: 'classic'
-            }
+            telegram.impactFeedback('light')
 
-            const opposingMode = opposingModes[name]
-            if (opposingMode) {
-                document.querySelector(`div[name="${opposingMode}"]`).classList.remove('active')
-            }
-
+            // const opposingModes = {
+            //     thrown: 'transferable',
+            //     transferable: 'thrown',
+            //     neighbors: 'all',
+            //     all: 'neighbors',
+            //     honest: 'cheaters',
+            //     cheaters: 'honest',
+            //     classic: 'draw',
+            //     draw: 'classic'
+            // }
+            //
+            // const opposingMode = opposingModes[name]
+            // if (opposingMode) {
+            //     document.querySelector(`div[name="${opposingMode}"]`).classList.remove('active')
+            // }
+            //
             const activeModes = [...document.querySelectorAll('.active')].map(param => param.getAttribute('name'))
             storage.setItem('params', activeModes.join(','))
 

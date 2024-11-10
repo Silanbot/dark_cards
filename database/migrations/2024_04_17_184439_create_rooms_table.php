@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('bank');
             $table->unsignedTinyInteger('max_gamers')->default(2);
+            $table->unsignedTinyInteger('cards_count')->default(36);
             $table->jsonb('deck')->nullable();
             $table->jsonb('ready_state')->nullable();
             $table->jsonb('mode')->nullable();

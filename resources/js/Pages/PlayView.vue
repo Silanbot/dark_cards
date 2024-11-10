@@ -343,7 +343,7 @@ import modalDialog from './components/modalDialog.vue'
                 </div>
                 <div class="game__cart" v-if="cardsCount > 0">
                     <div class="game__cart__cold">
-                        <div class="game__cart__cold__count">36</div>
+                        <div class="game__cart__cold__count">{{ room.cards_count }}</div>
                         <div class="game__cart__cold__carts">
                             <img class="game__cart__cold__carts__side" src="./sources/cold-card.png" alt=""/>
                             <img class="game__cart__cold__carts__second" src="" alt=""/>
@@ -631,6 +631,9 @@ export default {
             this.updateAttacker(data)
             const count = 6 - [...document.querySelectorAll('img.my-card')].length;
             if (count > 0) await gameApi.takeFromDeck(this.room.id, (await telegram.profile()).id, count)
+        },
+        uniqueUsers(value, index, array) {
+            return array.indexOf(value) === index
         }
     },
     async mounted() {
@@ -650,6 +653,8 @@ export default {
             const res = await fetch(`/api/game/join?${new URLSearchParams({ id: this.room.id, user_id: profile.id })}`)
             for (const user of await res.json())
                 this.users.push(user);
+
+            this.users = this.users.filter((value, index, array) => array.indexOf(value) === index)
         })
         const sub = this.centrifugo.newSubscription(`room`)
 
@@ -686,7 +691,9 @@ export default {
                 case 'user_join_room':
                     if (data.user.id == profile.id) return
                     if (this.users.findIndex(u => u.id == data.user.id) !== -1) return
-                    return this.users.push(data.user)
+                    this.users.push(data.user)
+
+                    return this.users.filter((value, index, array) => array.indexOf(value) === index)
                 case 'player_take_card':
                     // isAttackerPlayer = profile.id == data.attacker_player_index
                     // this.updateAttacker(data)
