@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -o allexport
+source .env set
+
+make down bup
+
+make down
+
+docker compose --env-file .env -f .docker/${BUILD_MODE}.yml run --rm --no-deps app composer install
+
+docker compose --env-file .env -f .docker/dev.yml run --user "$(id -u):$(id -g)" app php artisan key:generate
+
+make down bup

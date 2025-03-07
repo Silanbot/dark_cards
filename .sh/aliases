@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -o allexport
+source .env set
+
+# Execute command from the app container by the current user
+alias app='docker compose --env-file .env -f .docker/dev.yml -p ${BUILD_REGISTRY} exec --user "$(id -u):$(id -g)" app'
+
+# Execute command from specified container
+alias from='docker compose --env-file .env -f .docker/dev.yml exec'
+
+# Execute command from specified container by the current user
+alias owning='docker compose --env-file .env -f .docker/dev.yml exec --user "$(id -u):$(id -g)"'
+
+# Run artisan commands
+alias artisan='docker compose --env-file .env -f .docker/${BUILD_MODE}.yml exec --user "$(id -u):$(id -g)" app php artisan'
+
+# Testing aliases
+alias test='docker compose --env-file .env -f .docker/dev.yml exec app vendor/bin/phpunit'
+alias tf='docker compose --env-file .env -f .docker/dev.yml exec app vendor/bin/phpunit --filter'
+alias ts='docker compose --env-file .env -f .docker/dev.yml exec app vendor/bin/phpunit --testsuite'
+
+alias exec='docker compose --env-file .env -f .docker/${BUILD_MODE}.yml exec'
+
+alias run='docker compose --env-file .env -f .docker/${BUILD_MODE}.yml run'
+
+alias logs='docker compose --env-file .env -f .docker/${BUILD_MODE}.yml logs'
+
+alias composer='docker compose --env-file .env -f .docker/${BUILD_MODE}.yml run --rm --no-deps app composer'

@@ -8,15 +8,19 @@ export default function useWebsocket(token, subscription) {
     let listeners = []
 
     return {
-        $websocket: centrifugo,
+        $websocket: () => centrifugo,
         onConnected: callback => centrifugo.on('connected', callback),
         runListening: sub => {
             sub.on('publication', ({ data }) => {
-                listeners.find(listener => listener.event === data.event).handler(data)
-            }).subscribe()
+                const listener = listeners.find(listener => listener.event === data.event);
+                if (listener) {
+                    listener.handler(data);
+                }
+            }).subscribe();
         },
         newSubscription: channel => centrifugo.newSubscription(channel),
         addListener: listener => listeners.push(listener),
-        connect: () => centrifugo.connect()
-    }
+        connect: connect,
+        disconnect: disconnect // Можно вызвать отдельно, если нужно вручную отключить
+    };
 }
