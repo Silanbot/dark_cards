@@ -471,6 +471,10 @@ import gameApi from './api/game.api.js'
 import api from './api/users.api.js'
 import useStorage from "./api/storage.js";
 
+const isDev = import.meta.env.MODE === 'development';
+
+const centrifugoURL = isDev ? "ws://127.0.0.1:8888/connection/websocket"  : `wss://${window.location.host}/connection/websocket`
+
 export default {
     props: {
         room: Object,
@@ -648,7 +652,7 @@ export default {
             location.replace('/home')
         }))
 
-        this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })
+        this.centrifugo = new Centrifuge(centrifugoURL, { token })
         this.centrifugo.on('connected', async () => {
             const res = await fetch(`/api/game/join?${new URLSearchParams({ id: this.room.id, user_id: profile.id })}`)
             for (const user of await res.json())
