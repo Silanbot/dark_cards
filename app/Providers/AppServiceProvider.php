@@ -35,5 +35,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(WebsocketContract::class, WebsocketService::class);
         $this->app->bind(GameContract::class, GameService::class);
+
+        if (!$this->app->isLocal()) {
+            //else register your services you require for production
+            $this->app['request']->server->set('HTTPS', true);
+        }
     }
 }
