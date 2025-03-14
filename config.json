@@ -5,7 +5,8 @@
     "api_key": "05b129e5-88b3-46eb-bfef-4a1d7070425a",
     "allowed_origins": [
         "https://darkcards.test",
-        "https://darkcards.de"
+        "https://darkcards.de",
+        "http://127.0.0.1:8000"
     ],
     "allow_subscribe_for_client": true,
     "allow_publish_for_client": true,

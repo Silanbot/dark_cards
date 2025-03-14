@@ -1,74 +1,88 @@
 <script setup>
-import modalProfile from './components/modalProfile.vue'
-import modalChat from './components/modalChat.vue'
-import modalDialog from './components/modalDialog.vue'
+import modalProfile from "./components/modalProfile.vue";
+import modalChat from "./components/modalChat.vue";
+import modalDialog from "./components/modalDialog.vue";
 </script>
 
 <template>
-    <modalProfile @showReport="modalChatShow = true; modalProfileShow = false" @hide="modalProfileShow = false"
-                  v-if="modalProfileShow"/>
-    <modalChat @hide="modalChatShow = false" v-if="modalChatShow"/>
-    <modalDialog @hide="modalDialogShow = false" :room="room" v-if="modalDialogShow"/>
-    <div style="display:none">
-        <img data-cardimg="b" src="./sources/cards/back.svg">
-        <img data-cardimg="6s" src="./sources/cards/6_of_spades.svg">
-        <img data-cardimg="ac" src="./sources/cards/ace_of_clubs.svg">
-        <img data-cardimg="kc" src="./sources/cards/king_of_clubs.svg">
-        <img data-cardimg="bj" src="./sources/cards/black_joker.svg">
-        <img data-cardimg="jh" src="./sources/cards/jack_of_hearts.svg">
-        <img data-cardimg="rj" src="./sources/cards/red_joker.svg">
-        <img data-cardimg="kh" src="./sources/cards/king_of_hearts.svg">
-        <img data-cardimg="qh" src="./sources/cards/queen_of_hearts.svg">
-        <img data-cardimg="9h" src="./sources/cards/9_of_hearts.svg">
-        <img data-cardimg="4c" src="./sources/cards/4_of_clubs.svg">
-        <img data-cardimg="8h" src="./sources/cards/8_of_hearts.svg">
-        <img data-cardimg="qc" src="./sources/cards/queen_of_clubs.svg">
-        <img data-cardimg="7s" src="./sources/cards/7_of_spades.svg">
-        <img data-cardimg="5d" src="./sources/cards/5_of_diamonds.svg">
-        <img data-cardimg="ad" src="./sources/cards/ace_of_diamonds.svg">
-        <img data-cardimg="2s" src="./sources/cards/2_of_spades.svg">
-        <img data-cardimg="qs" src="./sources/cards/queen_of_spades.svg">
-        <img data-cardimg="7h" src="./sources/cards/7_of_hearts.svg">
-        <img data-cardimg="1d" src="./sources/cards/10_of_diamonds.svg">
-        <img data-cardimg="2h" src="./sources/cards/2_of_hearts.svg">
-        <img data-cardimg="qd" src="./sources/cards/queen_of_diamonds.svg">
-        <img data-cardimg="6h" src="./sources/cards/6_of_hearts.svg">
-        <img data-cardimg="2c" src="./sources/cards/2_of_clubs.svg">
-        <img data-cardimg="kd" src="./sources/cards/king_of_diamonds.svg">
-        <img data-cardimg="ah" src="./sources/cards/ace_of_hearts.svg">
-        <img data-cardimg="3d" src="./sources/cards/3_of_diamonds.svg">
-        <img data-cardimg="3c" src="./sources/cards/3_of_clubs.svg">
-        <img data-cardimg="9s" src="./sources/cards/9_of_spades.svg">
-        <img data-cardimg="jc" src="./sources/cards/jack_of_clubs.svg">
-        <img data-cardimg="9c" src="./sources/cards/9_of_clubs.svg">
-        <img data-cardimg="9d" src="./sources/cards/9_of_diamonds.svg">
-        <img data-cardimg="2d" src="./sources/cards/2_of_diamonds.svg">
-        <img data-cardimg="8s" src="./sources/cards/8_of_spades.svg">
-        <img data-cardimg="5h" src="./sources/cards/5_of_hearts.svg">
-        <img data-cardimg="8d" src="./sources/cards/8_of_diamonds.svg">
-        <img data-cardimg="js" src="./sources/cards/jack_of_spades.svg">
-        <img data-cardimg="1c" src="./sources/cards/10_of_clubs.svg">
-        <img data-cardimg="4s" src="./sources/cards/4_of_spades.svg">
-        <img data-cardimg="as" src="./sources/cards/ace_of_spades.svg">
-        <img data-cardimg="5s" src="./sources/cards/5_of_spades.svg">
-        <img data-cardimg="3s" src="./sources/cards/3_of_spades.svg">
-        <img data-cardimg="6d" src="./sources/cards/6_of_diamonds.svg">
-        <img data-cardimg="7d" src="./sources/cards/7_of_diamonds.svg">
-        <img data-cardimg="3h" src="./sources/cards/3_of_hearts.svg">
-        <img data-cardimg="4d" src="./sources/cards/4_of_diamonds.svg">
-        <img data-cardimg="ks" src="./sources/cards/king_of_spades.svg">
-        <img data-cardimg="1h" src="./sources/cards/10_of_hearts.svg">
-        <img data-cardimg="5c" src="./sources/cards/5_of_clubs.svg">
-        <img data-cardimg="4h" src="./sources/cards/4_of_hearts.svg">
-        <img data-cardimg="8c" src="./sources/cards/8_of_clubs.svg">
-        <img data-cardimg="1s" src="./sources/cards/10_of_spades.svg">
-        <img data-cardimg="6c" src="./sources/cards/6_of_clubs.svg">
-        <img data-cardimg="7c" src="./sources/cards/7_of_clubs.svg">
-        <img data-cardimg="jd" src="./sources/cards/jack_of_diamonds.svg">
+    <modalProfile
+        @showReport="
+            modalChatShow = true;
+            modalProfileShow = false;
+        "
+        @hide="modalProfileShow = false"
+        v-if="modalProfileShow"
+    />
+    <modalChat @hide="modalChatShow = false" v-if="modalChatShow" />
+    <modalDialog
+        @hide="modalDialogShow = false"
+        :room="room"
+        v-if="modalDialogShow"
+    />
+    <div style="display: none">
+        <img data-cardimg="b" src="./sources/cards/back.svg" />
+        <img data-cardimg="6s" src="./sources/cards/6_of_spades.svg" />
+        <img data-cardimg="ac" src="./sources/cards/ace_of_clubs.svg" />
+        <img data-cardimg="kc" src="./sources/cards/king_of_clubs.svg" />
+        <img data-cardimg="bj" src="./sources/cards/black_joker.svg" />
+        <img data-cardimg="jh" src="./sources/cards/jack_of_hearts.svg" />
+        <img data-cardimg="rj" src="./sources/cards/red_joker.svg" />
+        <img data-cardimg="kh" src="./sources/cards/king_of_hearts.svg" />
+        <img data-cardimg="qh" src="./sources/cards/queen_of_hearts.svg" />
+        <img data-cardimg="9h" src="./sources/cards/9_of_hearts.svg" />
+        <img data-cardimg="4c" src="./sources/cards/4_of_clubs.svg" />
+        <img data-cardimg="8h" src="./sources/cards/8_of_hearts.svg" />
+        <img data-cardimg="qc" src="./sources/cards/queen_of_clubs.svg" />
+        <img data-cardimg="7s" src="./sources/cards/7_of_spades.svg" />
+        <img data-cardimg="5d" src="./sources/cards/5_of_diamonds.svg" />
+        <img data-cardimg="ad" src="./sources/cards/ace_of_diamonds.svg" />
+        <img data-cardimg="2s" src="./sources/cards/2_of_spades.svg" />
+        <img data-cardimg="qs" src="./sources/cards/queen_of_spades.svg" />
+        <img data-cardimg="7h" src="./sources/cards/7_of_hearts.svg" />
+        <img data-cardimg="1d" src="./sources/cards/10_of_diamonds.svg" />
+        <img data-cardimg="2h" src="./sources/cards/2_of_hearts.svg" />
+        <img data-cardimg="qd" src="./sources/cards/queen_of_diamonds.svg" />
+        <img data-cardimg="6h" src="./sources/cards/6_of_hearts.svg" />
+        <img data-cardimg="2c" src="./sources/cards/2_of_clubs.svg" />
+        <img data-cardimg="kd" src="./sources/cards/king_of_diamonds.svg" />
+        <img data-cardimg="ah" src="./sources/cards/ace_of_hearts.svg" />
+        <img data-cardimg="3d" src="./sources/cards/3_of_diamonds.svg" />
+        <img data-cardimg="3c" src="./sources/cards/3_of_clubs.svg" />
+        <img data-cardimg="9s" src="./sources/cards/9_of_spades.svg" />
+        <img data-cardimg="jc" src="./sources/cards/jack_of_clubs.svg" />
+        <img data-cardimg="9c" src="./sources/cards/9_of_clubs.svg" />
+        <img data-cardimg="9d" src="./sources/cards/9_of_diamonds.svg" />
+        <img data-cardimg="2d" src="./sources/cards/2_of_diamonds.svg" />
+        <img data-cardimg="8s" src="./sources/cards/8_of_spades.svg" />
+        <img data-cardimg="5h" src="./sources/cards/5_of_hearts.svg" />
+        <img data-cardimg="8d" src="./sources/cards/8_of_diamonds.svg" />
+        <img data-cardimg="js" src="./sources/cards/jack_of_spades.svg" />
+        <img data-cardimg="1c" src="./sources/cards/10_of_clubs.svg" />
+        <img data-cardimg="4s" src="./sources/cards/4_of_spades.svg" />
+        <img data-cardimg="as" src="./sources/cards/ace_of_spades.svg" />
+        <img data-cardimg="5s" src="./sources/cards/5_of_spades.svg" />
+        <img data-cardimg="3s" src="./sources/cards/3_of_spades.svg" />
+        <img data-cardimg="6d" src="./sources/cards/6_of_diamonds.svg" />
+        <img data-cardimg="7d" src="./sources/cards/7_of_diamonds.svg" />
+        <img data-cardimg="3h" src="./sources/cards/3_of_hearts.svg" />
+        <img data-cardimg="4d" src="./sources/cards/4_of_diamonds.svg" />
+        <img data-cardimg="ks" src="./sources/cards/king_of_spades.svg" />
+        <img data-cardimg="1h" src="./sources/cards/10_of_hearts.svg" />
+        <img data-cardimg="5c" src="./sources/cards/5_of_clubs.svg" />
+        <img data-cardimg="4h" src="./sources/cards/4_of_hearts.svg" />
+        <img data-cardimg="8c" src="./sources/cards/8_of_clubs.svg" />
+        <img data-cardimg="1s" src="./sources/cards/10_of_spades.svg" />
+        <img data-cardimg="6c" src="./sources/cards/6_of_clubs.svg" />
+        <img data-cardimg="7c" src="./sources/cards/7_of_clubs.svg" />
+        <img data-cardimg="jd" src="./sources/cards/jack_of_diamonds.svg" />
     </div>
     <section class="inter section section-inter">
         <div class="inter__header inter__header_play">
-            <div class="inter__monet inter__monet_icon" v-for="setting of modes" :key="modes.id">
+            <div
+                class="inter__monet inter__monet_icon"
+                v-for="setting of modes"
+                :key="modes.id"
+            >
                 <svg
                     v-if="setting.name === 'thrown'"
                     width="75"
@@ -302,51 +316,84 @@ import modalDialog from './components/modalDialog.vue'
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                 >
-                    <rect width="105" height="51" rx="12" fill="#834444"/>
-                    <circle cx="31.24" cy="25.9998" r="10.24" fill="#EB3D3D"/>
-                    <circle cx="74.7595" cy="25.9998" r="10.24" fill="#EB3D3D"/>
+                    <rect width="105" height="51" rx="12" fill="#834444" />
+                    <circle cx="31.24" cy="25.9998" r="10.24" fill="#EB3D3D" />
+                    <circle
+                        cx="74.7595"
+                        cy="25.9998"
+                        r="10.24"
+                        fill="#EB3D3D"
+                    />
                 </svg>
             </div>
             <div class="inter__monet inter__monet_right">
                 <span>{{ room.bank }}</span>
-                <img src="./sources/coin2.svg" alt="" v-if="currency"/>
+                <img src="./sources/coin2.svg" alt="" v-if="currency" />
                 <img src="./sources/coin1.svg" alt="" v-else />
             </div>
         </div>
         <div class="inter__inner el-2 blured">
-            <img src="./sources/back-3.png" class="back-3" alt=""/>
+            <img src="./sources/back-3.png" class="back-3" alt="" />
             <section class="section-game game">
                 <div id="cards"></div>
                 <div class="game__players">
-                    <div class="game__players__player" :key="i" v-for="(user, i) of users" :class="(() => {
-                        const d = i + 1 - ~~(users.length / 2)
-                        const m = Math.abs(users.length % 2 != 0 || d > 0 ? d - 1 : d);
-                        return {
-                            small1: users.length > 3,
-                            small2: users.length > 4,
-                            down1: m > 0,
-                            down2: m > 1,
-                        }
-                    })()">
+                    <div
+                        class="game__players__player"
+                        :key="i"
+                        v-for="(user, i) of users"
+                        :class="
+                            (() => {
+                                const d = i + 1 - ~~(users.length / 2);
+                                const m = Math.abs(
+                                    users.length % 2 != 0 || d > 0 ? d - 1 : d
+                                );
+                                return {
+                                    small1: users.length > 3,
+                                    small2: users.length > 4,
+                                    down1: m > 0,
+                                    down2: m > 1,
+                                };
+                            })()
+                        "
+                    >
                         <div class="game__players__player__cart" v-if="started">
-                            <img src="./sources/cartes.svg" alt=""/>
+                            <img src="./sources/cartes.svg" alt="" />
                         </div>
-                        <div class="game__players__player__photo" :data-player="user.id">
+                        <div
+                            class="game__players__player__photo"
+                            :data-player="user.id"
+                        >
                             <div class="win__amount">+100</div>
-                            <img class="game__players__player__photo__img" src="./sources/player.png" alt=""/>
+                            <img
+                                class="game__players__player__photo__img"
+                                src="./sources/player.png"
+                                alt=""
+                            />
                             <div class="game__players__player__photo__text">
-                                <img src="./sources/level-2.png" alt=""/>
+                                <img src="./sources/level-2.png" alt="" />
                             </div>
-                            <div class="game__players__player__photo__name">{{ user.username }}</div>
+                            <div class="game__players__player__photo__name">
+                                {{ user.username }}
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="game__cart" v-if="cardsCount > 0">
                     <div class="game__cart__cold">
-                        <div class="game__cart__cold__count">{{ room.cards_count }}</div>
+                        <div class="game__cart__cold__count">
+                            {{ room.cards_count }}
+                        </div>
                         <div class="game__cart__cold__carts">
-                            <img class="game__cart__cold__carts__side" src="./sources/cold-card.png" alt=""/>
-                            <img class="game__cart__cold__carts__second" src="" alt=""/>
+                            <img
+                                class="game__cart__cold__carts__side"
+                                src="./sources/cold-card.png"
+                                alt=""
+                            />
+                            <img
+                                class="game__cart__cold__carts__second"
+                                src=""
+                                alt=""
+                            />
                         </div>
                     </div>
                 </div>
@@ -355,30 +402,85 @@ import modalDialog from './components/modalDialog.vue'
         <footer class="footer" style="z-index: 100">
             <div class="footer__inner footer__inner_play">
                 <template v-if="!started">
-                    <div class="footer__button" @click="setReadyState" v-if="!ready">Готов</div>
-                    <div class="footer__button" @click="setReadyState" v-else>Не готов</div>
+                    <div
+                        class="footer__button"
+                        @click="setReadyState"
+                        v-if="!ready"
+                    >
+                        Готов
+                    </div>
+                    <div class="footer__button" @click="setReadyState" v-else>
+                        Не готов
+                    </div>
                 </template>
                 <template v-else>
-                    <div class="footer__button" @click="startFinishBeat"       v-if="(myTurn && gameCells.filter(c => c.length).length > 0 && gameCells.filter(c => c.length).every(c => c.length % 2 === 0))">Бито</div>
-                    <div class="footer__button turn"                           v-else-if="myTurn">Ваш ход</div>
-                    <div class="footer__button" @click="() => takeFromTable()" v-else :style="{ visibility: (myTurn  && gameCells.every(c => !c.length) && gameCells.filter(c => c.length).length !== 0) || (gameCells.filter(c => c.length).length === 0) || (!myTurn && (gameCells.filter(c => c.length).length+2) %2 === 1) ? 'hidden' : undefined }">Взять</div>
+                    <div
+                        class="footer__button"
+                        @click="startFinishBeat"
+                        v-if="
+                            myTurn &&
+                            gameCells.filter((c) => c.length).length > 0 &&
+                            gameCells
+                                .filter((c) => c.length)
+                                .every((c) => c.length % 2 === 0)
+                        "
+                    >
+                        Бито
+                    </div>
+                    <div class="footer__button turn" v-else-if="myTurn">
+                        Ваш ход
+                    </div>
+                    <div
+                        class="footer__button"
+                        @click="() => takeFromTable()"
+                        v-else
+                        :style="{
+                            visibility:
+                                (myTurn &&
+                                    gameCells.every((c) => !c.length) &&
+                                    gameCells.filter((c) => c.length).length !==
+                                        0) ||
+                                gameCells.filter((c) => c.length).length ===
+                                    0 ||
+                                (!myTurn &&
+                                    (gameCells.filter((c) => c.length).length +
+                                        2) %
+                                        2 ===
+                                        1)
+                                    ? 'hidden'
+                                    : undefined,
+                        }"
+                    >
+                        Взять
+                    </div>
                 </template>
 
                 <div class="footer__person">
                     <div class="win__amount win__amount__self">+100</div>
                     <div class="footer__person__img">
-                        <img :src="user.avatar" alt=""/>
+                        <img :src="user.avatar" alt="" />
                         <div class="text">
-<!--                            <img src="./sources/level-6.png" alt=""/>-->
+                            <!--                            <img src="./sources/level-6.png" alt=""/>-->
                         </div>
                     </div>
                     <div class="footer__person__name">{{ user.username }}</div>
                 </div>
-                <div class="footer__button chat" v-if="!step" @click="modalDialogShow = true">
-                    <svg width="50" height="43" viewBox="0 0 50 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <div
+                    class="footer__button chat"
+                    v-if="!step"
+                    @click="modalDialogShow = true"
+                >
+                    <svg
+                        width="50"
+                        height="43"
+                        viewBox="0 0 50 43"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
                         <path
                             d="M30.1728 7.38039C32.4847 8.8617 34.1058 11.3684 34.401 14.2781C35.3438 14.7283 36.3902 14.9872 37.4997 14.9872C41.55 14.9872 44.8328 11.6324 44.8328 7.4939C44.8328 3.35478 41.55 0 37.4997 0C33.4881 0.00127534 30.234 3.29612 30.1728 7.38039ZM25.3688 22.724C29.4191 22.724 32.7019 19.3686 32.7019 15.2301C32.7019 11.0916 29.4184 7.73685 25.3688 7.73685C21.3191 7.73685 18.0344 11.0923 18.0344 15.2307C18.0344 19.3692 21.3191 22.724 25.3688 22.724ZM28.4793 23.2348H22.257C17.0797 23.2348 12.8678 27.5397 12.8678 32.8304V40.6068L12.8872 40.7286L13.4113 40.8963C18.3521 42.4739 22.6445 43 26.1775 43C33.0781 43 37.0779 40.9894 37.3244 40.8613L37.8142 40.6081H37.8666V32.8304C37.8685 27.5397 33.6566 23.2348 28.4793 23.2348ZM40.6115 15.4986H34.4372C34.3704 18.0231 33.3159 20.2964 31.648 21.9314C36.2498 23.3298 39.6169 27.6908 39.6169 32.8419V35.2383C45.7132 35.01 49.2263 33.2443 49.4578 33.1257L49.9476 32.8719H50V25.093C50 19.8028 45.7881 15.4986 40.6115 15.4986ZM12.5016 14.9884C13.9361 14.9884 15.2708 14.5606 16.4015 13.8317C16.7609 11.436 18.0176 9.3425 19.8128 7.91667C19.8203 7.77639 19.8334 7.63737 19.8334 7.49581C19.8334 3.3567 16.55 0.00191287 12.5016 0.00191287C8.45064 0.00191287 5.16848 3.3567 5.16848 7.49581C5.16848 11.633 8.45064 14.9884 12.5016 14.9884ZM19.0871 21.9314C17.4273 20.3047 16.3765 18.0435 16.2998 15.5343C16.0708 15.5171 15.8443 15.4986 15.6109 15.4986H9.38912C4.21191 15.4986 0 19.8028 0 25.093V32.8706L0.0193436 32.9905L0.543492 33.1595C4.50705 34.424 8.04443 35.0068 11.1169 35.1905V32.8419C11.1182 27.6908 14.484 23.3311 19.0871 21.9314Z"
-                            fill="#8A2E2E"/>
+                            fill="#8A2E2E"
+                        />
                     </svg>
                     <span>Чат</span>
                 </div>
@@ -386,76 +488,147 @@ import modalDialog from './components/modalDialog.vue'
                     <div class="footer__btns__row">
                         <div class="footer__btns__row__cart">
                             <div class="footer__btns__row__cart__icon">
-                                <img src="./sources/dc_small.png" alt=""/>
+                                <img src="./sources/dc_small.png" alt="" />
                                 <span>1</span>
                             </div>
-                            <svg width="75" height="87" viewBox="0 0 75 87" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <rect x="0.612372" y="16.3536" width="57" height="70" rx="6.5"
-                                      transform="rotate(-15 0.612372 16.3536)"
-                                      fill="#321111" stroke="#EB3D3D"/>
+                            <svg
+                                width="75"
+                                height="87"
+                                viewBox="0 0 75 87"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <rect
+                                    x="0.612372"
+                                    y="16.3536"
+                                    width="57"
+                                    height="70"
+                                    rx="6.5"
+                                    transform="rotate(-15 0.612372 16.3536)"
+                                    fill="#321111"
+                                    stroke="#EB3D3D"
+                                />
                                 <path
                                     d="M25.2929 31.2929C24.9024 31.6834 24.9024 32.3166 25.2929 32.7071L30.2322 37.6464C33.3507 40.7649 33.3507 45.8209 30.2322 48.9393L25.2929 53.8787C24.9024 54.2692 24.9024 54.9024 25.2929 55.2929C25.6834 55.6834 26.3166 55.6834 26.7071 55.2929L31.6465 50.3536C34.7649 47.2351 39.8209 47.2351 42.9393 50.3536L47.8787 55.2929C48.2692 55.6834 48.9024 55.6834 49.2929 55.2929C49.6834 54.9024 49.6834 54.2692 49.2929 53.8787L44.3536 48.9393C41.2351 45.8209 41.2351 40.7649 44.3536 37.6464L49.2929 32.7071C49.6834 32.3166 49.6834 31.6834 49.2929 31.2929C48.9024 30.9024 48.2692 30.9024 47.8787 31.2929L42.9393 36.2322C39.8209 39.3507 34.7649 39.3507 31.6464 36.2322L26.7071 31.2929C26.3166 30.9024 25.6834 30.9024 25.2929 31.2929Z"
-                                    fill="#EB3D3D"/>
+                                    fill="#EB3D3D"
+                                />
                                 <path
                                     d="M35.5787 85.8743L26.0725 75.7191C25.3092 74.9036 25.3092 73.5944 26.0725 72.7789C26.8534 71.9447 28.1341 71.9447 28.915 72.7789L35.0062 79.286L35.0062 62.5957C35.0062 61.4699 35.8683 60.5 37 60.5C38.1317 60.5 38.9938 61.4699 38.9938 62.5957L38.9938 79.286L45.085 72.7789C45.8659 71.9447 47.1466 71.9447 47.9275 72.7789C48.6908 73.5944 48.6908 74.9036 47.9275 75.7191L38.4213 85.8743C37.6403 86.7086 36.3597 86.7086 35.5787 85.8743Z"
-                                    fill="#EB3D3D" stroke="#321111"/>
+                                    fill="#EB3D3D"
+                                    stroke="#321111"
+                                />
                             </svg>
                         </div>
                         <div class="footer__btns__row__cart">
                             <div class="footer__btns__row__cart__icon">
-                                <img src="./sources/dc_small.png" alt=""/>
+                                <img src="./sources/dc_small.png" alt="" />
                                 <span>1</span>
                             </div>
-                            <svg width="75" height="85" viewBox="0 0 75 85" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <rect x="-0.612372" y="0.353553" width="57" height="70" rx="6.5"
-                                      transform="matrix(-0.965926 -0.258819 -0.258819 0.965926 73.2861 15.8536)"
-                                      fill="#321111"
-                                      stroke="#EB3D3D"/>
-                                <rect x="0.612372" y="16.3536" width="57" height="70" rx="6.5"
-                                      transform="rotate(-15 0.612372 16.3536)"
-                                      fill="#321111" stroke="#EB3D3D"/>
-                                <path opacity="0.5"
-                                      d="M22 43C22 45.46 22.6375 46.2865 23.9125 47.944C26.458 51.25 30.727 55 37 55C43.273 55 47.542 51.25 50.0875 47.944C51.3625 46.288 52 45.4585 52 43C52 40.54 51.3625 39.7135 50.0875 38.056C47.542 34.75 43.273 31 37 31C30.727 31 26.458 34.75 23.9125 38.056C22.6375 39.715 22 40.5415 22 43Z"
-                                      fill="#EB3D3D"/>
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                      d="M31.375 43C31.375 41.5082 31.9676 40.0774 33.0225 39.0225C34.0774 37.9676 35.5082 37.375 37 37.375C38.4918 37.375 39.9226 37.9676 40.9775 39.0225C42.0324 40.0774 42.625 41.5082 42.625 43C42.625 44.4918 42.0324 45.9226 40.9775 46.9775C39.9226 48.0324 38.4918 48.625 37 48.625C35.5082 48.625 34.0774 48.0324 33.0225 46.9775C31.9676 45.9226 31.375 44.4918 31.375 43ZM33.625 43C33.625 42.1049 33.9806 41.2465 34.6135 40.6135C35.2465 39.9806 36.1049 39.625 37 39.625C37.8951 39.625 38.7536 39.9806 39.3865 40.6135C40.0194 41.2465 40.375 42.1049 40.375 43C40.375 43.8951 40.0194 44.7536 39.3865 45.3865C38.7536 46.0194 37.8951 46.375 37 46.375C36.1049 46.375 35.2465 46.0194 34.6135 45.3865C33.9806 44.7536 33.625 43.8951 33.625 43Z"
-                                      fill="#EB3D3D"/>
+                            <svg
+                                width="75"
+                                height="85"
+                                viewBox="0 0 75 85"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <rect
+                                    x="-0.612372"
+                                    y="0.353553"
+                                    width="57"
+                                    height="70"
+                                    rx="6.5"
+                                    transform="matrix(-0.965926 -0.258819 -0.258819 0.965926 73.2861 15.8536)"
+                                    fill="#321111"
+                                    stroke="#EB3D3D"
+                                />
+                                <rect
+                                    x="0.612372"
+                                    y="16.3536"
+                                    width="57"
+                                    height="70"
+                                    rx="6.5"
+                                    transform="rotate(-15 0.612372 16.3536)"
+                                    fill="#321111"
+                                    stroke="#EB3D3D"
+                                />
+                                <path
+                                    opacity="0.5"
+                                    d="M22 43C22 45.46 22.6375 46.2865 23.9125 47.944C26.458 51.25 30.727 55 37 55C43.273 55 47.542 51.25 50.0875 47.944C51.3625 46.288 52 45.4585 52 43C52 40.54 51.3625 39.7135 50.0875 38.056C47.542 34.75 43.273 31 37 31C30.727 31 26.458 34.75 23.9125 38.056C22.6375 39.715 22 40.5415 22 43Z"
+                                    fill="#EB3D3D"
+                                />
+                                <path
+                                    fill-rule="evenodd"
+                                    clip-rule="evenodd"
+                                    d="M31.375 43C31.375 41.5082 31.9676 40.0774 33.0225 39.0225C34.0774 37.9676 35.5082 37.375 37 37.375C38.4918 37.375 39.9226 37.9676 40.9775 39.0225C42.0324 40.0774 42.625 41.5082 42.625 43C42.625 44.4918 42.0324 45.9226 40.9775 46.9775C39.9226 48.0324 38.4918 48.625 37 48.625C35.5082 48.625 34.0774 48.0324 33.0225 46.9775C31.9676 45.9226 31.375 44.4918 31.375 43ZM33.625 43C33.625 42.1049 33.9806 41.2465 34.6135 40.6135C35.2465 39.9806 36.1049 39.625 37 39.625C37.8951 39.625 38.7536 39.9806 39.3865 40.6135C40.0194 41.2465 40.375 42.1049 40.375 43C40.375 43.8951 40.0194 44.7536 39.3865 45.3865C38.7536 46.0194 37.8951 46.375 37 46.375C36.1049 46.375 35.2465 46.0194 34.6135 45.3865C33.9806 44.7536 33.625 43.8951 33.625 43Z"
+                                    fill="#EB3D3D"
+                                />
                             </svg>
                         </div>
                         <div class="footer__btns__row__cart">
                             <div class="footer__btns__row__cart__icon">
-                                <img src="./sources/dc_small.png" alt=""/>
+                                <img src="./sources/dc_small.png" alt="" />
                                 <span>1</span>
                             </div>
-                            <svg width="93" height="92" viewBox="0 0 93 92" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <rect x="-0.639606" y="0.301503" width="57" height="70" rx="6.5"
-                                      transform="matrix(-0.941109 -0.338104 -0.338104 0.941109 91.4502 24.4114)"
-                                      fill="#321111"
-                                      stroke="#EB3D3D"/>
-                                <rect x="-0.516896" y="0.482513" width="57" height="70" rx="6.5"
-                                      transform="matrix(-0.999409 -0.0343826 -0.0343826 0.999409 76.3894 9.97665)"
-                                      fill="#321111"
-                                      stroke="#EB3D3D"/>
-                                <rect x="0.612372" y="15.365" width="57" height="70" rx="6.5"
-                                      transform="rotate(-15 0.612372 15.365)"
-                                      fill="#321111" stroke="#EB3D3D"/>
-                                <circle opacity="0.5" cx="36.5" cy="40.5" r="11.5" fill="#EB3D3D"/>
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                      d="M51.5597 54.0221C50.0695 52.532 50.0443 50.1586 51.0423 48.3024C52.2914 45.9793 53 43.3224 53 40.5C53 31.3873 45.6127 24 36.5 24C27.3873 24 20 31.3873 20 40.5C20 49.6127 27.3873 57 36.5 57C39.0924 57 41.5452 56.4021 43.7279 55.3368C45.5529 54.4461 47.8198 54.5248 49.2557 55.9608L53.6484 60.3535C54.2342 60.9393 55.184 60.9393 55.7698 60.3535C56.3555 59.7677 56.3555 58.818 55.7698 58.2322L51.5597 54.0221ZM36.5 54.5362C28.748 54.5362 22.4638 48.252 22.4638 40.5C22.4638 32.748 28.748 26.4638 36.5 26.4638C44.252 26.4638 50.5362 32.748 50.5362 40.5C50.5362 48.252 44.252 54.5362 36.5 54.5362Z"
-                                      fill="#EB3D3D"/>
+                            <svg
+                                width="93"
+                                height="92"
+                                viewBox="0 0 93 92"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <rect
+                                    x="-0.639606"
+                                    y="0.301503"
+                                    width="57"
+                                    height="70"
+                                    rx="6.5"
+                                    transform="matrix(-0.941109 -0.338104 -0.338104 0.941109 91.4502 24.4114)"
+                                    fill="#321111"
+                                    stroke="#EB3D3D"
+                                />
+                                <rect
+                                    x="-0.516896"
+                                    y="0.482513"
+                                    width="57"
+                                    height="70"
+                                    rx="6.5"
+                                    transform="matrix(-0.999409 -0.0343826 -0.0343826 0.999409 76.3894 9.97665)"
+                                    fill="#321111"
+                                    stroke="#EB3D3D"
+                                />
+                                <rect
+                                    x="0.612372"
+                                    y="15.365"
+                                    width="57"
+                                    height="70"
+                                    rx="6.5"
+                                    transform="rotate(-15 0.612372 15.365)"
+                                    fill="#321111"
+                                    stroke="#EB3D3D"
+                                />
+                                <circle
+                                    opacity="0.5"
+                                    cx="36.5"
+                                    cy="40.5"
+                                    r="11.5"
+                                    fill="#EB3D3D"
+                                />
+                                <path
+                                    fill-rule="evenodd"
+                                    clip-rule="evenodd"
+                                    d="M51.5597 54.0221C50.0695 52.532 50.0443 50.1586 51.0423 48.3024C52.2914 45.9793 53 43.3224 53 40.5C53 31.3873 45.6127 24 36.5 24C27.3873 24 20 31.3873 20 40.5C20 49.6127 27.3873 57 36.5 57C39.0924 57 41.5452 56.4021 43.7279 55.3368C45.5529 54.4461 47.8198 54.5248 49.2557 55.9608L53.6484 60.3535C54.2342 60.9393 55.184 60.9393 55.7698 60.3535C56.3555 59.7677 56.3555 58.818 55.7698 58.2322L51.5597 54.0221ZM36.5 54.5362C28.748 54.5362 22.4638 48.252 22.4638 40.5C22.4638 32.748 28.748 26.4638 36.5 26.4638C44.252 26.4638 50.5362 32.748 50.5362 40.5C50.5362 48.252 44.252 54.5362 36.5 54.5362Z"
+                                    fill="#EB3D3D"
+                                />
                             </svg>
                         </div>
                     </div>
                     <div class="footer__btns__row footer__btns__row_second">
                         <div class="footer__btns__row__el">
-                            <img src="./sources/dc_small.png" alt=""/>
+                            <img src="./sources/dc_small.png" alt="" />
                             <span>44</span>
                         </div>
                         <div class="footer__btns__row__el">
-                            <img src="./sources/dollar.png" alt=""/>
+                            <img src="./sources/dollar.png" alt="" />
                             <span>4.84к</span>
                         </div>
                     </div>
@@ -465,22 +638,24 @@ import modalDialog from './components/modalDialog.vue'
     </section>
 </template>
 <script>
-import {Centrifuge} from "centrifuge";
-import telegram from './api/telegram.js'
-import gameApi from './api/game.api.js'
-import api from './api/users.api.js'
+import { Centrifuge } from "centrifuge";
+import telegram from "./api/telegram.js";
+import gameApi from "./api/game.api.js";
+import api from "./api/users.api.js";
 import useStorage from "./api/storage.js";
 
-const isDev = import.meta.env.MODE === 'development';
+const isDev = import.meta.env.MODE === "development";
 
-const centrifugoURL = isDev ? "ws://127.0.0.1:8888/connection/websocket"  : `wss://${window.location.host}/connection/websocket`
+const centrifugoURL = isDev
+    ? "ws://127.0.0.1:8888/connection/websocket"
+    : `wss://${window.location.host}/connection/websocket`;
 
 export default {
     props: {
         room: Object,
         players: Array,
         modes: Array,
-        currency: String
+        currency: String,
     },
     data() {
         return {
@@ -498,11 +673,26 @@ export default {
             cardsCount: 36,
 
             cardValues: {
-                2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 1: 10,
-                j: 11, q: 12, k: 13, a: 14
+                2: 2,
+                3: 3,
+                4: 4,
+                5: 5,
+                6: 6,
+                7: 7,
+                8: 8,
+                9: 9,
+                1: 10,
+                j: 11,
+                q: 12,
+                k: 13,
+                a: 14,
             },
             cardSuits: {
-                s: 1, c: 2, h: 3, d: 4, j: 5
+                s: 1,
+                c: 2,
+                h: 3,
+                d: 4,
+                j: 5,
             },
 
             gameCells: Array.from({ length: 5 }, () => []),
@@ -510,440 +700,660 @@ export default {
                 const [x, y] = [window.innerWidth / 2, window.innerHeight / 2];
                 return [
                     [x * 0.6, y * 0.9],
-                    [x,       y * 0.9],
+                    [x, y * 0.9],
                     [x * 1.4, y * 0.9],
                     [x * 0.8, y * 1.14],
-                    [x * 1.2, y * 1.14]
-                ]
-            }
-        }
+                    [x * 1.2, y * 1.14],
+                ];
+            },
+        };
     },
     methods: {
         async setReadyState() {
-            await gameApi.ready((await telegram.profile()).id, this.room.id)
-            this.ready = !this.ready
+            const localMockUser = localStorage.getItem("usr");
+            const readyID = isDev && localMockUser ? JSON.parse(localMockUser).id : (await telegram.profile()).id
+            await gameApi.ready(readyID, this.room.id);
+            this.ready = !this.ready;
         },
         lt(a, b) {
             return this.cardSuits[a[1]] == this.cardSuits[b[1]]
                 ? this.cardValues[a[0]] < this.cardValues[b[0]]
-                : this.cardSuits[a[1]] < this.cardSuits[b[1]]
+                : this.cardSuits[a[1]] < this.cardSuits[b[1]];
         },
         cannotBeat(a, b) {
             return a[1] === b[1]
                 ? this.cardValues[a[0]] < this.cardValues[b[0]]
-                : a[1] != document.querySelector('.game__cart__cold__carts__second').dataset.card[1]
+                : a[1] !=
+                      document.querySelector(".game__cart__cold__carts__second")
+                          .dataset.card[1];
         },
         async updateAttacker(data) {
-            this.myTurn = (await telegram.profile()).id == data.attacker_player_index;
+            const localMockUser = localStorage.getItem("usr");
+            const myID = isDev && localMockUser ? JSON.parse(localMockUser).id : (await telegram.profile()).id
+            this.myTurn =
+            myID == data.attacker_player_index;
 
             for (let { id: userId } of this.users) {
-                const userElem = document.querySelectorAll(`div.game__players__player__photo[data-player="${userId}"]`)[0]
-                userElem.classList.remove('opponent')
-                userElem.classList.remove('attacker')
-                if      (userId == data.attacker_player_index) userElem.classList.add('attacker')
-                else if (userId == data.opponent_player_index) userElem.classList.add('opponent')
+                const userElem = document.querySelectorAll(
+                    `div.game__players__player__photo[data-player="${userId}"]`
+                )[0];
+                userElem.classList.remove("opponent");
+                userElem.classList.remove("attacker");
+                if (userId == data.attacker_player_index)
+                    userElem.classList.add("attacker");
+                else if (userId == data.opponent_player_index)
+                    userElem.classList.add("opponent");
             }
         },
         addMyCard(card, addElement = true) {
-            card.style.removeProperty('z-index')
-            card.style.width = '30vw'
-            card.style.left = '-15vw'
-            card.style.top = '-28vw'
-            card.classList.add('my-card');
+            card.style.removeProperty("z-index");
+            card.style.width = "30vw";
+            card.style.left = "-15vw";
+            card.style.top = "-28vw";
+            card.classList.add("my-card");
 
             if (card.dataset.gameCell !== undefined) {
-                const cardInCell = this.gameCells[card.dataset.gameCell].findIndex(c => c.dataset.card == card.dataset.card);
-                this.gameCells[card.dataset.gameCell].splice(cardInCell, 1)
+                const cardInCell = this.gameCells[
+                    card.dataset.gameCell
+                ].findIndex((c) => c.dataset.card == card.dataset.card);
+                this.gameCells[card.dataset.gameCell].splice(cardInCell, 1);
 
                 if (this.gameCells[card.dataset.gameCell][0]) {
                     const [x, y] = this.gameCellPos()[card.dataset.gameCell];
-                    this.gameCells[card.dataset.gameCell][0].style.transform = `translate(${x}px, ${y}px)`
-                    this.gameCells[card.dataset.gameCell][0].style.zIndex = 3
+                    this.gameCells[
+                        card.dataset.gameCell
+                    ][0].style.transform = `translate(${x}px, ${y}px)`;
+                    this.gameCells[card.dataset.gameCell][0].style.zIndex = 3;
                 }
 
                 delete card.dataset.gameCell;
             }
 
-            if (!addElement) return
-            for (const cardHand of document.querySelectorAll('img.my-card'))
+            if (!addElement) return;
+            for (const cardHand of document.querySelectorAll("img.my-card"))
                 if (this.lt(card.dataset.card, cardHand.dataset.card))
-                    return document.querySelector('#cards').insertBefore(card, cardHand)
-            document.querySelector('#cards').appendChild(card)
+                    return document
+                        .querySelector("#cards")
+                        .insertBefore(card, cardHand);
+            document.querySelector("#cards").appendChild(card);
         },
         async takeFromTable(data) {
-            const profile = await telegram.profile()
+            const profile = await this.getProfile();
             if (!data) {
                 for (const card of this.gameCells.flat()) {
                     // const beforeMine = card.dataset.player == profile.id
                     // card.dataset.player = profile.id;
                     // this.addMyCard(card, !beforeMine)
                     card.dataset.player = profile.id;
-                    this.addMyCard(card, false)
+                    this.addMyCard(card, false);
                 }
-                await gameApi.takeFromTable(this.room.id, profile.id)
+                await gameApi.takeFromTable(this.room.id, profile.id);
             } else {
-                const cardTable = this.gameCells.flat().find(c => c.dataset.player == profile.id)?.dataset.card
-                if (!cardTable) return
+                const cardTable = this.gameCells
+                    .flat()
+                    .find((c) => c.dataset.player == profile.id)?.dataset.card;
+                if (!cardTable) return;
 
                 let playerId;
-                for (const [playerIdCurrent, cards] of Object.entries(data.deck.players))
+                for (const [playerIdCurrent, cards] of Object.entries(
+                    data.deck.players
+                ))
                     if (playerIdCurrent != profile.id)
                         for (const card of cards)
                             if (card == cardTable) {
                                 playerId = playerIdCurrent;
                                 break;
                             }
-                const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == playerId)
-                if (!player) return console.error(`opponent player ${playerId} not found to give card`);
+                const player = [
+                    ...document.querySelectorAll(
+                        ".game__players__player__photo"
+                    ),
+                ].find((e) => e.dataset.player == playerId);
+                if (!player)
+                    return console.error(
+                        `opponent player ${playerId} not found to give card`
+                    );
 
-                const playerRect = player.getBoundingClientRect()
+                const playerRect = player.getBoundingClientRect();
                 for (const card of this.gameCells.flat())
                     (async () => {
-                        const cardInCell = this.gameCells[card.dataset.gameCell].findIndex(c => c.dataset.card == card.dataset.card);
-                        this.gameCells[card.dataset.gameCell].splice(cardInCell, 1)
+                        const cardInCell = this.gameCells[
+                            card.dataset.gameCell
+                        ].findIndex((c) => c.dataset.card == card.dataset.card);
+                        this.gameCells[card.dataset.gameCell].splice(
+                            cardInCell,
+                            1
+                        );
 
                         if (this.gameCells[card.dataset.gameCell][0]) {
-                            const [x, y] = this.gameCellPos()[card.dataset.gameCell];
-                            this.gameCells[card.dataset.gameCell][0].style.transform = `translate(${x}px, ${y}px)`
-                            this.gameCells[card.dataset.gameCell][0].style.zIndex = 3
+                            const [x, y] =
+                                this.gameCellPos()[card.dataset.gameCell];
+                            this.gameCells[
+                                card.dataset.gameCell
+                            ][0].style.transform = `translate(${x}px, ${y}px)`;
+                            this.gameCells[
+                                card.dataset.gameCell
+                            ][0].style.zIndex = 3;
                         }
 
                         delete card.dataset.gameCell;
 
-                        card.style.transform = `translate(${playerRect.x + playerRect.width / 2}px, ${playerRect.y + playerRect.height / 2}px)`
-                        card.style.width = '10vw'
-                        player.style.zIndex = 6
-                        await new Promise(r => setTimeout(r, 300))
-                        document.querySelector('#cards').removeChild(card)
-                        player.style.zIndex = 1
-                    })()
+                        card.style.transform = `translate(${
+                            playerRect.x + playerRect.width / 2
+                        }px, ${playerRect.y + playerRect.height / 2}px)`;
+                        card.style.width = "10vw";
+                        player.style.zIndex = 6;
+                        await new Promise((r) => setTimeout(r, 300));
+                        document.querySelector("#cards").removeChild(card);
+                        player.style.zIndex = 1;
+                    })();
             }
-            const count = 6 - [...document.querySelectorAll('img.my-card')].length;
-            if (count > 0) await gameApi.takeFromDeck(this.room.id, profile.id, count)
+            const count =
+                6 - [...document.querySelectorAll("img.my-card")].length;
+            if (count > 0)
+                await gameApi.takeFromDeck(this.room.id, profile.id, count);
         },
         async startFinishBeat() {
-            await gameApi.beats(this.room.id, (await telegram.profile()).id)
+            await gameApi.beats(this.room.id, (await this.getProfile()).id);
         },
         async endCards(data) {
             for (const card of this.gameCells.flat()) {
-                card.style.transform = `translate(${window.innerWidth}px, ${window.innerHeight / 2}px) rotate(${Math.random() * 360}deg)`
+                card.style.transform = `translate(${window.innerWidth}px, ${
+                    window.innerHeight / 2
+                }px) rotate(${Math.random() * 360}deg)`;
                 setTimeout(() => {
-                    card.src = document.querySelector('img[data-cardimg="b"]').src
-                }, 200)
+                    card.src = document.querySelector(
+                        'img[data-cardimg="b"]'
+                    ).src;
+                }, 200);
             }
-            this.gameCells = Array.from({ length: 5 }, () => [])
-            this.updateAttacker(data)
-            const count = 6 - [...document.querySelectorAll('img.my-card')].length;
-            if (count > 0) await gameApi.takeFromDeck(this.room.id, (await telegram.profile()).id, count)
+            this.gameCells = Array.from({ length: 5 }, () => []);
+            this.updateAttacker(data);
+            const count =
+                6 - [...document.querySelectorAll("img.my-card")].length;
+            if (count > 0)
+                await gameApi.takeFromDeck(
+                    this.room.id,
+                    (
+                        await this.getProfile()
+                    ).id,
+                    count
+                );
         },
         uniqueUsers(value, index, array) {
-            return array.indexOf(value) === index
+            return array.indexOf(value) === index;
+        },
+        async getProfile() {
+            const localMockUser = localStorage.getItem("usr");
+            return isDev && localMockUser
+                ? JSON.parse(localMockUser)
+                : await telegram.profile();
         }
     },
+
     async mounted() {
-        telegram.showBackButton()
-        const profile = await telegram.profile()
-        const token = await api.generateConnectionToken(profile.id)
-        this.user = await api.profile(profile.id, profile.username)
-        const { storage } = useStorage()
+        telegram.showBackButton();
+        const profile = await this.getProfile();
+        const token = await api.generateConnectionToken(profile.id);
+        this.user = await api.profile(profile.id, profile.username);
+        const { storage } = useStorage();
 
-        window.Telegram.WebApp.BackButton.onClick(() => telegram.confirm('Ты действительно хочешь выйти из комнаты?', async () => {
-            await gameApi.leave(this.user.id, this.room.id)
-            location.replace('/home')
-        }))
+        window.Telegram.WebApp.BackButton.onClick(() =>
+            telegram.confirm(
+                "Ты действительно хочешь выйти из комнаты?",
+                async () => {
+                    await gameApi.leave(this.user.id, this.room.id);
+                    location.replace("/home");
+                }
+            )
+        );
 
-        this.centrifugo = new Centrifuge(centrifugoURL, { token })
-        this.centrifugo.on('connected', async () => {
-            const res = await fetch(`/api/game/join?${new URLSearchParams({ id: this.room.id, user_id: profile.id })}`)
-            for (const user of await res.json())
-                this.users.push(user);
+        this.centrifugo = new Centrifuge(centrifugoURL, { token });
+        this.centrifugo.on("connected", async () => {
+            const res = await fetch(
+                `/api/game/join?${new URLSearchParams({
+                    id: this.room.id,
+                    user_id: profile.id,
+                })}`
+            );
+            console.log("CENTR:", res);
+            for (const user of await res.json()) this.users.push(user);
 
-            this.users = this.users.filter((value, index, array) => array.indexOf(value) === index)
-        })
-        const sub = this.centrifugo.newSubscription(`room`)
+            this.users = this.users.filter(
+                (value, index, array) => array.indexOf(value) === index
+            );
+        });
+        const sub = this.centrifugo.newSubscription(`room`);
 
-        let touch = false
-        let dragging = false
-        let lastDragging = false
-        let tx, ty
+        let touch = false;
+        let dragging = false;
+        let lastDragging = false;
+        let tx, ty;
 
-        let activeCard = null
+        let activeCard = null;
         let canBeat = true;
 
-        let countElem = document.querySelector('.game__cart__cold__count')
-        let count = parseInt(countElem.innerHTML)
-        this.cardsCount = count
+        let countElem = document.querySelector(".game__cart__cold__count");
+        let count = parseInt(countElem.innerHTML);
+        this.cardsCount = count;
 
         let isAttackerPlayer = false;
 
-        sub.on('publication', async ({ data }) => {
-            console.log(data.event, data)
+        sub.on("publication", async ({ data }) => {
+            console.log(data.event, data);
             switch (data.event) {
-                case 'game_started':
-                    this.started = true
-                    isAttackerPlayer = (await telegram.profile()).id == data.attacker_player_index
-                    this.updateAttacker(data)
-                    setTrumpCard(data.deck.at(-1))
+                case "game_started":
+                    this.started = true;
+                    isAttackerPlayer =
+                        (await this.getProfile()).id ==
+                        data.attacker_player_index;
+                    this.updateAttacker(data);
+                    setTrumpCard(data.deck.at(-1));
                     for (const [player, cards] of Object.entries(data.players))
                         (async () => {
                             for (const code of cards) {
-                                giveCard.bind(this)(player, code)
-                                await new Promise(r => setTimeout(r, 100))
+                                giveCard.bind(this)(player, code);
+                                await new Promise((r) => setTimeout(r, 100));
                             }
                         })();
-                    return
-                case 'user_join_room':
-                    if (data.user.id == profile.id) return
-                    if (this.users.findIndex(u => u.id == data.user.id) !== -1) return
-                    this.users.push(data.user)
+                    return;
+                case "user_join_room":
+                    if (data.user.id == profile.id) return;
+                    if (
+                        this.users.findIndex((u) => u.id == data.user.id) !== -1
+                    )
+                        return;
+                    this.users.push(data.user);
 
-                    return this.users.filter((value, index, array) => array.indexOf(value) === index)
-                case 'player_take_card':
+                    return this.users.filter(
+                        (value, index, array) => array.indexOf(value) === index
+                    );
+                case "player_take_card":
                     // isAttackerPlayer = profile.id == data.attacker_player_index
                     // this.updateAttacker(data)
                     if (data.player == profile.id && count > 0) {
-                        for (const card of data.cards) giveCard.bind(this)(data.player, card)
+                        for (const card of data.cards)
+                            giveCard.bind(this)(data.player, card);
                     }
-                    canBeat = true
-                    return
-                case 'player_take_table':
-                    return this.takeFromTable(data)
-                case 'user_left_room':
-                    return document.querySelector(`div[data-player="${data.player}"]`).parentNode.remove()
-                case 'discard_card':
-                    isAttackerPlayer = profile.id == data.attacker_player_index
-                    this.updateAttacker(data)
-                    const card = document.createElement('img')
-                    card.dataset.player = Object.keys(data.deck.players).find(id => id != profile.id)
-                    card.dataset.card = data.deck.table.at(-1)
-                    card.src = document.querySelector(`img[data-cardimg="${card.dataset.card}"]`).src
-                    if (this.gameCells.flat().some(c => c.dataset.card == card.dataset.card)) return
-                    return discardCard.bind(this)(card)
-                case 'revert_card':
-                    const cardd = this.gameCells.flat().find(c => c.dataset.card == data.card)
-
-                    const playerr = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
-                    if (!playerr) return console.error(`opponent player ${cardd.dataset.player} not found to give card`);
-
-                    const playerRectr = playerr.getBoundingClientRect()
-                    cardd.style.transform = `translate(${playerRectr.x + playerRectr.width / 2}px, ${playerRectr.y + playerRectr.height / 2}px)`
-                    cardd.style.width = '10vw'
-                    return document.querySelector('#cards').removeChild(cardd)
-                case 'beats':
-                    if (!this.gameCells.flat().length) return
-                    isAttackerPlayer = data.attacker_player_index === (await telegram.profile()).id
+                    canBeat = true;
+                    return;
+                case "player_take_table":
+                    return this.takeFromTable(data);
+                case "user_left_room":
+                    return document
+                        .querySelector(`div[data-player="${data.player}"]`)
+                        .parentNode.remove();
+                case "discard_card":
+                    isAttackerPlayer = profile.id == data.attacker_player_index;
                     this.updateAttacker(data);
-                    return this.endCards(data)
-                case 'user_win':
-                    const a = [...document.querySelectorAll('.win__amount')]
+                    const card = document.createElement("img");
+                    card.dataset.player = Object.keys(data.deck.players).find(
+                        (id) => id != profile.id
+                    );
+                    card.dataset.card = data.deck.table.at(-1);
+                    card.src = document.querySelector(
+                        `img[data-cardimg="${card.dataset.card}"]`
+                    ).src;
+                    if (
+                        this.gameCells
+                            .flat()
+                            .some((c) => c.dataset.card == card.dataset.card)
+                    )
+                        return;
+                    return discardCard.bind(this)(card);
+                case "revert_card":
+                    const cardd = this.gameCells
+                        .flat()
+                        .find((c) => c.dataset.card == data.card);
+
+                    const playerr = [
+                        ...document.querySelectorAll(
+                            ".game__players__player__photo"
+                        ),
+                    ].find((e) => e.dataset.player == card.dataset.player);
+                    if (!playerr)
+                        return console.error(
+                            `opponent player ${cardd.dataset.player} not found to give card`
+                        );
+
+                    const playerRectr = playerr.getBoundingClientRect();
+                    cardd.style.transform = `translate(${
+                        playerRectr.x + playerRectr.width / 2
+                    }px, ${playerRectr.y + playerRectr.height / 2}px)`;
+                    cardd.style.width = "10vw";
+                    return document.querySelector("#cards").removeChild(cardd);
+                case "beats":
+                    if (!this.gameCells.flat().length) return;
+                    isAttackerPlayer =
+                        data.attacker_player_index ===
+                        (await this.getProfile()).id;
+                    this.updateAttacker(data);
+                    return this.endCards(data);
+                case "user_win":
+                    const a = [...document.querySelectorAll(".win__amount")];
                     // const b = a[~~(Math.random() * a.length)]
-                    const b = a.find(e => !e.parentElement.dataset.player)
-                    b.classList.add('visible')
-                    setTimeout(() => b.classList.remove('visible'), 3000)
-                    if (!b.parentElement.dataset.player) setTimeout(() => window.Telegram.WebApp.showAlert(`Ты выиграл: ${data.winners[profile.id]}!`), 3000)
-                case 'table_full':
-                    isAttackerPlayer = false
-                    telegram.alert('Стол переполнен!', true)
+                    const b = a.find((e) => !e.parentElement.dataset.player);
+                    b.classList.add("visible");
+                    setTimeout(() => b.classList.remove("visible"), 3000);
+                    if (!b.parentElement.dataset.player)
+                        setTimeout(
+                            () =>
+                                window.Telegram.WebApp.showAlert(
+                                    `Ты выиграл: ${data.winners[profile.id]}!`
+                                ),
+                            3000
+                        );
+                case "table_full":
+                    isAttackerPlayer = false;
+                    telegram.alert("Стол переполнен!", true);
                     break;
-                case 'game_beat':
-                    if (data.status === false && data.player == (await telegram.profile()).id) {
-                        canBeat = false
+                case "game_beat":
+                    if (
+                        data.status === false &&
+                        data.player == (await this.getProfile()).id
+                    ) {
+                        canBeat = false;
 
-                        return
+                        return;
                     }
-                    this.updateAttacker(data)
-                    return
+                    this.updateAttacker(data);
+                    return;
             }
-        }).subscribe()
-        this.centrifugo.connect()
+        }).subscribe();
+        this.centrifugo.connect();
 
-        document.addEventListener('touchstart', async e=>{
+        document.addEventListener("touchstart", async (e) => {
             const card = e.target;
-            if (!card.dataset?.card) return
+            if (!card.dataset?.card) return;
             if (card.dataset.gameCell !== undefined) {
-                const otherCard = this.gameCells[card.dataset.gameCell].find(c => c.dataset.card != card.dataset.card)
+                const otherCard = this.gameCells[card.dataset.gameCell].find(
+                    (c) => c.dataset.card != card.dataset.card
+                );
                 const top = otherCard?.style.zIndex == 3;
 
-                const isCheaters = storage.getItem('params')?.split(',').includes('cheaters') ?? false;
-                if (!top || !this.cannotBeat(card.dataset.card, otherCard.dataset.card)) return
+                const isCheaters =
+                    storage
+                        .getItem("params")
+                        ?.split(",")
+                        .includes("cheaters") ?? false;
+                if (
+                    !top ||
+                    !this.cannotBeat(card.dataset.card, otherCard.dataset.card)
+                )
+                    return;
 
-                const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
-                if (!player) return console.error(`opponent player ${card.dataset.player} not found to give card`);
+                const player = [
+                    ...document.querySelectorAll(
+                        ".game__players__player__photo"
+                    ),
+                ].find((e) => e.dataset.player == card.dataset.player);
+                if (!player)
+                    return console.error(
+                        `opponent player ${card.dataset.player} not found to give card`
+                    );
 
-                const playerRect = player.getBoundingClientRect()
-                card.style.transform = `translate(${playerRect.x + playerRect.width / 2}px, ${playerRect.y + playerRect.height / 2}px)`
-                card.style.width = '10vw'
-                player.style.zIndex = 6
-                await new Promise(r => setTimeout(r, 300))
-                document.querySelector('#cards').removeChild(card)
-                player.style.zIndex = 1
-                return gameApi.revert(this.room.id, card.dataset.player, card.dataset.card)
+                const playerRect = player.getBoundingClientRect();
+                card.style.transform = `translate(${
+                    playerRect.x + playerRect.width / 2
+                }px, ${playerRect.y + playerRect.height / 2}px)`;
+                card.style.width = "10vw";
+                player.style.zIndex = 6;
+                await new Promise((r) => setTimeout(r, 300));
+                document.querySelector("#cards").removeChild(card);
+                player.style.zIndex = 1;
+                return gameApi.revert(
+                    this.room.id,
+                    card.dataset.player,
+                    card.dataset.card
+                );
             }
-            touch=true;
+            touch = true;
             [tx, ty] = [e.touches[0].clientX, e.touches[0].clientY];
-            activeCard=card
-        })
-        document.addEventListener('touchmove', e=>{
-            [tx, ty] = [e.touches[0].clientX, e.touches[0].clientY]
-            let elem = document.elementFromPoint(tx, ty)
-            if (touch && !dragging && elem?.dataset.player == profile.id) activeCard = elem
-        })
-        document.addEventListener('touchend', e=>{
-            touch = false
-            dragging = lastDragging = false
-            if (!activeCard) return
+            activeCard = card;
+        });
+        document.addEventListener("touchmove", (e) => {
+            [tx, ty] = [e.touches[0].clientX, e.touches[0].clientY];
+            let elem = document.elementFromPoint(tx, ty);
+            if (touch && !dragging && elem?.dataset.player == profile.id)
+                activeCard = elem;
+        });
+        document.addEventListener("touchend", (e) => {
+            touch = false;
+            dragging = lastDragging = false;
+            if (!activeCard) return;
 
-            console.log('attackerPlayer', isAttackerPlayer)
-            console.log('myTurn?', this.myTurn)
-            console.log('gameCells?', this.gameCells.filter(c => c.length).length)
-            console.log('gameCells/0?', this.gameCells.filter(c => c.length).every(c => c.length % 2 === 0))
-            console.log('gameCells/1?', this.gameCells.filter(c => c.length).every(c => c.length % 2 !== 0))
+            console.log("attackerPlayer", isAttackerPlayer);
+            console.log("myTurn?", this.myTurn);
+            console.log(
+                "gameCells?",
+                this.gameCells.filter((c) => c.length).length
+            );
+            console.log(
+                "gameCells/0?",
+                this.gameCells
+                    .filter((c) => c.length)
+                    .every((c) => c.length % 2 === 0)
+            );
+            console.log(
+                "gameCells/1?",
+                this.gameCells
+                    .filter((c) => c.length)
+                    .every((c) => c.length % 2 !== 0)
+            );
 
             // this.cardsCount === 24 && this.gameCells.length === 10 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             // this.gameCells.length >= 12 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
             // isAttackerPlayer ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
             // canBeat ? discardCard.bind(this)(activeCard) : this.addMyCard(activeCard, false)
             if (!this.myTurn) {
-                this.addMyCard(activeCard, false)
-                activeCard = null
+                this.addMyCard(activeCard, false);
+                activeCard = null;
 
-                return
+                return;
             }
 
             if (ty > window.innerHeight * 0.75) {
-                this.addMyCard(activeCard, false)
+                this.addMyCard(activeCard, false);
             } else {
-                discardCard.bind(this)(activeCard)
+                discardCard.bind(this)(activeCard);
             }
 
             // ty > window.innerHeight * 0.75 ? this.addMyCard(activeCard, false) : discardCard.bind(this)(activeCard)
 
-            activeCard = null
-        })
+            activeCard = null;
+        });
         let time = performance.now();
         function updateCards(t) {
-            const dt = t - time
-            time = t
+            const dt = t - time;
+            time = t;
 
-            const myCards = [...document.querySelectorAll('img.my-card')]
-            myCards.sort((a, b) => this.lt(a.dataset.card, b.dataset.card) ? -1 : 1)
+            const myCards = [...document.querySelectorAll("img.my-card")];
+            myCards.sort((a, b) =>
+                this.lt(a.dataset.card, b.dataset.card) ? -1 : 1
+            );
             myCards.forEach((card, i) => {
-                let fromCenter = i - myCards.length / 2
-                if (card.data === undefined) card.data = { x: 0, y: window.innerHeight / 2 }
-                card.data.tx = window.innerWidth / 2 + window.innerWidth * 0.1 + fromCenter * window.innerWidth * 0.8 / myCards.length
-                card.data.ty = window.innerHeight * 0.75 - (touch ? (card === activeCard ? 40 : i && myCards[i - 1] === activeCard ? 10 : 0) : 0)
-                card.data.x += (card.data.tx - card.data.x) * 0.01 * dt
-                card.data.y += (card.data.ty - card.data.y) * 0.01 * dt
-                card.style.zIndex = 10 + i
-                card.style.transform = `translate(${card.data.x.toFixed(0)}px, ${card.data.y.toFixed(0)}px) rotate(${fromCenter * 2}deg)`
-            })
+                let fromCenter = i - myCards.length / 2;
+                if (card.data === undefined)
+                    card.data = { x: 0, y: window.innerHeight / 2 };
+                card.data.tx =
+                    window.innerWidth / 2 +
+                    window.innerWidth * 0.1 +
+                    (fromCenter * window.innerWidth * 0.8) / myCards.length;
+                card.data.ty =
+                    window.innerHeight * 0.75 -
+                    (touch
+                        ? card === activeCard
+                            ? 40
+                            : i && myCards[i - 1] === activeCard
+                            ? 10
+                            : 0
+                        : 0);
+                card.data.x += (card.data.tx - card.data.x) * 0.01 * dt;
+                card.data.y += (card.data.ty - card.data.y) * 0.01 * dt;
+                card.style.zIndex = 10 + i;
+                card.style.transform = `translate(${card.data.x.toFixed(
+                    0
+                )}px, ${card.data.y.toFixed(0)}px) rotate(${
+                    fromCenter * 2
+                }deg)`;
+            });
 
             if (touch && activeCard && ty < window.innerHeight * 0.75) {
-                dragging = true
+                dragging = true;
                 if (!lastDragging) {
-                    lastDragging = true
-                    activeCard.style.zIndex = 10
+                    lastDragging = true;
+                    activeCard.style.zIndex = 10;
                 }
             }
 
             if (dragging)
-                activeCard.style.transform = `translate(${tx}px, ${ty - window.innerWidth * 0.25}px)`
+                activeCard.style.transform = `translate(${tx}px, ${
+                    ty - window.innerWidth * 0.25
+                }px)`;
 
-            requestAnimationFrame(updateCards.bind(this))
+            requestAnimationFrame(updateCards.bind(this));
         }
-        requestAnimationFrame(updateCards.bind(this))
+        requestAnimationFrame(updateCards.bind(this));
 
         function setTrumpCard(card) {
-            const code = (card.rank[0] + card.suit[0]).toLowerCase()
-            const trumpCardElem = document.querySelector('.game__cart__cold__carts__second')
-            trumpCardElem.src = document.querySelector(`img[data-cardimg="${trumpCardElem.dataset.card = code}"]`).src
+            const code = (card.rank[0] + card.suit[0]).toLowerCase();
+            const trumpCardElem = document.querySelector(
+                ".game__cart__cold__carts__second"
+            );
+            trumpCardElem.src = document.querySelector(
+                `img[data-cardimg="${(trumpCardElem.dataset.card = code)}"]`
+            ).src;
         }
 
         function giveCard(playerId, code) {
-            const card = document.createElement('img')
-            card.dataset.player = playerId
-            card.dataset.card = playerId == profile.id ? code : 'b'
-            card.src = document.querySelector(`img[data-cardimg="${card.dataset.card}"]`).src
+            const card = document.createElement("img");
+            card.dataset.player = playerId;
+            card.dataset.card = playerId == profile.id ? code : "b";
+            card.src = document.querySelector(
+                `img[data-cardimg="${card.dataset.card}"]`
+            ).src;
             if (playerId == profile.id) this.addMyCard(card);
             else {
-                const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == playerId)
-                if (!player) console.error(`opponent player ${playerId} not found to give card`);
+                const player = [
+                    ...document.querySelectorAll(
+                        ".game__players__player__photo"
+                    ),
+                ].find((e) => e.dataset.player == playerId);
+                if (!player)
+                    console.error(
+                        `opponent player ${playerId} not found to give card`
+                    );
                 else {
-                    document.querySelector('#cards').appendChild(card)
-                    const playerRect = player.getBoundingClientRect()
-                    card.style.transform = `translate(${playerRect.x + playerRect.width / 2}px, ${playerRect.y + playerRect.height / 2}px)`
-                    card.style.width = '10vw'
+                    document.querySelector("#cards").appendChild(card);
+                    const playerRect = player.getBoundingClientRect();
+                    card.style.transform = `translate(${
+                        playerRect.x + playerRect.width / 2
+                    }px, ${playerRect.y + playerRect.height / 2}px)`;
+                    card.style.width = "10vw";
                 }
             }
-            countElem.innerHTML = --count
+            countElem.innerHTML = --count;
         }
 
         async function discardCard(card) {
-            const discardIsMine = card.dataset.player == profile.id
+            const discardIsMine = card.dataset.player == profile.id;
             if (!discardIsMine) {
-                const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
-                if (!player) return console.error(`opponent player ${card.dataset.player} not found to give card`);
+                const player = [
+                    ...document.querySelectorAll(
+                        ".game__players__player__photo"
+                    ),
+                ].find((e) => e.dataset.player == card.dataset.player);
+                if (!player)
+                    return console.error(
+                        `opponent player ${card.dataset.player} not found to give card`
+                    );
 
-                const playerRect = player.getBoundingClientRect()
-                card.style.transform = `translate(${playerRect.x + playerRect.width / 2}px, ${playerRect.y + playerRect.height / 2}px)`
-                card.style.width = '10vw'
-                document.querySelector('#cards').appendChild(card)
-                await new Promise(r => setTimeout(r, 300))
+                const playerRect = player.getBoundingClientRect();
+                card.style.transform = `translate(${
+                    playerRect.x + playerRect.width / 2
+                }px, ${playerRect.y + playerRect.height / 2}px)`;
+                card.style.width = "10vw";
+                document.querySelector("#cards").appendChild(card);
+                await new Promise((r) => setTimeout(r, 300));
             }
 
-            const gameCell = this.gameCells.findIndex(c => c.length < 2 && (c.length == 0 || c[0].dataset.player != card.dataset.player));
+            const gameCell = this.gameCells.findIndex(
+                (c) =>
+                    c.length < 2 &&
+                    (c.length == 0 ||
+                        c[0].dataset.player != card.dataset.player)
+            );
             // if (gameCell == -1)
             //     if (!discardIsMine) return
-                // else {
-                //     const a = [...document.querySelectorAll('.win__amount')]
-                //     // const b = a[~~(Math.random() * a.length)]
-                //     const b = a.find(e => !e.parentElement.dataset.player)
-                //     b.classList.add('visible')
-                //     setTimeout(() => b.classList.remove('visible'), 3000)
-                //     if (!b.parentElement.dataset.player) setTimeout(() => window.Telegram.WebApp.showAlert(`Ты выиграл: ${100}!`), 3000)
-                //
-                //     for (const card of this.gameCells.flat()) {
-                //         // const beforeMine = card.dataset.player == profile.id
-                //         // card.dataset.player = profile.id;
-                //         // this.addMyCard(card, !beforeMine)
-                //         card.dataset.player = profile.id;
-                //         // this.addMyCard(card, false)
-                //     }
-                //     // return this.addMyCard(card, false)
-                // }
+            // else {
+            //     const a = [...document.querySelectorAll('.win__amount')]
+            //     // const b = a[~~(Math.random() * a.length)]
+            //     const b = a.find(e => !e.parentElement.dataset.player)
+            //     b.classList.add('visible')
+            //     setTimeout(() => b.classList.remove('visible'), 3000)
+            //     if (!b.parentElement.dataset.player) setTimeout(() => window.Telegram.WebApp.showAlert(`Ты выиграл: ${100}!`), 3000)
+            //
+            //     for (const card of this.gameCells.flat()) {
+            //         // const beforeMine = card.dataset.player == profile.id
+            //         // card.dataset.player = profile.id;
+            //         // this.addMyCard(card, !beforeMine)
+            //         card.dataset.player = profile.id;
+            //         // this.addMyCard(card, false)
+            //     }
+            //     // return this.addMyCard(card, false)
+            // }
 
             const top = this.gameCells[gameCell].length != 0;
             if (discardIsMine && this.myTurn) {
-                const isCheaters = storage.getItem('params')?.split(',').includes('cheaters') ?? false;
-                if (!isCheaters && top && this.cannotBeat(card.dataset.card, this.gameCells[gameCell][Number(!top)].dataset.card))
-                    return this.addMyCard(card, false)
+                const isCheaters =
+                    storage
+                        .getItem("params")
+                        ?.split(",")
+                        .includes("cheaters") ?? false;
+                if (
+                    !isCheaters &&
+                    top &&
+                    this.cannotBeat(
+                        card.dataset.card,
+                        this.gameCells[gameCell][Number(!top)].dataset.card
+                    )
+                )
+                    return this.addMyCard(card, false);
                 // Первый ход и остальные ходы
                 if (this.gameCells.length === 10 && this.cardsCount === 24) {
-                    return this.addMyCard(card, false)
+                    return this.addMyCard(card, false);
                 }
                 if (!this.myTurn) {
-                    return this.addMyCard(card, false)
+                    return this.addMyCard(card, false);
                 }
 
-                if (top) gameApi.fight(this.room.id, this.gameCells[gameCell][Number(!top)].dataset.card, card.dataset.card, this.user.id)
-                gameApi.discard(card.dataset.card, this.room.id, this.user.id)
+                if (top)
+                    gameApi.fight(
+                        this.room.id,
+                        this.gameCells[gameCell][Number(!top)].dataset.card,
+                        card.dataset.card,
+                        this.user.id
+                    );
+                gameApi.discard(card.dataset.card, this.room.id, this.user.id);
             }
             this.gameCells[gameCell][Number(top)] = card;
 
             if (discardIsMine) {
-                card.style.removeProperty('left')
-                card.style.removeProperty('top')
-                card.classList.remove('my-card')
+                card.style.removeProperty("left");
+                card.style.removeProperty("top");
+                card.classList.remove("my-card");
             }
-            card.style.width = '13vw'
-            card.dataset.gameCell = gameCell
+            card.style.width = "13vw";
+            card.dataset.gameCell = gameCell;
 
             const [x, y] = this.gameCellPos()[gameCell];
-            card.style.transform = `translate(${x + (top ? 25 : 0)}px, ${y + (top ? 5 : 0)}px)` + (top ? ` rotate(10deg)` : '')
-            card.style.zIndex = top?5:3
+            card.style.transform =
+                `translate(${x + (top ? 25 : 0)}px, ${y + (top ? 5 : 0)}px)` +
+                (top ? ` rotate(10deg)` : "");
+            card.style.zIndex = top ? 5 : 3;
         }
-    }
-}
+    },
+};
 </script>
 <style lang="scss" scoped>
 .inter__header_play {
