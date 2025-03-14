@@ -178,10 +178,10 @@ class GameService implements GameContract
         if ($fightCard->isHigherThan($card, $room->deck->get('trump'), '6')) {
             $table = $room->deck->get('table');
             $players = $room->deck->get('players');
-            $c = array_search(strtolower($fightCard->toString()), $players[$user]);
-            $table[] = $fightCard->toString();
-            unset($players[$user][$c]);
-            $players[$user] = array_values($players[$user]);
+//            $c = array_search(strtolower($fightCard->toString()), $players[$user]);
+//            $table[] = $fightCard->toString();
+//            unset($players[$user][$c]);
+//            $players[$user] = array_values($players[$user]);
 
             $this->updatePlayerIndices($room, true, $user);
 
