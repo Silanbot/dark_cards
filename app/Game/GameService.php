@@ -23,18 +23,25 @@ class GameService implements GameContract
         $currentAttackerIndex = array_search($room->attacker_player_index, $players);
         $playersCount = $room->max_gamers;
 
-        if ($playerTookCards !== null) {
-            $newOpponentIndex = array_search($playerTookCards, $players);
-            $newAttackerIndex = $this->findNextActiveIndex($players, $currentAttackerIndex);
-        } elseif ($playersCount === 2) {
-            $newAttackerIndex = ($currentAttackerIndex + 1) % $playersCount;
-            $newOpponentIndex = $currentAttackerIndex;
-        } else {
-            if ($attackerWon) {
-                $newAttackerIndex = $this->findNextActiveIndex($players, $currentAttackerIndex);
-            }
+        // Инициализируем значения по умолчанию
+        $newAttackerIndex = $currentAttackerIndex;
+        $newOpponentIndex = $currentAttackerIndex;
 
+        if ($playerTookCards !== null) {
+            // Игрок взял карты - он становится новым атакующим
+            $newAttackerIndex = array_search($playerTookCards, $players);
             $newOpponentIndex = $this->findNextActiveIndex($players, $newAttackerIndex);
+        } else {
+            // Успешная защита - ход переходит следующему игроку
+            if ($playersCount === 2) {
+                // Для двух игроков просто меняем местами
+                $newAttackerIndex = ($currentAttackerIndex + 1) % $playersCount;
+                $newOpponentIndex = $currentAttackerIndex;
+            } else {
+                // Для нескольких игроков ищем следующего активного
+                $newAttackerIndex = $this->findNextActiveIndex($players, $currentAttackerIndex);
+                $newOpponentIndex = $this->findNextActiveIndex($players, $newAttackerIndex);
+            }
         }
 
         $room->update([
@@ -49,13 +56,13 @@ class GameService implements GameContract
         $nextIndex = ($currentIndex + 1) % $playersCount;
 
         while ($nextIndex != $currentIndex) {
-            if (isset($players[$nextIndex]) && $players[$nextIndex] !== null) {
+            if (isset($players[$nextIndex])) {
                 return $nextIndex;
             }
             $nextIndex = ($nextIndex + 1) % $playersCount;
         }
 
-        return $currentIndex;
+        return $nextIndex;
     }
 
     private function formatCard(array $card): string
