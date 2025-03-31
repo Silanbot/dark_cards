@@ -17,28 +17,24 @@ class GameService implements GameContract
         $this->centrifugo = $centrifugo;
     }
 
-    private function updatePlayerIndices(Room $room, bool $attackerWon, ?int $playerTookCards = null): void
+    private function updatePlayerIndices(Room $room, ?int $playerTookCards = null): void
     {
         $players = $room->join_state->toArray();
         $currentAttackerIndex = array_search($room->attacker_player_index, $players);
-        $playersCount = $room->max_gamers;
+        $playersCount = count($players); // Исправлено: используем текущее количество игроков
 
-        // Инициализируем значения по умолчанию
         $newAttackerIndex = $currentAttackerIndex;
         $newOpponentIndex = $currentAttackerIndex;
 
         if ($playerTookCards !== null) {
-            // Игрок взял карты - он становится новым атакующим
-            $newAttackerIndex = array_search($playerTookCards, $players);
+            $tookCardsPlayerIndex = array_search($playerTookCards, $players);
+            $newAttackerIndex = $this->findNextActiveIndex($players, $tookCardsPlayerIndex);
             $newOpponentIndex = $this->findNextActiveIndex($players, $newAttackerIndex);
         } else {
-            // Успешная защита - ход переходит следующему игроку
             if ($playersCount === 2) {
-                // Для двух игроков просто меняем местами
                 $newAttackerIndex = ($currentAttackerIndex + 1) % $playersCount;
                 $newOpponentIndex = $currentAttackerIndex;
             } else {
-                // Для нескольких игроков ищем следующего активного
                 $newAttackerIndex = $this->findNextActiveIndex($players, $currentAttackerIndex);
                 $newOpponentIndex = $this->findNextActiveIndex($players, $newAttackerIndex);
             }
@@ -190,7 +186,7 @@ class GameService implements GameContract
 //            unset($players[$user][$c]);
 //            $players[$user] = array_values($players[$user]);
 
-            $this->updatePlayerIndices($room, true, $user);
+            $this->updatePlayerIndices($room, $user);
 
             $room->update([
                 'deck' => [
@@ -226,7 +222,7 @@ class GameService implements GameContract
         $players = $room->deck->get('players');
         $players[$player] = array_merge($players[$player], $table);
 
-        $this->updatePlayerIndices($room, false, $player);
+        $this->updatePlayerIndices($room, $player);
 
         $room->update([
             'deck' => [
@@ -266,8 +262,10 @@ class GameService implements GameContract
         $index = array_search(strtolower($card->toString()), $players[$player]);
         unset($players[$player][$index]);
         $players[$player] = array_values($players[$player]);
+        $attackerIndex =  $room->attacker_player_index;
+        $opponentIndex = $room->opponent_player_index;
 
-        $this->updatePlayerIndices($room, false);
+        $this->updatePlayerIndices($room);
 
         $room->update([
             'deck' => [
@@ -283,6 +281,7 @@ class GameService implements GameContract
             'deck' => $room->deck,
             'attacker_player_index' => $room->attacker_player_index,
             'opponent_player_index' => $room->opponent_player_index,
+            'discarded_card_player' => $attackerIndex,
             'player' => $player,
         ]);
     }
@@ -332,7 +331,7 @@ class GameService implements GameContract
         $room->update(['beats' => $beats]);
 
         if ($beats->count() === $room->max_gamers - 1) {
-            $this->updatePlayerIndices($room, true);
+            $this->updatePlayerIndices($room);
 
             $room->update([
                 'deck' => [

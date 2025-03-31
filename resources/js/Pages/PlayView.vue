@@ -648,7 +648,7 @@ export default {
             location.replace('/home')
         }))
 
-        this.centrifugo = new Centrifuge(`wss://${window.location.host}/connection/websocket`, { token })
+        this.centrifugo = new Centrifuge(`ws://127.0.0.1:8888/connection/websocket`, { token })
         this.centrifugo.on('connected', async () => {
             const res = await fetch(`/api/game/join?${new URLSearchParams({ id: this.room.id, user_id: profile.id })}`)
             for (const user of await res.json())
@@ -708,6 +708,8 @@ export default {
                     return document.querySelector(`div[data-player="${data.player}"]`).parentNode.remove()
                 case 'discard_card':
                     isAttackerPlayer = profile.id == data.attacker_player_index
+                    let isCardDiscardedByAttacker = data.discarded_card_player
+
                     this.updateAttacker(data)
                     const card = document.createElement('img')
                     card.dataset.player = Object.keys(data.deck.players).find(id => id != profile.id)
@@ -874,7 +876,7 @@ export default {
             countElem.innerHTML = --count
         }
 
-        async function discardCard(card) {
+        async function discardCard(card, cardDiscardedByPlayer) {
             const discardIsMine = card.dataset.player == profile.id
             if (!discardIsMine) {
                 const player = [...document.querySelectorAll('.game__players__player__photo')].find(e => e.dataset.player == card.dataset.player)
