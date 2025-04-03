@@ -186,7 +186,7 @@ class GameService implements GameContract
 //            unset($players[$user][$c]);
 //            $players[$user] = array_values($players[$user]);
 
-            $this->updatePlayerIndices($room, $user);
+//            $this->updatePlayerIndices($room, $user);
 
             $room->update([
                 'deck' => [
