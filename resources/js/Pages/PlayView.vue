@@ -453,6 +453,37 @@ import modalDialog from "./components/modalDialog.vue";
                     >
                         Взять
                     </div>
+                    <!-- <template v-else-if="myTurn">
+                        <div class="footer__button turn">Ваш ход</div>
+                        <div
+                            class="footer__button take"
+                            @click="() => takeFromTable()"
+                            :style="{
+                                visibility:
+                                    (myTurn &&
+                                        gameCells.every((c) => !c.length) &&
+                                        gameCells.filter((c) => c.length)
+                                            .length !== 0) ||
+                                    gameCells.filter((c) => c.length).length ===
+                                        0 ||
+                                    (!myTurn &&
+                                        (gameCells.filter((c) => c.length)
+                                            .length +
+                                            2) %
+                                            2 ===
+                                            1)
+                                        ? 'hidden'
+                                        : undefined,
+                            }"
+                        >
+                            Взять
+                        </div>
+                    </template>
+                    <span
+                        class="footer__button"
+                        :style="{ visibility: 'hidden' }"
+                        v-else
+                    /> -->
                 </template>
 
                 <div class="footer__person">
@@ -711,7 +742,10 @@ export default {
     methods: {
         async setReadyState() {
             const localMockUser = localStorage.getItem("usr");
-            const readyID = isDev && localMockUser ? JSON.parse(localMockUser).id : (await telegram.profile()).id
+            const readyID =
+                isDev && localMockUser
+                    ? JSON.parse(localMockUser).id
+                    : (await telegram.profile()).id;
             await gameApi.ready(readyID, this.room.id);
             this.ready = !this.ready;
         },
@@ -729,9 +763,11 @@ export default {
         },
         async updateAttacker(data) {
             const localMockUser = localStorage.getItem("usr");
-            const myID = isDev && localMockUser ? JSON.parse(localMockUser).id : (await telegram.profile()).id
-            this.myTurn =
-            myID == data.attacker_player_index;
+            const myID =
+                isDev && localMockUser
+                    ? JSON.parse(localMockUser).id
+                    : (await telegram.profile()).id;
+            this.myTurn = myID == data.attacker_player_index;
 
             for (let { id: userId } of this.users) {
                 const userElem = document.querySelectorAll(
@@ -888,7 +924,7 @@ export default {
             return isDev && localMockUser
                 ? JSON.parse(localMockUser)
                 : await telegram.profile();
-        }
+        },
     },
 
     async mounted() {
@@ -1411,4 +1447,20 @@ export default {
 .win__amount.visible {
     visibility: inherit;
 }
+
+// footer.footer .footer__button.turn {
+//     position: absolute;
+//     width: 100px;
+//     height: 25px;
+//     left: 50%;
+//     margin-left: -50px;
+//     top: -30px;
+//     font-size: 16px;
+//     background: #401515;
+//     border-radius: 10px;
+// }
+
+// footer.footer .footer__button.take {
+//     width: 30%;
+// }
 </style>
