@@ -18,10 +18,12 @@ class PlayController extends Controller
             && !str_starts_with($setting['name'], 'select_mode_')
         );
         $currency = array_filter($room->settings->toArray(), fn (array $setting) => str_starts_with($setting['name'], 'select_mode_'));
+        $lastCurrency = end($currency);
+
         return inertia('PlayView', [
             'room' => $room,
             'modes' => $settings,
-            'currency' => end($currency)['name'] === 'select_mode_2', // true - cash, false - coin
+            'currency' => isset($lastCurrency['name']) && $lastCurrency['name'] === 'select_mode_2', // true - cash, false - coin
             'players' => !empty($room->ready_state) ? User::query()->whereIn('id', $room->ready_state)->get() : [],
         ]);
     }
