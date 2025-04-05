@@ -417,17 +417,11 @@ import modalDialog from "./components/modalDialog.vue";
                     <div
                         class="footer__button"
                         @click="startFinishBeat"
-                        v-if="
-                            myTurn &&
-                            gameCells.filter((c) => c.length).length > 0 &&
-                            gameCells
-                                .filter((c) => c.length)
-                                .every((c) => c.length % 2 === 0)
-                        "
+                        v-if="showBeat"
                     >
                         Бито
                     </div>
-                    <div class="footer__button turn" v-else-if="myTurn">
+                    <div class="footer__button turn" v-else-if="showYourTurn">
                         Ваш ход
                     </div>
                     <div
@@ -435,20 +429,7 @@ import modalDialog from "./components/modalDialog.vue";
                         @click="() => takeFromTable()"
                         v-else
                         :style="{
-                            visibility:
-                                (myTurn &&
-                                    gameCells.every((c) => !c.length) &&
-                                    gameCells.filter((c) => c.length).length !==
-                                        0) ||
-                                gameCells.filter((c) => c.length).length ===
-                                    0 ||
-                                (!myTurn &&
-                                    (gameCells.filter((c) => c.length).length +
-                                        2) %
-                                        2 ===
-                                        1)
-                                    ? 'hidden'
-                                    : undefined,
+                            visibility: !showTake ? 'hidden' : undefined,
                         }"
                     >
                         Взять
@@ -702,6 +683,7 @@ export default {
             myTurn: false,
             user: [],
             cardsCount: 36,
+            defender: false,
 
             cardValues: {
                 2: 2,
@@ -739,7 +721,49 @@ export default {
             },
         };
     },
+    computed: {
+        showYourTurn() {
+            const allEmpty = this.gameCells.every(
+                (cell) => Array.isArray(cell) && cell.length === 0
+            );
+            return allEmpty && this.myTurn === true;
+        },
+        showBeat() {
+            return (
+                this.myTurn &&
+                !this.defender &&
+                this.gameCells.filter((c) => c.length).length > 0 &&
+                this.gameCells
+                    .filter((c) => c.length)
+                    .every((c) => c.length % 2 === 0)
+            );
+        },
+        showTake() {
+            if (!this.defender) return false;
+
+            return this.gameCells.some(
+                (cell) =>
+                    Array.isArray(cell) && cell.length > 0 && cell.length < 2
+            );
+        },
+    },
     methods: {
+        resetRoundState() {
+            this.defender = false;
+            this.lastDiscarderPlayer = null;
+        },
+        async updateDefenderStatus(data) {
+            const localMockUser = localStorage.getItem("usr");
+            const profileID =
+                isDev && localMockUser
+                    ? JSON.parse(localMockUser).id
+                    : (await telegram.profile()).id;
+
+            const isFirstCard = this.gameCells.flat().length === 0;
+            if (!isFirstCard) return;
+
+            this.defender = data.attacker_player_index == profileID;
+        },
         async setReadyState() {
             const localMockUser = localStorage.getItem("usr");
             const readyID =
@@ -767,6 +791,7 @@ export default {
                 isDev && localMockUser
                     ? JSON.parse(localMockUser).id
                     : (await telegram.profile()).id;
+            console.log("LLLLLLLLLL", myID, data.attacker_player_index);
             this.myTurn = myID == data.attacker_player_index;
 
             for (let { id: userId } of this.users) {
@@ -1006,7 +1031,7 @@ export default {
                     );
                 case "player_take_card":
                     // isAttackerPlayer = profile.id == data.attacker_player_index
-                    // this.updateAttacker(data)
+                    this.updateAttacker(data);
                     if (data.player == profile.id && count > 0) {
                         for (const card of data.cards)
                             giveCard.bind(this)(data.player, card);
@@ -1014,6 +1039,7 @@ export default {
                     canBeat = true;
                     return;
                 case "player_take_table":
+                    this.defender = false;
                     return this.takeFromTable(data);
                 case "user_left_room":
                     return document
@@ -1021,6 +1047,10 @@ export default {
                         .parentNode.remove();
                 case "discard_card":
                     isAttackerPlayer = profile.id == data.attacker_player_index;
+                    this.lastDiscarderPlayer = data.discarded_card_player;
+
+                    await this.updateDefenderStatus(data);
+
                     this.updateAttacker(data);
                     const card = document.createElement("img");
                     card.dataset.player = Object.keys(data.deck.players).find(
@@ -1063,7 +1093,10 @@ export default {
                     isAttackerPlayer =
                         data.attacker_player_index ===
                         (await this.getProfile()).id;
+
+                    this.defender = false;
                     this.updateAttacker(data);
+
                     return this.endCards(data);
                 case "user_win":
                     const a = [...document.querySelectorAll(".win__amount")];
@@ -1079,6 +1112,7 @@ export default {
                                 ),
                             3000
                         );
+                        this.defender = false;
                 case "table_full":
                     isAttackerPlayer = false;
                     telegram.alert("Стол переполнен!", true);
@@ -1093,6 +1127,7 @@ export default {
                         return;
                     }
                     this.updateAttacker(data);
+
                     return;
             }
         }).subscribe();
